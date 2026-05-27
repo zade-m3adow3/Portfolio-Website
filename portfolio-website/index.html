@@ -169,7 +169,9 @@
       });
       window.lenisInstance = lenis;
 
-      // Tie Lenis to GSAP ticker
+      // Tie Lenis to GSAP ticker AND feed scroll events to ScrollTrigger
+      // Without this, GSAP pins don't work with Lenis smooth scroll
+      lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add(time => lenis.raf(time * 1000));
       gsap.ticker.lagSmoothing(0);
 
@@ -202,8 +204,10 @@
       }
 
       /* Wire inter-slide transitions */
+      // NOTE: slide-02 is intentionally excluded — it has its own
+      // GSAP pin (horizontal scroll) that handles its own exit.
+      // Adding a wireSlideTransition on it conflicts and kills the pin.
       wireSlideTransition("#slide-01", "#slide-02");
-      wireSlideTransition("#slide-02", "#slide-03");
       wireSlideTransition("#slide-03", "#slide-04");
       wireSlideTransition("#slide-04", "#slide-05");
       wireSlideTransition("#slide-05", "#slide-06");

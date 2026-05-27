@@ -378,8 +378,24 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
     });
   }
 
+  /* ── 5. Math Rendering ─────────────────────────────────── */
+  function renderEquations() {
+    if (typeof katex === "undefined") return;
+    document.querySelectorAll(".apux-katex-block").forEach(el => {
+      const tex = el.getAttribute("data-katex");
+      if (tex) {
+        try {
+          katex.render(tex, el, { displayMode: true, throwOnError: false });
+        } catch (e) {
+          console.error("KaTeX error:", e);
+        }
+      }
+    });
+  }
+
   /* ── Init ──────────────────────────────────────────────── */
   function init() {
+    renderEquations();
     initThreeScene();
     initUI();
     initScroll();

@@ -1,11 +1,13 @@
 /* sims.css — Slide 05 */
 
 .slide-05-sims { 
-  height:100vh; 
+  min-height: 100vh;
+  height: 100vh;
   background:var(--void); 
   display:flex; 
   flex-direction:column; 
-  overflow:hidden; 
+  overflow:visible;
+  position: relative;
 }
 
 .sims-header { 
@@ -32,7 +34,8 @@
   display:grid; 
   grid-template-columns:40% 60%; 
   gap:0; 
-  overflow:hidden; 
+  overflow:hidden;
+  min-height: 0;
 }
 
 .sims-panel-a { 
@@ -43,7 +46,7 @@
 
 #sims-stiefel-canvas {
   flex: 1;
-  min-height: 400px;
+  min-height: 0;
   background: var(--void);
   position: relative;
   overflow: hidden;
@@ -53,7 +56,8 @@
   flex:1; 
   position:relative; 
   background:#06060f; 
-  overflow:hidden; 
+  overflow:hidden;
+  min-height: 0;
 }
 
 .sims-stats-overlay { 

@@ -187,6 +187,24 @@
   /* ── GSAP horizontal scroll ─────────────────────────────── */
   function initHorizontalScroll() {
     if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+    // On tablet / mobile the CSS stacks panels vertically — skip the GSAP pin
+    if (window.innerWidth <= 1024) {
+      // Make sim cards immediately visible via a simple IntersectionObserver
+      const simCards = document.querySelectorAll(".s2-sim-card");
+      const simObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+            el.style.opacity = "1";
+            el.style.transform = "translateY(0)";
+            simObserver.unobserve(el);
+          }
+        });
+      }, { threshold: 0.1 });
+      simCards.forEach((c) => simObserver.observe(c));
+      return;
+    }
 
     gsap.registerPlugin(ScrollTrigger);
 

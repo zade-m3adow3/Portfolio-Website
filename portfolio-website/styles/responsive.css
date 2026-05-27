@@ -1,0 +1,400 @@
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE.CSS — All slides, tablet & mobile
+   Breakpoints:
+     Tablet  : max-width 1024px
+     Mobile  : max-width 767px
+     Tiny    : max-width 480px
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Global progress dots: hide on small screens ────────────── */
+@media (max-width: 767px) {
+  #global-progress { display: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SLIDE 01 — HERO
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .hero-content-wrapper {
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 32px;
+    gap: 40px;
+  }
+  .hero-left, .hero-right {
+    width: 100%;
+  }
+  .hero-right {
+    display: flex;
+    justify-content: flex-start;
+  }
+  .terminal-box {
+    max-width: 100%;
+  }
+  .hero-heading {
+    font-size: clamp(52px, 8vw, 80px);
+  }
+}
+
+@media (max-width: 767px) {
+  .slide-01-hero {
+    align-items: flex-start;
+    padding-top: 80px;
+  }
+  .hero-content-wrapper {
+    padding: 0 20px;
+    gap: 32px;
+  }
+  .hero-heading {
+    font-size: clamp(40px, 11vw, 60px);
+  }
+  .hero-subtitle {
+    font-size: 13px;
+  }
+  .hero-tags {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .hero-mission {
+    font-size: 14px;
+  }
+  .terminal-box {
+    min-height: 180px;
+    padding: 16px;
+  }
+  .scroll-indicator {
+    display: none;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SLIDE 02 — MOTIVATION (horizontal scroll → vertical on mobile)
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  /* Disable the horizontal GSAP track on tablet/mobile.
+     Stack panels vertically so users can read everything. */
+  .slide-02-motivation {
+    height: auto !important;
+    min-height: 100vh;
+    overflow: visible !important;
+  }
+  .s2-outer {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .s2-track {
+    width: 100% !important;
+    height: auto !important;
+    flex-direction: column !important;
+    transform: none !important; /* kill GSAP inline transform */
+  }
+  .s2-panel {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+  /* Hide giant decorative vertical label */
+  .s2-vert-label { display: none; }
+
+  .s2-panel-a-content {
+    padding: 40px 28px;
+  }
+  .s2-heading {
+    font-size: clamp(28px, 5vw, 44px);
+    margin-bottom: 24px;
+  }
+  .s2-cards { gap: 16px; margin-bottom: 28px; }
+  .s2-card-symbol { font-size: 48px; }
+  .s2-card-title { font-size: 17px; }
+  .s2-card-text { font-size: 14px; }
+  .s2-pullquote { font-size: 22px; }
+  .s2-scroll-hint { display: none; } /* no longer relevant */
+
+  /* Panel B: stack sim cards in a single column */
+  .s2-panel-b-content {
+    padding: 32px 20px;
+    overflow: visible !important;
+  }
+  .s2-sim-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+  .s2-sim-card-wide {
+    grid-column: 1 !important;
+  }
+  .s2-sim-plot { min-height: 160px; }
+  .s2-equation-block { padding: 12px; max-width: 100%; }
+}
+
+@media (max-width: 767px) {
+  .s2-panel-a-content { padding: 32px 16px; }
+  .s2-heading { font-size: clamp(26px, 7vw, 36px); }
+  .s2-card { gap: 12px; }
+  .s2-card-symbol { font-size: 36px; }
+  .s2-card-title { font-size: 15px; }
+  .s2-card-text { font-size: 13px; }
+  .s2-pullquote { font-size: 18px; }
+  .s2-panel-b-content { padding: 24px 12px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SLIDE 03 — PMM TECHNICAL
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .slide-03-pmm {
+    height: auto !important;
+    min-height: 100vh;
+    overflow: visible !important;
+  }
+  .pmm-layout {
+    flex-direction: column;
+    height: auto !important;
+  }
+  /* Rail becomes horizontal scrollable tab bar */
+  .pmm-rail {
+    width: 100% !important;
+    height: auto !important;
+    overflow-y: visible;
+    overflow-x: auto;
+    flex-direction: row;
+    align-items: stretch;
+    padding: 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .pmm-rail-title { display: none; }
+  .pmm-rail-line { display: none; }
+  .pmm-rail-list {
+    flex-direction: row;
+    gap: 0;
+    padding: 0;
+    white-space: nowrap;
+  }
+  .pmm-rail-item {
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 16px;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    flex-shrink: 0;
+  }
+  .pmm-rail-active {
+    border-left-color: transparent !important;
+    border-bottom-color: var(--spectral-1) !important;
+  }
+  .pmm-rail-full { display: none; }
+  .pmm-rail-name { font-size: 11px; }
+
+  /* Diagram column hides on tablet — too narrow */
+  .pmm-diagram { display: none; }
+
+  .pmm-main {
+    height: auto !important;
+    overflow: visible;
+  }
+  .pmm-content-area {
+    overflow: visible;
+    padding: 24px 20px;
+  }
+  .pmm-pane-title { font-size: 24px; }
+}
+
+@media (max-width: 767px) {
+  .pmm-rail-item { padding: 10px 12px; }
+  .pmm-rail-num { font-size: 9px; }
+  .pmm-rail-name { font-size: 10px; }
+  .pmm-content-area { padding: 20px 14px; }
+  .pmm-pane-title { font-size: 20px; }
+  .pmm-text { font-size: 14px; }
+  .pmm-katex-block { padding: 12px; }
+  .pmm-toggle-wrap { position: static; margin-top: 12px; }
+  .pmm-toggle-wrap { display: flex; justify-content: flex-end; padding: 0 14px 12px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SLIDE 04 — APU-X SUBSTRATE
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .slide-04-apux {
+    height: auto !important;
+    min-height: 100vh;
+    overflow: visible !important;
+  }
+  .apux-layout {
+    flex-direction: column;
+    height: auto !important;
+  }
+  /* 3D viewer: full width, fixed height */
+  .apux-viewer {
+    width: 100% !important;
+    height: 50vw !important;
+    min-height: 260px;
+    max-height: 420px;
+  }
+  #apux-canvas { height: 100%; }
+  .apux-controls {
+    bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .apux-btn { font-size: 11px; padding: 5px 12px; }
+
+  /* Content panel: full width, natural height */
+  .apux-content {
+    width: 100% !important;
+    height: auto !important;
+  }
+  .apux-header {
+    padding: 24px 20px 16px;
+  }
+  .apux-toggle-wrap {
+    position: static;
+    margin-top: 12px;
+  }
+  .apux-title { font-size: 26px; }
+  .apux-accordion-list {
+    padding: 16px 20px 32px;
+    gap: 10px;
+  }
+  .apux-card-title { font-size: 17px; }
+  .apux-card-badge { font-size: 16px; }
+}
+
+@media (max-width: 767px) {
+  .apux-viewer {
+    height: 56vw !important;
+    min-height: 220px;
+  }
+  .apux-header { padding: 16px 14px 12px; }
+  .apux-title { font-size: 22px; }
+  .apux-accordion-list { padding: 12px 14px 24px; }
+  .apux-card-header { padding: 12px 14px; gap: 10px; }
+  .apux-card-title { font-size: 15px; }
+  .apux-text { font-size: 13px; }
+  .apux-controls { gap: 6px; }
+  .apux-btn { font-size: 10px; padding: 4px 10px; letter-spacing: 1px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SLIDE 05 — SIMULATIONS
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .slide-05-sims {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .sims-main-grid {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .sims-panel-a {
+    min-height: 60vw;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .sims-canvas-outer {
+    min-height: 280px;
+  }
+  .sims-panel-right {
+    height: auto;
+  }
+  .sims-panel-b {
+    height: auto !important;
+    min-height: 300px;
+  }
+  .sims-panel-c {
+    height: auto !important;
+  }
+  /* SOTA charts: stack vertically */
+  .sims-charts-row {
+    flex-direction: column;
+    height: auto !important;
+  }
+  .sims-chart-wrap {
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    min-height: 200px;
+  }
+  .sims-chart-wrap:last-child { border-bottom: none; }
+  .sims-d3-chart { min-height: 160px; }
+  .sims-banach-layout { flex-direction: column; }
+  .sims-banach-svg, .sims-banach-line-chart { min-height: 160px; }
+}
+
+@media (max-width: 767px) {
+  .sims-header { padding: 20px 16px 10px; }
+  .sims-panel-a { min-height: 70vw; }
+  .sims-canvas-outer { min-height: 240px; }
+  .sims-stats-overlay { font-size: 9px; padding: 6px 8px; }
+  .sims-controls-row, .sims-speed-row { flex-wrap: wrap; gap: 8px; }
+  .sims-btn { font-size: 10px; padding: 4px 10px; }
+  .sims-panel-head { padding: 8px 12px; }
+  .sims-panel-title { font-size: 10px; }
+  .sims-chart-wrap { min-height: 180px; padding: 4px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SLIDE 06 — ANIMATIONS / FOOTER
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .slide-06-anim {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .anim-scroll-container {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .anim-block { min-height: auto; padding: 40px 24px; }
+  .anim-canvas-wrap { width: 100%; }
+  .anim-canvas { height: 280px; }
+
+  .anim-dasm-layout {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 16px;
+  }
+  .dasm-middle {
+    flex-direction: row;
+    width: auto;
+    gap: 16px;
+  }
+  .dasm-canvas { height: 180px; }
+
+  .anim-thermal-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+  }
+  .thermal-canvas { width: 100% !important; }
+}
+
+@media (max-width: 767px) {
+  .anim-header { padding: 20px 16px 12px; }
+  .anim-block { padding: 28px 14px; }
+  .anim-block-title { font-size: 20px; }
+  .anim-block-desc { font-size: 13px; }
+  .anim-canvas { height: 220px; }
+  .dasm-canvas { height: 140px; }
+  .anim-footer { padding: 40px 20px; min-height: auto; }
+  .anim-footer-links { gap: 20px; }
+  .anim-footer-links a { font-size: 12px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SHARED — KaTeX overflows on narrow screens
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .katex-display, .katex {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+  }
+  .pmm-katex-block { overflow-x: auto; }
+  .apux-katex-block { overflow-x: auto; }
+  .s2-equation-block { overflow-x: auto; }
+}

@@ -210,6 +210,18 @@
   box-shadow:0 0 20px rgba(0,200,255,0.1); 
 }
 
+.s2-plot-expanded {
+  position: fixed !important;
+  inset: 10vh 10vw !important;
+  width: 80vw !important;
+  height: 80vh !important;
+  z-index: 9999 !important;
+  background: #08080f !important;
+  border: 1px solid rgba(0,200,255,0.3) !important;
+  box-shadow: 0 0 60px rgba(0,200,255,0.15) !important;
+  cursor: zoom-out !important;
+}
+
 .s2-sim-result { 
   font-family:'IBM Plex Mono',monospace; 
   font-size:10px; 

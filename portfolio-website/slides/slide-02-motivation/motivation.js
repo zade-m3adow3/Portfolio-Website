@@ -266,22 +266,10 @@
         // Close any open
         document.querySelectorAll(".s2-plot-expanded").forEach((el) => {
           el.classList.remove("s2-plot-expanded");
-          el.style.transform = "";
-          el.style.zIndex = "";
-          el.style.position = "";
         });
 
         if (!isExpanded) {
           plot.classList.add("s2-plot-expanded");
-          plot.style.position = "fixed";
-          plot.style.inset = "10vh 10vw";
-          plot.style.width = "80vw";
-          plot.style.height = "80vh";
-          plot.style.zIndex = "999";
-          plot.style.background = "#08080f";
-          plot.style.border = "1px solid rgba(0,200,255,0.3)";
-          plot.style.boxShadow = "0 0 60px rgba(0,200,255,0.15)";
-          plot.style.cursor = "zoom-out";
         }
       });
     });

@@ -203,7 +203,7 @@
         pin: true,
         scrub: 1,
         start: "top top",
-        end: "+=200%",           // 2× viewport height of scroll to traverse both panels
+        end: "+=350%",           // Extra scroll distance for the inner vertical scroll
         anticipatePin: 1,
         onUpdate(self) {
           // Progress bar spans across both panels
@@ -216,6 +216,19 @@
 
     tl_s2.to(track, {
       x: () => -(track.scrollWidth - window.innerWidth) + "px",
+      ease: "none",
+    });
+
+    // Inner scroll effect for Panel B (Empirical Grounding / 5 Simulations)
+    const simGrid = document.getElementById("s2-sim-grid");
+    const panelContent = document.querySelector(".s2-panel-b-content");
+    
+    tl_s2.to(simGrid, {
+      y: () => {
+        if (!simGrid || !panelContent) return 0;
+        const overflow = simGrid.scrollHeight - panelContent.clientHeight + 64; // pad the bottom
+        return overflow > 0 ? -overflow + "px" : "0px";
+      },
       ease: "none",
     });
 

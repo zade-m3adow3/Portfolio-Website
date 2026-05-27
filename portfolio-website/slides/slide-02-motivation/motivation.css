@@ -156,7 +156,7 @@
   padding:24px 32px; 
   display:flex; 
   flex-direction:column; 
-  overflow:auto; 
+  overflow:hidden; 
 }
 
 .s2-sim-grid { 

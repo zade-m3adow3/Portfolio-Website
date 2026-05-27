@@ -141,7 +141,7 @@
       // Wait for GSAP + friends
       await new Promise(r => {
         const check = () => {
-          if (window.gsap && window.ScrollTrigger && window.Lenis) {
+          if (window.gsap && window.ScrollTrigger && window.Lenis && window.THREE && window.d3 && window.katex) {
             gsap.registerPlugin(ScrollTrigger);
             r();
           } else {

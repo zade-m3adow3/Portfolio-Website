@@ -106,16 +106,14 @@
         dasmBeamY = 400;
         flashIndices = [];
         statusText.innerText = 'I(t) = TRUE · AUTONOMOUS EXECUTION ENABLED';
-        statusText.style.color = 'var(--neural-green)';
+        statusText.style.color = '#0af5a0';
         counterText.innerText = 'δ̂_k = 2.84';
         wrap.classList.remove('gim-fail');
       } 
       else if (phase === 1) {
-        // Oscillation logic
-        let p = (time - 3) / 2; // 0 to 1
-        if (p < 0.5) spectralState = 1; // yellow
-        else spectralState = 2; // red
-        
+        let p = (time - 3) / 2;
+        if (p < 0.5) spectralState = 1;
+        else spectralState = 2;
         let eg = 2.84 - p * (2.84 - 0.05);
         counterText.innerText = `δ̂_k = ${Math.max(0.05, eg).toFixed(2)}`;
       }
@@ -123,7 +121,7 @@
         if (!allRed) {
           allRed = true;
           statusText.innerText = 'I(t) = FALSE · HALT ALL AUTONOMOUS ACTIONS';
-          statusText.style.color = 'var(--rollback-red)';
+          statusText.style.color = '#ff3864';
           wrap.classList.add('gim-fail');
           playAlertTone();
         }
@@ -135,7 +133,7 @@
           counterText.innerText = 'θ_{t+1} ← θ_snapshot';
           wrap.classList.remove('gim-fail');
         }
-        dasmBeamY -= (dt * 300); // beam moves up
+        dasmBeamY -= (dt * 300);
         if (dasmBeamY < cy) dasmBeamY = cy;
       }
       else if (phase === 4) {
@@ -144,21 +142,28 @@
         flashIndices = Array.from({length: Math.min(7, numRecovered)}, (_, i) => i);
         if (p > 0.8) {
           statusText.innerText = 'I(t) = TRUE · ROLLBACK COMPLETE · EXECUTION RESUMED';
-          statusText.style.color = 'var(--neural-green)';
+          statusText.style.color = '#0af5a0';
           counterText.innerText = 'δ̂_k = 2.84';
         } else {
           counterText.innerText = 'RECOVERING...';
         }
       }
+      else if (phase === 5) {
+        // 2-second stable pause before loop resets (blueprint spec)
+        statusText.innerText = 'I(t) = TRUE · AUTONOMOUS EXECUTION ENABLED';
+        statusText.style.color = '#0af5a0';
+        counterText.innerText = 'δ̂_k = 2.84';
+        flashIndices = Array.from({length: 7}, (_, i) => i);
+      }
 
       // Draw DASM register & beam in Phase 3
       if (phase === 3 || (phase === 4 && dasmBeamY <= cy)) {
-        ctx.fillStyle = 'var(--spectral-1)';
+        ctx.fillStyle = '#00c8ff'; // --spectral-1
         ctx.fillRect(cx - 40, dasmBeamY, 80, 400 - dasmBeamY);
         
         ctx.fillStyle = 'rgba(0,200,255,0.2)';
         ctx.fillRect(cx - 100, 350, 200, 50);
-        ctx.fillStyle = 'var(--spectral-1)';
+        ctx.fillStyle = '#00c8ff'; // --spectral-1
         ctx.font = '12px "IBM Plex Mono"';
         ctx.textAlign = 'center';
         ctx.fillText('DASM SRAM', cx, 380);
@@ -179,24 +184,23 @@
         ctx.moveTo(nx, ny);
         ctx.lineTo(cx, cy);
         
-        if (isRedLine) ctx.strokeStyle = 'var(--rollback-red)';
+        if (isRedLine) ctx.strokeStyle = '#ff3864'; // --rollback-red
         else if (isYellowLine) ctx.strokeStyle = '#e8c547';
         else ctx.strokeStyle = 'rgba(10,245,160,0.3)';
         ctx.lineWidth = 1;
         ctx.stroke();
 
         // Dots flowing
-        if (phase < 2 || phase === 4) {
+        if (phase < 2 || phase === 4 || phase === 5) {
           let numDots = 3;
           for(let d=0; d<numDots; d++) {
             let offset = (time * 0.5 + d/numDots) % 1.0; 
-            // 0 is outer, 1 is center
             let dx = nx + (cx - nx) * offset;
             let dy = ny + (cy - ny) * offset;
             
             ctx.beginPath();
             ctx.arc(dx, dy, 2, 0, Math.PI*2);
-            ctx.fillStyle = 'var(--neural-green)';
+            ctx.fillStyle = '#0af5a0'; // --neural-green
             ctx.fill();
           }
         }

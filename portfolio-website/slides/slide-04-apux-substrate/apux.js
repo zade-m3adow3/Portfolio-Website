@@ -70,13 +70,13 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
     // LOAD GLB
     const loader = new GLTFLoader();
-    // Resolve path relative to this script
-    const glbPath = document.querySelector('link[href*="apux.css"]')
-      ? document.querySelector('link[href*="apux.css"]').href.replace("apux.css", "assets/apux_model.glb")
-      : "assets/apux_model.glb";
+    let model; // Declare model in outer scope
+    
+    // Resolve path relative to index.html
+    const glbPath = "slides/slide-04-apux-substrate/assets/apux_model.glb";
 
     loader.load(glbPath, (gltf) => {
-      const model = gltf.scene;
+      model = gltf.scene; // Assign to outer variable
       // Auto center and scale the model to fit perfectly
       const box = new THREE.Box3().setFromObject(model);
       const center = box.getCenter(new THREE.Vector3());

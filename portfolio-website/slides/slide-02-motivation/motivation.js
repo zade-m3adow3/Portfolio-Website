@@ -215,7 +215,7 @@
     });
 
     tl_s2.to(track, {
-      x: "-100vw",
+      x: () => -(track.scrollWidth - window.innerWidth) + "px",
       ease: "none",
     });
 

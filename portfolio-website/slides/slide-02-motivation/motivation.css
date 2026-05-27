@@ -153,7 +153,7 @@
 
 .s2-panel-b-content { 
   flex:1; 
-  padding:48px 64px; 
+  padding:24px 32px; 
   display:flex; 
   flex-direction:column; 
   overflow:auto; 
@@ -162,7 +162,7 @@
 .s2-sim-grid { 
   display:grid; 
   grid-template-columns:1fr 1fr; 
-  gap:16px; 
+  gap:8px; 
   flex:1; 
 }
 
@@ -196,7 +196,7 @@
 
 .s2-sim-plot { 
   flex:1; 
-  min-height:120px; 
+  min-height:80px; 
   background:#08080f; 
   cursor:zoom-in; 
   display:flex; 
@@ -212,17 +212,17 @@
 
 .s2-sim-result { 
   font-family:'IBM Plex Mono',monospace; 
-  font-size:11px; 
+  font-size:10px; 
   color:var(--text-muted); 
-  padding:8px 12px; 
+  padding:4px 8px; 
   border-top:1px solid rgba(255,255,255,0.05); 
 }
 
 .s2-equation-block { 
   text-align:center; 
-  padding:32px; 
+  padding:16px; 
   max-width:80%; 
-  margin:24px auto 0; 
+  margin:12px auto 0; 
   border-top:1px solid rgba(255,255,255,0.05); 
 }
 

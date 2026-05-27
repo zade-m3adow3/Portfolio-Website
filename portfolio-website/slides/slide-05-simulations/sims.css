@@ -2,7 +2,6 @@
 
 .slide-05-sims { 
   min-height: 100vh;
-  height: 100vh;
   background:var(--void); 
   display:flex; 
   flex-direction:column; 

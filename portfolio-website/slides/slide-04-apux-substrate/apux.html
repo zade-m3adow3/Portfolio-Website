@@ -24,7 +24,7 @@
         </div>
       </header>
 
-      <div class="apux-accordion">
+      <div class="apux-accordion-list">
         
         <!-- CARD 1 -->
         <div class="apux-card" data-layer="1">
@@ -38,7 +38,8 @@
           </div>
           <div class="apux-card-body">
             <div class="apux-view apux-view-technical active-view">
-              <p class="apux-text">Fabricated on 14nm FinFET process node. High-K dielectric gates with channel length L ≥ 14nm maintain Ion/Ioff > 10⁷. Single-cycle clock: 77 MHz (period 12.98 ns). Combinational latency: 250 stages × 40ps + 2.9ns wire = 12.9ns satisfying T_comb ≤ 1/f_clock. CTE = 10⁻⁵ K⁻¹.</p>
+              <p class="apux-text">Fabricated on 14nm FinFET process node. High-K dielectric gates with channel length L ≥ 14nm maintain Ion/Ioff &gt; 10⁷. Single-cycle clock: 77 MHz (period 12.98 ns). CTE = 10⁻⁵ K⁻¹.</p>
+              <div class="apux-katex-block" data-katex="T_{\text{comb}} = 250 \times 40\text{ps} + 2.9\text{ns} = 12.9\text{ns} \;\le\; \frac{1}{f_{\text{clock}}}"></div>
             </div>
             <div class="apux-view apux-view-layman">
               <div class="apux-analogy-header"><span class="apux-analogy-emoji">🏗️</span><span class="apux-analogy-label">The Foundation Floor</span></div>
@@ -59,7 +60,8 @@
           </div>
           <div class="apux-card-body">
             <div class="apux-view apux-view-technical active-view">
-              <p class="apux-text">L=512 independent processing tiles each managing sub-dictionary N_tile = N/L. Sequential O(m·N) complexity reduced to O(m·N/L). For N=2¹⁶, m=1028: 1.3×10⁵ ops/tile. At 77 MHz: completes in 1.68ms. Switched-capacitor arithmetic.</p>
+              <p class="apux-text">L=512 independent processing tiles each managing sub-dictionary N_tile = N/L. Sequential O(m·N) complexity reduced to O(m·N/L). At 77 MHz: completes in 1.68ms. Switched-capacitor arithmetic.</p>
+              <div class="apux-katex-block" data-katex="\text{ops}_{\text{tile}} = \frac{m \cdot N}{L} = \frac{1028 \times 2^{16}}{512} = 1.3\times10^{5}"></div>
             </div>
             <div class="apux-view apux-view-layman">
               <div class="apux-analogy-header"><span class="apux-analogy-emoji">🏭</span><span class="apux-analogy-label">The 512-Worker Factory</span></div>
@@ -80,7 +82,8 @@
           </div>
           <div class="apux-card-body">
             <div class="apux-view apux-view-technical active-view">
-              <p class="apux-text">Vertical carbon nanotube pillars achieve κ_vertical ≥ 1400 W/m·K. Lateral Graphene/h-BN shunts provide horizontal heat distribution. At P_density = 12.5 W/mm³, ΔT_max = P_density × d²_layer / (2κ_vertical) = 1.004×10⁻⁷ K. Write frequency limited to f_SOT &lt; 1/τ_phonon ≈ 76.9 GHz.</p>
+              <p class="apux-text">Vertical carbon nanotube pillars achieve κ_vertical ≥ 1400 W/m·K. Lateral Graphene/h-BN shunts provide horizontal heat distribution. Write frequency limited to f_SOT &lt; 1/τ_phonon ≈ 76.9 GHz.</p>
+              <div class="apux-katex-block" data-katex="\Delta T_{\max} = \frac{P_{\text{density}} \cdot d^2_{\text{layer}}}{2\kappa_{\text{vertical}}} = 1.004\times10^{-7}\,\text{K}"></div>
             </div>
             <div class="apux-view apux-view-layman">
               <div class="apux-analogy-header"><span class="apux-analogy-emoji">🌡️</span><span class="apux-analogy-label">The World's Best Radiator</span></div>
@@ -101,7 +104,8 @@
           </div>
           <div class="apux-card-body">
             <div class="apux-view apux-view-technical active-view">
-              <p class="apux-text">Grounded graphene monolayer outer sleeve at radius r_s enforces boundary condition n̂×E(r_s)=0. Physical shielding leakage δ_shield ≤ 10⁻⁵. Mutual inductance M_ij = δ_shield × μ₀L_z/(2π) × ln(r_s/D). Induced noise V_noise = M_ij × dI_i/dt ≈ 2.77μV &lt; V_LSB = 976μV.</p>
+              <p class="apux-text">Grounded graphene monolayer outer sleeve at radius r_s enforces boundary condition n̂×E(r_s)=0. Physical shielding leakage δ_shield ≤ 10⁻⁵.</p>
+              <div class="apux-katex-block" data-katex="V_{\text{noise}} = M_{ij}\,\frac{dI_i}{dt} \approx 2.77\,\mu\text{V} \;<\; V_{\text{LSB}} = 976\,\mu\text{V}"></div>
             </div>
             <div class="apux-view apux-view-layman">
               <div class="apux-analogy-header"><span class="apux-analogy-emoji">🔇</span><span class="apux-analogy-label">Microscopic Faraday Cages</span></div>
@@ -122,7 +126,8 @@
           </div>
           <div class="apux-card-body">
             <div class="apux-view apux-view-technical active-view">
-              <p class="apux-text">Spin-Orbit Torque MRAM provides non-volatile high-endurance storage for analog parameter state invariance copies. Deterministic single-cycle write. Used as hardware ground truth for DASM rollback source. BER &lt; 10⁻¹⁵ under normal operation.</p>
+              <p class="apux-text">Spin-Orbit Torque MRAM provides non-volatile high-endurance storage for analog parameter state invariance copies. Deterministic single-cycle write. Used as hardware ground truth for DASM rollback source.</p>
+              <div class="apux-katex-block" data-katex="\text{BER} < 10^{-15} \;\text{under normal operation}\quad f_{\text{write}} = f_{\text{clock}} = 77\,\text{MHz}"></div>
             </div>
             <div class="apux-view apux-view-layman">
               <div class="apux-analogy-header"><span class="apux-analogy-emoji">💿</span><span class="apux-analogy-label">The Chip's Permanent Memory</span></div>
@@ -143,7 +148,8 @@
           </div>
           <div class="apux-card-body">
             <div class="apux-view apux-view-technical active-view">
-              <p class="apux-text">DASM mirrors θ_t → θ_snapshot before each update. On GIM predicate failure: θ_{t+1} ← θ_snapshot (bitwise copy, single cycle). Error: E[||θ_restored − θ_t||²] ≡ 0. Eliminates analog reverse-operation drift: E[||θ_reversed − θ_t||²] = 2Θσ² (avoided).</p>
+              <p class="apux-text">DASM mirrors θ_t → θ_snapshot before each update. On GIM predicate failure: θ_{t+1} ← θ_snapshot (bitwise copy, single cycle). Eliminates analog reverse-operation drift.</p>
+              <div class="apux-katex-block" data-katex="\mathbb{E}\!\left[\|\theta_{\text{restored}} - \theta_t\|^2\right] \equiv 0 \quad\text{vs}\quad \mathbb{E}\!\left[\|\theta_{\text{reversed}} - \theta_t\|^2\right] = 2\Theta\sigma^2"></div>
             </div>
             <div class="apux-view apux-view-layman">
               <div class="apux-analogy-header"><span class="apux-analogy-emoji">📸</span><span class="apux-analogy-label">Perfect Undo — Every Time</span></div>
@@ -164,7 +170,8 @@
           </div>
           <div class="apux-card-body">
             <div class="apux-view apux-view-technical active-view">
-              <p class="apux-text">Runs in lock-step with primary execution path. Evaluates algebraic invariants at 20 Hz on SRAM snapshot blocks. Independently reconstructs states via inverse dictionary operator D_t. Triggers single-cycle hardware rollback on ECF spectral collapse or symbolic predicate failure. Decoupled from primary execution to prevent single-point failure.</p>
+              <p class="apux-text">Runs in lock-step with primary execution path. Evaluates algebraic invariants at 20 Hz on SRAM snapshot blocks. Independently reconstructs states via inverse dictionary operator D_t. Decoupled from primary execution to prevent single-point failure.</p>
+              <div class="apux-katex-block" data-katex="\mathcal{I}(t) \;\Rightarrow\; \text{PASS} \;:\; \theta_{t+1} = \theta_t - \eta_t\nabla\mathcal{L} \quad \text{FAIL} \;:\; \theta_{t+1} \leftarrow \theta_{\text{snapshot}}"></div>
             </div>
             <div class="apux-view apux-view-layman">
               <div class="apux-analogy-header"><span class="apux-analogy-emoji">🕵️</span><span class="apux-analogy-label">The Silent Auditor</span></div>

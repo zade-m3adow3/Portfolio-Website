@@ -1,0 +1,84 @@
+<section id="slide-06" class="slide slide-06-anim">
+  <div class="anim-scroll-container" id="anim-scroll-container">
+
+    <!-- Sticky header -->
+    <header class="anim-header">
+      <span class="anim-label">§ SYSTEM DYNAMICS IN MOTION</span>
+      <h2 class="anim-title">See the Theory Execute</h2>
+    </header>
+
+    <!-- ANIMATION 1: GIM Rollback -->
+    <section class="anim-block" id="anim-gim-block">
+      <div class="anim-block-head">
+        <h3 class="anim-block-title">GIM Predicate Failure &amp; Rollback</h3>
+        <p class="anim-block-desc">When any of the seven GIM predicates fails — eigengap collapse, symbolic mismatch, or ethical gate violation — the system executes a deterministic single-cycle rollback to the last DASM snapshot. Autonomous execution halts instantly.</p>
+      </div>
+      <div class="anim-canvas-wrap" id="gim-canvas-wrap">
+        <canvas id="canvas-gim" class="anim-canvas" width="800" height="400"></canvas>
+        <div class="anim-overlay-status" id="gim-status-text">I(t) = TRUE · AUTONOMOUS EXECUTION ENABLED</div>
+        <div class="anim-eigengap-counter" id="gim-eigengap">δ̂_k = 2.84</div>
+      </div>
+    </section>
+
+    <!-- ANIMATION 2: DASM Protocol -->
+    <section class="anim-block" id="anim-dasm-block">
+      <div class="anim-block-head">
+        <h3 class="anim-block-title">Differential Active-Set Masking — Zero-Drift Guarantee</h3>
+      </div>
+      <div class="anim-dasm-layout">
+        <div class="dasm-domain">
+          <h4 class="dasm-domain-title">ANALOG DOMAIN</h4>
+          <canvas id="canvas-dasm-analog" class="dasm-canvas" width="350" height="250"></canvas>
+          <p id="dasm-analog-label" class="dasm-caption">Analog weights: drift accumulating...</p>
+        </div>
+        <div class="dasm-middle">
+          <div class="dasm-arrow">→</div>
+          <div class="dasm-arrow-label">DASM mirror<br><small>every 12.98 ns</small></div>
+          <button id="btn-sim-drift" class="sims-btn sims-btn-danger" style="font-family:'Bebas Neue';font-size:12px;padding:6px 12px;">SIMULATE DRIFT</button>
+        </div>
+        <div class="dasm-domain">
+          <h4 class="dasm-domain-title">DIGITAL SRAM</h4>
+          <canvas id="canvas-dasm-digital" class="dasm-canvas" width="350" height="250"></canvas>
+          <p id="dasm-digital-label" class="dasm-caption dasm-success">SNAPSHOT COMMITTED ✓</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANIMATION 3: Thermal -->
+    <section class="anim-block" id="anim-thermal-block">
+      <div class="anim-block-head">
+        <h3 class="anim-block-title">Caloric Entropy Masking — 1.004 × 10⁻⁷ K</h3>
+      </div>
+      <div class="anim-thermal-layout">
+        <div class="thermal-panel">
+          <h4 class="thermal-panel-title">TOP-DOWN HEATMAP (16×16 Crossbar)</h4>
+          <canvas id="canvas-thermal-top" class="thermal-canvas" width="320" height="320"></canvas>
+          <button id="btn-high-load" class="sims-btn" style="font-family:'Bebas Neue';font-size:12px;margin-top:12px;">HIGH LOAD</button>
+        </div>
+        <div class="thermal-panel">
+          <h4 class="thermal-panel-title">SIDE CROSS-SECTION (7 Layers)</h4>
+          <canvas id="canvas-thermal-side" class="thermal-canvas" width="400" height="320"></canvas>
+          <div class="thermal-readout">
+            <div>ΔT_max = <span class="thermal-ok">1.004 × 10⁻⁷ K</span></div>
+            <div>ε_arith = <span class="thermal-ok">1.004 × 10⁻¹²</span></div>
+            <div>τ_shear = <span class="thermal-ok">3.012 × 10⁻² Pa ≪ σ_yield = 10⁸ Pa</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="anim-thermal-eq" data-katex="\Delta T_{\max} = \frac{P_{\text{density}} \cdot d_{\text{layer}}^2}{2\kappa_{\text{vertical}}} = 1.004 \times 10^{-7}\,\text{K}"></div>
+    </section>
+
+    <!-- Credits -->
+    <footer class="anim-footer">
+      <p class="anim-footer-text">This thesis portfolio documents original research conducted independently by Rounak Mukherjee, Class XII, Ramakrishna Mission Vidyalaya Narendrapur, Kolkata, India — in partial fulfillment of realizing a mathematically rigorous framework for trajectory-stable artificial general intelligence.</p>
+      <div class="anim-footer-links">
+        <a href="#">Full Thesis PDF</a>
+        <a href="#">GitHub: Project Antigravity</a>
+        <a href="#">Contact</a>
+        <a href="#">MIT Application Portfolio</a>
+      </div>
+      <div class="anim-footer-meta">Rounak Mukherjee · Class XII · RKMNV · May 2026 · Claude Sonnet 4.6 Evaluation</div>
+    </footer>
+
+  </div>
+</section>

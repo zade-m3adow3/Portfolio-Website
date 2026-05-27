@@ -1,0 +1,179 @@
+<section id="slide-04" class="slide slide-04-apux">
+  <div class="apux-layout">
+    <!-- Left: 3D Viewer -->
+    <div id="apux-canvas">
+      <!-- Three.js renders here -->
+      <div class="apux-controls">
+        <button class="apux-btn apux-btn-active" data-mode="idle">IDLE ROTATE</button>
+        <button class="apux-btn" data-mode="explode">EXPLODE VIEW</button>
+        <button class="apux-btn" data-mode="thermal">THERMAL</button>
+      </div>
+    </div>
+
+    <!-- Right: Content & Accordion -->
+    <div class="apux-content">
+      <header class="apux-header">
+        <span class="apux-label">§ APU-X NEUROMORPHIC SUBSTRATE</span>
+        <h2 class="apux-title">The Physical Architecture of Safety</h2>
+        <div class="apux-toggle-container">
+          <button id="apux-toggle" class="pmm-toggle" aria-pressed="false">
+            <span class="pmm-toggle-option pmm-toggle-active" data-mode="technical">TECHNICAL</span>
+            <span class="pmm-toggle-option" data-mode="layman">LAYMAN</span>
+            <span class="pmm-toggle-thumb" id="apux-toggle-thumb"></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="apux-accordion">
+        
+        <!-- CARD 1 -->
+        <div class="apux-card" data-layer="1">
+          <div class="apux-card-header">
+            <span class="apux-card-badge">01</span>
+            <div class="apux-card-title-wrap">
+              <h3 class="apux-card-title">14nm FinFET Silicon Base</h3>
+              <span class="apux-layer-badge">LAYER 1 · Z=0–1mm</span>
+            </div>
+            <span class="apux-card-icon">▼</span>
+          </div>
+          <div class="apux-card-body">
+            <div class="apux-view apux-view-technical active-view">
+              <p class="apux-text">Fabricated on 14nm FinFET process node. High-K dielectric gates with channel length L ≥ 14nm maintain Ion/Ioff > 10⁷. Single-cycle clock: 77 MHz (period 12.98 ns). Combinational latency: 250 stages × 40ps + 2.9ns wire = 12.9ns satisfying T_comb ≤ 1/f_clock. CTE = 10⁻⁵ K⁻¹.</p>
+            </div>
+            <div class="apux-view apux-view-layman">
+              <div class="apux-analogy-header"><span class="apux-analogy-emoji">🏗️</span><span class="apux-analogy-label">The Foundation Floor</span></div>
+              <p class="apux-text">The foundation floor of a skyscraper — laid with such precision that each tile is correct to within one atom's width. The 77 MHz clock is the heartbeat (77 million beats per second) that synchronizes every operation above it.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2 -->
+        <div class="apux-card" data-layer="2">
+          <div class="apux-card-header">
+            <span class="apux-card-badge">02</span>
+            <div class="apux-card-title-wrap">
+              <h3 class="apux-card-title">512-Tile Parallel Rank-Update Array</h3>
+              <span class="apux-layer-badge">LAYER 2 · Z=1–3mm</span>
+            </div>
+            <span class="apux-card-icon">▼</span>
+          </div>
+          <div class="apux-card-body">
+            <div class="apux-view apux-view-technical active-view">
+              <p class="apux-text">L=512 independent processing tiles each managing sub-dictionary N_tile = N/L. Sequential O(m·N) complexity reduced to O(m·N/L). For N=2¹⁶, m=1028: 1.3×10⁵ ops/tile. At 77 MHz: completes in 1.68ms. Switched-capacitor arithmetic.</p>
+            </div>
+            <div class="apux-view apux-view-layman">
+              <div class="apux-analogy-header"><span class="apux-analogy-emoji">🏭</span><span class="apux-analogy-label">The 512-Worker Factory</span></div>
+              <p class="apux-text">Imagine needing to compare one document against 65,536 others. Doing it sequentially takes all day. With 512 parallel workers each checking 128 documents simultaneously, it's done in seconds. This is the factory floor — 512 workers, one synchronized whistle.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="apux-card" data-layer="3">
+          <div class="apux-card-header">
+            <span class="apux-card-badge">03</span>
+            <div class="apux-card-title-wrap">
+              <h3 class="apux-card-title">CNT Thermal Pillars + Graphene/h-BN Shunts</h3>
+              <span class="apux-layer-badge">LAYER 3 · Z=3–6mm</span>
+            </div>
+            <span class="apux-card-icon">▼</span>
+          </div>
+          <div class="apux-card-body">
+            <div class="apux-view apux-view-technical active-view">
+              <p class="apux-text">Vertical carbon nanotube pillars achieve κ_vertical ≥ 1400 W/m·K. Lateral Graphene/h-BN shunts provide horizontal heat distribution. At P_density = 12.5 W/mm³, ΔT_max = P_density × d²_layer / (2κ_vertical) = 1.004×10⁻⁷ K. Write frequency limited to f_SOT &lt; 1/τ_phonon ≈ 76.9 GHz.</p>
+            </div>
+            <div class="apux-view apux-view-layman">
+              <div class="apux-analogy-header"><span class="apux-analogy-emoji">🌡️</span><span class="apux-analogy-label">The World's Best Radiator</span></div>
+              <p class="apux-text">Carbon nanotubes conduct heat 3× better than diamond. The alternating graphene/h-BN layers are like a radiator — they spread heat sideways before it can accumulate. The temperature rise from full operation is 0.0000001°C. Less than the thermal noise of a single thought.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4 -->
+        <div class="apux-card" data-layer="4">
+          <div class="apux-card-header">
+            <span class="apux-card-badge">04</span>
+            <div class="apux-card-title-wrap">
+              <h3 class="apux-card-title">CHS Coaxial Heterogeneous Shielding</h3>
+              <span class="apux-layer-badge">LAYER 4 · Z=6–8mm</span>
+            </div>
+            <span class="apux-card-icon">▼</span>
+          </div>
+          <div class="apux-card-body">
+            <div class="apux-view apux-view-technical active-view">
+              <p class="apux-text">Grounded graphene monolayer outer sleeve at radius r_s enforces boundary condition n̂×E(r_s)=0. Physical shielding leakage δ_shield ≤ 10⁻⁵. Mutual inductance M_ij = δ_shield × μ₀L_z/(2π) × ln(r_s/D). Induced noise V_noise = M_ij × dI_i/dt ≈ 2.77μV &lt; V_LSB = 976μV.</p>
+            </div>
+            <div class="apux-view apux-view-layman">
+              <div class="apux-analogy-header"><span class="apux-analogy-emoji">🔇</span><span class="apux-analogy-label">Microscopic Faraday Cages</span></div>
+              <p class="apux-text">Every wire in the chip is wrapped in a microscopic graphene Faraday cage. Neighboring wires cannot hear each other — like whispering inside soundproof phone booths arranged millimeters apart. The cage reduces interference by 100,000×.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 5 -->
+        <div class="apux-card" data-layer="5">
+          <div class="apux-card-header">
+            <span class="apux-card-badge">05</span>
+            <div class="apux-card-title-wrap">
+              <h3 class="apux-card-title">SOT-MRAM Parameter State Invariance</h3>
+              <span class="apux-layer-badge">LAYER 5 · Z=8–11mm</span>
+            </div>
+            <span class="apux-card-icon">▼</span>
+          </div>
+          <div class="apux-card-body">
+            <div class="apux-view apux-view-technical active-view">
+              <p class="apux-text">Spin-Orbit Torque MRAM provides non-volatile high-endurance storage for analog parameter state invariance copies. Deterministic single-cycle write. Used as hardware ground truth for DASM rollback source. BER &lt; 10⁻¹⁵ under normal operation.</p>
+            </div>
+            <div class="apux-view apux-view-layman">
+              <div class="apux-analogy-header"><span class="apux-analogy-emoji">💿</span><span class="apux-analogy-label">The Chip's Permanent Memory</span></div>
+              <p class="apux-text">A permanent backup hard drive built into the chip itself — but one that writes in a single clock tick (13 nanoseconds), uses magnetic spin states rather than charge (immune to radiation), and has never lost a single bit in 10¹⁵ reads. This is where the system's soul is stored between operations.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 6 -->
+        <div class="apux-card" data-layer="6">
+          <div class="apux-card-header">
+            <span class="apux-card-badge">06</span>
+            <div class="apux-card-title-wrap">
+              <h3 class="apux-card-title">DASM Digital Snapshot Registers</h3>
+              <span class="apux-layer-badge">LAYER 6 · Z=11–13mm</span>
+            </div>
+            <span class="apux-card-icon">▼</span>
+          </div>
+          <div class="apux-card-body">
+            <div class="apux-view apux-view-technical active-view">
+              <p class="apux-text">DASM mirrors θ_t → θ_snapshot before each update. On GIM predicate failure: θ_{t+1} ← θ_snapshot (bitwise copy, single cycle). Error: E[||θ_restored − θ_t||²] ≡ 0. Eliminates analog reverse-operation drift: E[||θ_reversed − θ_t||²] = 2Θσ² (avoided).</p>
+            </div>
+            <div class="apux-view apux-view-layman">
+              <div class="apux-analogy-header"><span class="apux-analogy-emoji">📸</span><span class="apux-analogy-label">Perfect Undo — Every Time</span></div>
+              <p class="apux-text">Before every single operation, a perfect photograph is taken of the system's complete state. If anything goes wrong, the rollback isn't a guess or an approximation — it's restoring the exact photograph. Perfect undo. Every time. In 13 nanoseconds.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 7 -->
+        <div class="apux-card" data-layer="7">
+          <div class="apux-card-header">
+            <span class="apux-card-badge">07</span>
+            <div class="apux-card-title-wrap">
+              <h3 class="apux-card-title">Shadow Worker Verification Tile</h3>
+              <span class="apux-layer-badge">LAYER 7 · Z=13–15mm</span>
+            </div>
+            <span class="apux-card-icon">▼</span>
+          </div>
+          <div class="apux-card-body">
+            <div class="apux-view apux-view-technical active-view">
+              <p class="apux-text">Runs in lock-step with primary execution path. Evaluates algebraic invariants at 20 Hz on SRAM snapshot blocks. Independently reconstructs states via inverse dictionary operator D_t. Triggers single-cycle hardware rollback on ECF spectral collapse or symbolic predicate failure. Decoupled from primary execution to prevent single-point failure.</p>
+            </div>
+            <div class="apux-view apux-view-layman">
+              <div class="apux-analogy-header"><span class="apux-analogy-emoji">🕵️</span><span class="apux-analogy-label">The Silent Auditor</span></div>
+              <p class="apux-text">A silent auditor sitting in the same room as every operation, checking the arithmetic independently. It never sleeps, never misses a cycle, and has no ability to be bribed or deceived — it only reads from the clean snapshot registers, not from the potentially compromised working memory.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

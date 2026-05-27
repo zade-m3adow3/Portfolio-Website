@@ -1,0 +1,14 @@
+[
+  { "time": 0, "quicksand": 1.0, "standard": 1.0, "streaming_pca": 1.0, "theoretical": 1.0 },
+  { "time": 100, "quicksand": 0.1, "standard": 0.15, "streaming_pca": 0.12, "theoretical": 0.09 },
+  { "time": 200, "quicksand": 0.01, "standard": 0.03, "streaming_pca": 0.02, "theoretical": 0.009 },
+  { "time": 300, "quicksand": 0.002, "standard": 0.015, "streaming_pca": 0.01, "theoretical": 0.001 },
+  { "time": 400, "quicksand": 0.001, "standard": 0.01, "streaming_pca": 0.005, "theoretical": 0.0005 },
+  { "time": 479, "quicksand": 0.0008, "standard": 0.009, "streaming_pca": 0.004, "theoretical": 0.0003 },
+  { "time": 480, "quicksand": 0.0008, "standard": 0.009, "streaming_pca": 0.004, "theoretical": 0.0003 },
+  { "time": 490, "quicksand": 0.003, "standard": 0.5, "streaming_pca": 0.8, "theoretical": 0.001 },
+  { "time": 500, "quicksand": 0.01, "standard": 2.0, "streaming_pca": 3.5, "theoretical": 0.005 },
+  { "time": 600, "quicksand": 0.002, "standard": 2.5, "streaming_pca": 4.0, "theoretical": 0.001 },
+  { "time": 800, "quicksand": 0.001, "standard": 2.8, "streaming_pca": 4.2, "theoretical": 0.0005 },
+  { "time": 1000, "quicksand": 0.0008, "standard": 3.0, "streaming_pca": 4.5, "theoretical": 0.0003 }
+]

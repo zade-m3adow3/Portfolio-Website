@@ -1,0 +1,11 @@
+[
+  { "noise": 0.0, "gim": 0.001, "naive": 0.002, "memgpt": 0.005 },
+  { "noise": 0.1, "gim": 0.001, "naive": 0.005, "memgpt": 0.008 },
+  { "noise": 0.2, "gim": 0.002, "naive": 0.015, "memgpt": 0.012 },
+  { "noise": 0.3, "gim": 0.002, "naive": 0.040, "memgpt": 0.020 },
+  { "noise": 0.4, "gim": 0.003, "naive": 0.065, "memgpt": 0.035 },
+  { "noise": 0.5, "gim": 0.003, "naive": 0.080, "memgpt": 0.045 },
+  { "noise": 0.6, "gim": 0.004, "naive": 0.090, "memgpt": 0.052 },
+  { "noise": 0.8, "gim": 0.005, "naive": 0.095, "memgpt": 0.065 },
+  { "noise": 1.0, "gim": 0.006, "naive": 0.098, "memgpt": 0.075 }
+]

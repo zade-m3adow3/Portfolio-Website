@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PMM-Abraxas — AGI Thesis Portfolio · Rounak Mukherjee</title>
+  <meta name="description" content="Complete technical portfolio for the Post-Mitigated Abraxas Model — a neuro-spectral-symbolic cognitive architecture for trajectory-stable AGI on commodity hardware. By Rounak Mukherjee, 18.">
+
+  <!-- ── Fonts ───────────────────────────────────────────── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- ── KaTeX ───────────────────────────────────────────── -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+
+  <!-- ── Design system CSS ──────────────────────────────── -->
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/global.css">
+  <link rel="stylesheet" href="styles/animations.css">
+  <link rel="stylesheet" href="styles/scroll.css">
+
+  <!-- ── Slide CSS ──────────────────────────────────────── -->
+  <link rel="stylesheet" href="slides/slide-01-hero/hero.css">
+  <link rel="stylesheet" href="slides/slide-02-motivation/motivation.css">
+  <link rel="stylesheet" href="slides/slide-03-pmm-technical/pmm.css">
+  <link rel="stylesheet" href="slides/slide-04-apux-substrate/apux.css">
+  <link rel="stylesheet" href="slides/slide-05-simulations/sims.css">
+  <link rel="stylesheet" href="slides/slide-06-animations/anim.css">
+
+  <!-- ── Libraries (synchronous, before body) ───────────── -->
+  <!-- Import Map for ES Modules -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.module.min.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+  <!-- Three.js r160 (Global fallback, though modules are preferred now) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js" defer></script>
+  <!-- D3 v7 -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js" defer></script>
+  <!-- KaTeX -->
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script>
+  <!-- Lenis smooth scroll -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
+</head>
+
+<body>
+
+  <!-- ── Progress indicator (global, slide count) ─────── -->
+  <div id="global-progress" aria-hidden="true">
+    <span class="gp-dot gp-dot-active" data-slide="1"></span>
+    <span class="gp-dot" data-slide="2"></span>
+    <span class="gp-dot" data-slide="3"></span>
+    <span class="gp-dot" data-slide="4"></span>
+    <span class="gp-dot" data-slide="5"></span>
+    <span class="gp-dot" data-slide="6"></span>
+  </div>
+
+  <!-- ── Slide mount points ────────────────────────────── -->
+  <main id="app" role="main">
+    <div id="slide-01-container"></div>
+    <div id="slide-02-container"></div>
+    <div id="slide-03-container"></div>
+    <div id="slide-04-container"></div>
+    <div id="slide-05-container"></div>
+    <div id="slide-06-container"></div>
+  </main>
+
+  <!-- ════════════════════════════════════════════════════
+       BOOTSTRAP SCRIPT
+       Loads all slides, wires transitions, starts Lenis.
+  ════════════════════════════════════════════════════ -->
+  <script type="module">
+    /* ── Helpers ──────────────────────────────────────── */
+    async function loadHTML(containerId, htmlPath) {
+      const res = await fetch(htmlPath);
+      if (!res.ok) throw new Error(`Failed to load ${htmlPath}: ${res.status}`);
+      document.getElementById(containerId).innerHTML = await res.text();
+    }
+
+    function loadScript(src, type="text/javascript") {
+      return new Promise((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = src;
+        s.type = type;
+        s.onload = resolve;
+        s.onerror = reject;
+        document.body.appendChild(s);
+      });
+    }
+
+    /* ── Global progress dots ─────────────────────────── */
+    function initProgressDots() {
+      const dots = document.querySelectorAll(".gp-dot");
+      const slides = ["#slide-01", "#slide-02", "#slide-03", "#slide-04", "#slide-05", "#slide-06"];
+
+      slides.forEach((sel, i) => {
+        const el = document.querySelector(sel);
+        if (!el) return;
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top 60%",
+          end: "bottom 40%",
+          onToggle(self) {
+            dots.forEach((d, j) => d.classList.toggle("gp-dot-active", j === i && self.isActive));
+          },
+        });
+      });
+    }
+
+    /* ── Transition: slide clips up as next enters ────── */
+    function wireSlideTransition(outgoingId, incomingId) {
+      const outgoing = document.querySelector(outgoingId);
+      if (!outgoing) return;
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Outgoing clips upward
+      ScrollTrigger.create({
+        trigger: outgoing,
+        start: "top top",
+        end: "+=80%",
+        pin: false,
+        onUpdate(self) {
+          const p = Math.min(1, self.progress * 1.4);
+          outgoing.style.clipPath = `inset(0 0 ${p * 100}% 0)`;
+        },
+      });
+    }
+
+    /* ── Main ─────────────────────────────────────────── */
+    async function bootstrap() {
+      // Wait for GSAP + friends
+      await new Promise(r => {
+        const check = () => {
+          if (window.gsap && window.ScrollTrigger && window.Lenis) {
+            gsap.registerPlugin(ScrollTrigger);
+            r();
+          } else {
+            setTimeout(check, 40);
+          }
+        };
+        check();
+      });
+
+      /* Lenis smooth scroll */
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+      });
+      window.lenisInstance = lenis;
+
+      // Tie Lenis to GSAP ticker
+      gsap.ticker.add(time => lenis.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
+
+      /* Load slide HTML concurrently */
+      await Promise.all([
+        loadHTML("slide-01-container", "slides/slide-01-hero/hero.html"),
+        loadHTML("slide-02-container", "slides/slide-02-motivation/motivation.html"),
+        loadHTML("slide-03-container", "slides/slide-03-pmm-technical/pmm.html"),
+        loadHTML("slide-04-container", "slides/slide-04-apux-substrate/apux.html"),
+        loadHTML("slide-05-container", "slides/slide-05-simulations/sims.html"),
+        loadHTML("slide-06-container", "slides/slide-06-animations/anim.html"),
+      ]);
+
+      /* Load slide scripts sequentially (order matters for init) */
+      await loadScript("slides/slide-01-hero/hero.js");
+      await loadScript("slides/slide-02-motivation/motivation.js");
+      await loadScript("slides/slide-03-pmm-technical/pmm.js");
+      await loadScript("slides/slide-04-apux-substrate/apux.js", "module");
+      await loadScript("slides/slide-05-simulations/sims.js");
+      await loadScript("slides/slide-06-animations/anim.js");
+
+      /* Wire inter-slide transitions */
+      wireSlideTransition("#slide-01", "#slide-02");
+      wireSlideTransition("#slide-02", "#slide-03");
+      wireSlideTransition("#slide-03", "#slide-04");
+      wireSlideTransition("#slide-04", "#slide-05");
+      wireSlideTransition("#slide-05", "#slide-06");
+
+      /* Global progress dots */
+      initProgressDots();
+
+      /* Refresh ScrollTrigger after all DOM is settled */
+      setTimeout(() => ScrollTrigger.refresh(), 200);
+
+      console.log("[PMM Portfolio] All slides loaded ✓");
+    }
+
+    bootstrap().catch(err => {
+      console.error("[PMM Portfolio] Bootstrap error:", err);
+    });
+  </script>
+
+</body>
+</html>

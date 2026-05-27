@@ -1,0 +1,20 @@
+:root {
+  --void: #05050c;
+  --substrate: #0d0d1a;
+  --spectral-1: #00c8ff;
+  --spectral-2: #7f5af0;
+  --neural-green: #0af5a0;
+  --rollback-red: #ff3864;
+  --gold: #e8c547;
+  --text-primary: #e8e8f0;
+  --text-muted: #6b7280;
+
+  --spectral-1-30: rgba(0, 200, 255, 0.3);
+  --spectral-1-10: rgba(0, 200, 255, 0.1);
+  --spectral-2-40: rgba(127, 90, 240, 0.4);
+
+  --font-display: "DM Serif Display", serif;
+  --font-body: "IBM Plex Sans", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+  --font-accent: "Bebas Neue", sans-serif;
+}

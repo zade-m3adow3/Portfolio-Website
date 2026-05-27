@@ -1,0 +1,329 @@
+/**
+ * apux.js — Slide 04
+ * Interactive 3D model viewer and accordion UI.
+ */
+
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+(function () {
+  "use strict";
+
+  let viewMode = "technical"; // 'technical' | 'layman'
+  
+  let scene, camera, renderer, composer, mixer, controls;
+  let animationMode = "idle";
+  
+  const layerObjects = [];
+  const actionClips = {};
+  let currentAction = null;
+
+  /* ── 1. Init Three.js and load GLB ─────────────────────── */
+  function initThreeScene() {
+    const container = document.getElementById("apux-canvas");
+    if (!container) return;
+
+    // SCENE
+    scene = new THREE.Scene();
+    
+    // CAMERA
+    camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.set(0, 8, 20);
+    
+    // RENDERER
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+    container.appendChild(renderer.domElement);
+
+    // CONTROLS
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enablePan = false;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    // POST PROCESSING (BLOOM)
+    const renderScene = new RenderPass(scene, camera);
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(container.clientWidth, container.clientHeight),
+      0.4, // strength
+      0.4, // radius
+      0.7  // threshold
+    );
+    const outputPass = new OutputPass();
+
+    composer = new EffectComposer(renderer);
+    composer.addPass(renderScene);
+    composer.addPass(bloomPass);
+    composer.addPass(outputPass);
+
+    // LIGHTING (fallback in case GLB has none or they were excluded)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+
+    // LOAD GLB
+    const loader = new GLTFLoader();
+    // Resolve path relative to this script
+    const glbPath = document.querySelector('link[href*="apux.css"]')
+      ? document.querySelector('link[href*="apux.css"]').href.replace("apux.css", "assets/apux_model.glb")
+      : "assets/apux_model.glb";
+
+    loader.load(glbPath, (gltf) => {
+      const model = gltf.scene;
+      scene.add(model);
+
+      // Extract layers
+      const expectedNames = [
+        'layer_01_base', 'layer_02_crossbar', 'layer_03_cnt_pillars',
+        'layer_04_chs_shielding', 'layer_05_sot_mram', 
+        'layer_06_dasm_registers', 'layer_07_shadow_worker'
+      ];
+      
+      model.traverse((child) => {
+        if (child.isMesh && expectedNames.includes(child.name)) {
+          // Keep original material to restore later
+          child.userData.originalMaterial = child.material.clone();
+          layerObjects.push(child);
+        }
+      });
+      
+      // Sort layers by name just in case
+      layerObjects.sort((a, b) => a.name.localeCompare(b.name));
+
+      // ANIMATIONS
+      if (gltf.animations && gltf.animations.length > 0) {
+        mixer = new THREE.AnimationMixer(model);
+        gltf.animations.forEach((clip) => {
+          actionClips[clip.name] = mixer.clipAction(clip);
+        });
+        
+        // Start default
+        playAction("idle_rotate");
+      }
+
+    }, undefined, (error) => {
+      console.error("Error loading GLB:", error);
+    });
+
+    // Resize handler
+    window.addEventListener("resize", () => {
+      if (!container) return;
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      composer.setSize(container.clientWidth, container.clientHeight);
+    });
+
+    const clock = new THREE.Clock();
+    
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      const delta = clock.getDelta();
+      if (mixer) mixer.update(delta);
+      if (controls) controls.update();
+      
+      composer.render();
+    }
+    animate();
+  }
+
+  function playAction(name) {
+    if (!mixer || !actionClips[name]) return;
+    
+    // Stop all other actions
+    Object.values(actionClips).forEach(action => {
+      action.fadeOut(0.5);
+    });
+
+    const action = actionClips[name];
+    action.reset();
+    action.fadeIn(0.5);
+    action.play();
+    
+    currentAction = action;
+  }
+
+  /* ── 2. Handle Model Animation Modes ───────────────────── */
+  function setAnimationMode(mode) {
+    animationMode = mode;
+    
+    // Reset opacities
+    layerObjects.forEach(mesh => {
+      gsap.to(mesh.material, {
+        opacity: 1.0,
+        transparent: mesh.userData.originalMaterial.transparent,
+        duration: 0.4
+      });
+    });
+
+    if (mode === "idle") {
+      playAction("idle_rotate_track") || playAction("idle_rotate");
+    } 
+    else if (mode === "explode") {
+      playAction("explode_view");
+    }
+    else if (mode === "thermal") {
+      playAction("thermal_view");
+    }
+  }
+
+  function focusLayer(layerNum) {
+    const idx = layerNum - 1;
+    // Dim others
+    layerObjects.forEach((mesh, i) => {
+      // Ensure transparent is true for fading
+      mesh.material.transparent = true;
+      gsap.to(mesh.material, {
+        opacity: i === idx ? 1.0 : 0.1,
+        duration: 0.4
+      });
+    });
+    
+    // Stop animations to focus
+    if (mixer) mixer.stopAllAction();
+    
+    // Orbit camera to target the layer (approximate center of bounding box)
+    if (layerObjects[idx]) {
+      const box = new THREE.Box3().setFromObject(layerObjects[idx]);
+      const center = box.getCenter(new THREE.Vector3());
+      
+      gsap.to(controls.target, {
+        x: center.x,
+        y: center.y,
+        z: center.z,
+        duration: 1,
+        ease: "power2.inOut"
+      });
+    }
+  }
+
+  /* ── 3. UI Interactions ────────────────────────────────── */
+  function initUI() {
+    // Viewer Buttons
+    const viewBtns = document.querySelectorAll(".apux-btn");
+    viewBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        viewBtns.forEach(b => b.classList.remove("apux-btn-active"));
+        btn.classList.add("apux-btn-active");
+        setAnimationMode(btn.dataset.mode);
+        
+        // Remove layer focus if a mode is clicked
+        document.querySelectorAll(".apux-card").forEach(c => c.classList.remove("active"));
+        updateAccordionHeights();
+      });
+    });
+
+    // Toggle Switch (Tech/Layman)
+    const toggleBtn = document.getElementById("apux-toggle");
+    if (toggleBtn) {
+      toggleBtn.addEventListener("click", () => {
+        viewMode = viewMode === "technical" ? "layman" : "technical";
+        toggleBtn.setAttribute("aria-pressed", viewMode === "layman");
+        
+        toggleBtn.querySelectorAll(".pmm-toggle-option").forEach(opt => {
+          opt.classList.toggle("pmm-toggle-active", opt.dataset.mode === viewMode);
+        });
+        
+        updateCardViews();
+      });
+    }
+
+    // Accordions
+    const cards = document.querySelectorAll(".apux-card");
+    cards.forEach(card => {
+      const header = card.querySelector(".apux-card-header");
+      header.addEventListener("click", () => {
+        const isActive = card.classList.contains("active");
+        
+        // Close all
+        cards.forEach(c => c.classList.remove("active"));
+        
+        if (!isActive) {
+          card.classList.add("active");
+          // Focus the layer in 3D
+          const layerNum = parseInt(card.dataset.layer, 10);
+          if (layerNum) focusLayer(layerNum);
+        } else {
+          // Unfocus
+          layerObjects.forEach(mesh => {
+            gsap.to(mesh.material, { opacity: 1.0, duration: 0.4 });
+          });
+          // Restore idle animation
+          playAction("idle_rotate_track") || playAction("idle_rotate");
+        }
+        
+        updateAccordionHeights();
+      });
+    });
+
+    updateCardViews();
+  }
+
+  function updateCardViews() {
+    document.querySelectorAll(".apux-card-body").forEach(body => {
+      const techView = body.querySelector(".apux-view-technical");
+      const layView = body.querySelector(".apux-view-layman");
+      
+      if (techView && layView) {
+        if (viewMode === "technical") {
+          techView.classList.add("active-view");
+          layView.classList.remove("active-view");
+        } else {
+          layView.classList.add("active-view");
+          techView.classList.remove("active-view");
+        }
+      }
+    });
+    // Need to recalculate heights after view swap because content length differs
+    requestAnimationFrame(updateAccordionHeights);
+  }
+
+  function updateAccordionHeights() {
+    document.querySelectorAll(".apux-card").forEach(card => {
+      const body = card.querySelector(".apux-card-body");
+      if (card.classList.contains("active")) {
+        // Temporarily set to auto to get full scrollHeight, then hardcode for transition
+        body.style.height = "auto";
+        const h = body.scrollHeight;
+        body.style.height = h + "px";
+      } else {
+        body.style.height = "0px";
+      }
+    });
+  }
+
+  /* ── 4. Scroll Triggers ────────────────────────────────── */
+  function initScroll() {
+    if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    ScrollTrigger.create({
+      trigger: "#slide-04",
+      pin: true,
+      start: "top top",
+      end: "+=100%",
+      anticipatePin: 1
+    });
+  }
+
+  /* ── Init ──────────────────────────────────────────────── */
+  function init() {
+    initThreeScene();
+    initUI();
+    initScroll();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();

@@ -1,0 +1,353 @@
+<section id="slide-03" class="slide slide-03-pmm">
+
+  <!-- ── Zone layout wrapper ─────────────────────────────── -->
+  <div class="pmm-layout">
+
+    <!-- ══════════════════════════════════════════
+         ZONE A — Left navigation rail
+    ══════════════════════════════════════════ -->
+    <nav class="pmm-rail" id="pmm-rail" aria-label="PMM Components">
+
+      <div class="pmm-rail-title">PMM-ABRAXAS</div>
+
+      <!-- Vertical connector line -->
+      <div class="pmm-rail-line" aria-hidden="true"></div>
+
+      <ul class="pmm-rail-list" id="pmm-rail-list">
+        <li class="pmm-rail-item pmm-rail-active" data-component="npe" tabindex="0">
+          <span class="pmm-rail-num">01</span>
+          <span class="pmm-rail-name">NPE</span>
+          <span class="pmm-rail-full">Neural Processing Engine</span>
+        </li>
+        <li class="pmm-rail-item" data-component="ecf" tabindex="0">
+          <span class="pmm-rail-num">02</span>
+          <span class="pmm-rail-name">ECF</span>
+          <span class="pmm-rail-full">Eigenvector Cognitive Filter</span>
+        </li>
+        <li class="pmm-rail-item" data-component="src" tabindex="0">
+          <span class="pmm-rail-num">03</span>
+          <span class="pmm-rail-name">SRC</span>
+          <span class="pmm-rail-full">Symbolic Reasoning Core</span>
+        </li>
+        <li class="pmm-rail-item" data-component="gim" tabindex="0">
+          <span class="pmm-rail-num">04</span>
+          <span class="pmm-rail-name">GIM</span>
+          <span class="pmm-rail-full">Global Integrity Monitor</span>
+        </li>
+        <li class="pmm-rail-item" data-component="dasm" tabindex="0">
+          <span class="pmm-rail-num">05</span>
+          <span class="pmm-rail-name">DASM</span>
+          <span class="pmm-rail-full">Differential Active-Set Masking</span>
+        </li>
+        <li class="pmm-rail-item" data-component="oja" tabindex="0">
+          <span class="pmm-rail-num">06</span>
+          <span class="pmm-rail-name">Oja++</span>
+          <span class="pmm-rail-full">Quicksand Subspace Tracker</span>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- ══════════════════════════════════════════
+         ZONE B — Main content panel
+    ══════════════════════════════════════════ -->
+    <main class="pmm-main" id="pmm-main">
+
+      <!-- Toggle switch -->
+      <div class="pmm-toggle-wrap">
+        <button class="pmm-toggle" id="pmm-toggle" aria-pressed="false">
+          <span class="pmm-toggle-option pmm-toggle-active" data-mode="technical">TECHNICAL</span>
+          <span class="pmm-toggle-option" data-mode="layman">LAYMAN</span>
+          <span class="pmm-toggle-thumb" id="pmm-toggle-thumb"></span>
+        </button>
+      </div>
+
+      <!-- Content panels — all pre-rendered, toggled via CSS -->
+      <div class="pmm-content-area" id="pmm-content-area">
+
+        <!-- ── NPE ── -->
+        <div class="pmm-pane" id="pmm-pane-npe" data-component="npe">
+
+          <div class="pmm-pane-header">
+            <span class="pmm-pane-label">01 / NPE</span>
+            <h3 class="pmm-pane-title">Neural Processing Engine</h3>
+          </div>
+
+          <div class="pmm-view pmm-view-technical pmm-view-active">
+            <p class="pmm-text">
+              The NPE generates high-dimensional continuous embeddings
+              <em>z<sub>t</sub> = NPE(x<sub>t</sub>) ∈ ℝ<sup>d</sup></em>
+              from raw input. At <em>t=0</em>, a non-degenerate random kernel projection initializes
+              the manifold with non-zero trace, preventing epistemic vacuum collapse.
+              The unsupervised manifold drive <em>L<sub>task</sub></em> establishes initial linear separability.
+            </p>
+            <div class="pmm-katex-block" data-katex="z_t = \text{NPE}(x_t),\quad \text{Tr}(\mathbf{C}_0) > 0"></div>
+          </div>
+
+          <div class="pmm-view pmm-view-layman">
+            <div class="pmm-analogy-emoji">🏭</div>
+            <div class="pmm-analogy-label">ANALOGY: "The Factory Foreman"</div>
+            <p class="pmm-text">
+              Imagine a factory that receives raw sensory data — temperatures, pressures, visual
+              feeds — all at once. The NPE is the foreman who immediately organizes this chaos into
+              a meaningful summary report. It doesn't understand the report yet; it just ensures it's
+              not empty or nonsensical before passing it upstairs.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- ── ECF ── -->
+        <div class="pmm-pane pmm-pane-hidden" id="pmm-pane-ecf" data-component="ecf">
+
+          <div class="pmm-pane-header">
+            <span class="pmm-pane-label">02 / ECF</span>
+            <h3 class="pmm-pane-title">Eigenvector Cognitive Filter</h3>
+          </div>
+
+          <div class="pmm-view pmm-view-technical pmm-view-active">
+            <p class="pmm-text">
+              The ECF projects chaotic neural vectors onto the <em>k</em>-dimensional
+              Guided Action Subspace <em>W* ∈ ℝ<sup>d×k</sup></em> using the Quicksand Oja++ algorithm.
+              The subspace satisfies the Euler-Lagrange condition:
+              <em>(C + αGG<sup>T</sup>)W* = W*Λ</em>.
+              The eigengap <em>δ<sub>k</sub> = λ<sub>k</sub> − λ<sub>k+1</sub></em> measures structural separation.
+              If <em>δ<sub>k</sub></em> collapses below <em>δ<sub>min</sub></em>, the GIM triggers rollback.
+            </p>
+            <div class="pmm-katex-block" data-katex="\hat{W}_{t+1} = \text{QR}\!\left(\hat{W}_t + \eta_t^{\text{eff}} \bigl(I - \hat{W}_t \hat{W}_t^\top\bigr) x_t x_t^\top \hat{W}_t\right)"></div>
+          </div>
+
+          <div class="pmm-view pmm-view-layman">
+            <div class="pmm-analogy-emoji">🔬</div>
+            <div class="pmm-analogy-label">ANALOGY: "The Electron Microscope Focus Knob"</div>
+            <p class="pmm-text">
+              Raw neural data is blurry noise — like an unfocused microscope slide.
+              The ECF is the focus knob. It continuously adjusts to keep the 'most important features'
+              in sharp focus (principal subspace) while blurring out noise. The eigengap tells us how
+              sharp the focus is. If something attacks the lens — the GIM cuts power instantly.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- ── SRC ── -->
+        <div class="pmm-pane pmm-pane-hidden" id="pmm-pane-src" data-component="src">
+
+          <div class="pmm-pane-header">
+            <span class="pmm-pane-label">03 / SRC</span>
+            <h3 class="pmm-pane-title">Symbolic Reasoning Core</h3>
+          </div>
+
+          <div class="pmm-view pmm-view-technical pmm-view-active">
+            <p class="pmm-text">
+              Filtered spectral vectors map into discrete symbolic rules via a
+              noise-adaptive contraction filter and exact nearest-neighbor codebook matching.
+              Discretization Robustness Contract enforces stability within open ball radius
+              <em>r = Δ − ρ/L<sub>D</sub></em>, preventing symbolic chattering at decision boundaries.
+              Piecewise-MLRP routing assigns unique threshold <em>τ<sub>m</sub></em> per locally monotone sub-interval.
+            </p>
+          </div>
+
+          <div class="pmm-view pmm-view-layman">
+            <div class="pmm-analogy-emoji">📚</div>
+            <div class="pmm-analogy-label">ANALOGY: "The Translator Who Never Guesses"</div>
+            <p class="pmm-text">
+              The ECF speaks in smooth continuous whispers — 'this concept is somewhere between
+              0.73 and 0.81 on the threat axis.' The SRC is the translator who converts that whisper
+              into a crisp legal verdict: SAFE or UNSAFE. It draws lines carefully, with a guaranteed
+              no-chattering contract — it will never oscillate between verdicts at the edge of a
+              decision boundary.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- ── GIM ── -->
+        <div class="pmm-pane pmm-pane-hidden" id="pmm-pane-gim" data-component="gim">
+
+          <div class="pmm-pane-header">
+            <span class="pmm-pane-label">04 / GIM</span>
+            <h3 class="pmm-pane-title">Global Integrity Monitor</h3>
+          </div>
+
+          <div class="pmm-view pmm-view-technical pmm-view-active">
+            <p class="pmm-text">
+              GIM evaluates composite boolean predicate <em>I(t)</em> at 20 Hz. Seven orthogonal
+              conditions gate all autonomous actions. Governed by Lyapunov's Direct Method:
+              <em>V̇(U<sub>t</sub>) ≤ −2δ<sub>k</sub> V(U<sub>t</sub>)</em>.
+              Contraction modulus <em>L<sub>contract</sub> = 1 − η<sub>t</sub><sup>eff</sup>(2δ<sub>k</sub> − δ<sub>min</sub>) &lt; 1</em> guaranteed.
+              Hardware eBPF watchdog enforces at Ring 0.
+            </p>
+            <div class="pmm-katex-block" data-katex="\dot{V}(U_t) \leq -2\delta_k\, V(U_t)"></div>
+          </div>
+
+          <div class="pmm-view pmm-view-layman">
+            <div class="pmm-analogy-emoji">🚦</div>
+            <div class="pmm-analogy-label">ANALOGY: "The Seven-Lock Nuclear Launch Protocol"</div>
+            <p class="pmm-text">
+              A nuclear submarine requires seven independent officers to simultaneously insert their
+              keys before any launch. The GIM is this protocol — but for every single autonomous action
+              the system takes. ALL seven conditions must be TRUE simultaneously, or the system freezes
+              and rolls back to its last known safe state. No exceptions. No overrides.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- ── DASM ── -->
+        <div class="pmm-pane pmm-pane-hidden" id="pmm-pane-dasm" data-component="dasm">
+
+          <div class="pmm-pane-header">
+            <span class="pmm-pane-label">05 / DASM</span>
+            <h3 class="pmm-pane-title">Differential Active-Set Masking</h3>
+          </div>
+
+          <div class="pmm-view pmm-view-technical pmm-view-active">
+            <p class="pmm-text">
+              DASM mirrors verified analog parameter state <em>θ<sub>t</sub></em> into digital SRAM
+              snapshot register before each update. On GIM failure:
+              <em>θ<sub>t+1</sub> ← θ<sub>snapshot</sub></em> in a single clock cycle.
+              SRAM BER &lt; 10<sup>−15</sup> guarantees zero-drift restoration.
+              <em>E[‖θ<sub>restored</sub> − θ<sub>t</sub>‖²] ≡ 0</em>.
+            </p>
+            <div class="pmm-katex-block" data-katex="\mathbb{E}\!\left[\|\theta_{\text{restored}} - \theta_t\|^2\right] \equiv 0"></div>
+          </div>
+
+          <div class="pmm-view pmm-view-layman">
+            <div class="pmm-analogy-emoji">💾</div>
+            <div class="pmm-analogy-label">ANALOGY: "The Video Game Save State"</div>
+            <p class="pmm-text">
+              Every time you make a move in a game, a perfect snapshot is saved to a read-only
+              cartridge. If the game crashes — you don't reload from corrupted autosave. You reload
+              from the clean cartridge snapshot. The cartridge uses military-grade memory that hasn't
+              had a single wrong bit in 10<sup>15</sup> reads. DASM is this cartridge for the entire
+              cognitive state of the APU-X.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- ── OJA++ ── -->
+        <div class="pmm-pane pmm-pane-hidden" id="pmm-pane-oja" data-component="oja">
+
+          <div class="pmm-pane-header">
+            <span class="pmm-pane-label">06 / OJA++</span>
+            <h3 class="pmm-pane-title">Quicksand Oja++</h3>
+          </div>
+
+          <div class="pmm-view pmm-view-technical pmm-view-active">
+            <p class="pmm-text">
+              Event-driven online subspace tracker on Stiefel manifold <em>V<sub>k</sub>(ℝ<sup>d</sup>)</em>.
+              Noise-adaptive step <em>η<sub>t</sub><sup>eff</sup> = η<sub>0</sub> / (1 + σ̂²<sub>t</sub>/δ<sub>min</sub>)</em>.
+              Automatic damping: as σ̂²<sub>t</sub> → ∞, η<sub>t</sub><sup>eff</sup> → 0, preventing boundary singularity.
+              Asymptotic convergence: lim sup <em>E[V(Ŵ<sub>t</sub>)] ≤ η<sub>t</sub>B⁴/(2δ<sub>k</sub>) + O(σ²<sub>noise</sub>)</em>.
+            </p>
+            <div class="pmm-katex-block" data-katex="\eta_t^{\text{eff}} = \frac{\eta_0}{1 + \hat{\sigma}^2_t / \delta_{\min}}"></div>
+          </div>
+
+          <div class="pmm-view pmm-view-layman">
+            <div class="pmm-analogy-emoji">🏄</div>
+            <div class="pmm-analogy-label">ANALOGY: "The Surfer Who Knows When to Stop Paddling"</div>
+            <p class="pmm-text">
+              Imagine a surfer tracking the ocean's dominant wave direction. In calm water (small noise σ̂²),
+              she paddles hard (large η<sup>eff</sup>). As a storm hits and the ocean becomes chaotic
+              (σ̂² → ∞), she instinctively slows her paddle strokes to zero — not because she's scared,
+              but because paddling in chaos actively hurts. The 'Quicksand' name comes from this:
+              the noisier the ground, the slower you move.
+            </p>
+          </div>
+
+        </div>
+
+      </div><!-- /pmm-content-area -->
+    </main>
+
+    <!-- ══════════════════════════════════════════
+         ZONE C — Architecture diagram
+    ══════════════════════════════════════════ -->
+    <aside class="pmm-diagram" id="pmm-diagram" aria-label="PMM Architecture">
+
+      <div class="pmm-diagram-title">ARCHITECTURE</div>
+
+      <svg id="pmm-arch-svg" viewBox="0 0 220 520" xmlns="http://www.w3.org/2000/svg"
+           role="img" aria-label="PMM Architecture Diagram">
+
+        <!-- GIM halo (background oval) -->
+        <ellipse id="pmm-gim-halo" cx="110" cy="270" rx="100" ry="220"
+                 fill="none" stroke="rgba(255,56,100,0.12)" stroke-width="1.5"
+                 stroke-dasharray="4 3"/>
+        <text id="pmm-gim-label" x="110" y="504" text-anchor="middle"
+              font-family="Bebas Neue,sans-serif" font-size="9"
+              fill="rgba(255,56,100,0.5)" letter-spacing="1">GIM PERIMETER</text>
+
+        <!-- Flow connector lines -->
+        <line id="pmm-line-npe-ecf" x1="110" y1="88" x2="110" y2="158"
+              stroke="rgba(0,200,255,0.25)" stroke-width="1"/>
+        <line id="pmm-line-ecf-src" x1="110" y1="218" x2="110" y2="288"
+              stroke="rgba(0,200,255,0.25)" stroke-width="1"/>
+        <line id="pmm-line-src-out" x1="110" y1="348" x2="110" y2="410"
+              stroke="rgba(0,200,255,0.25)" stroke-width="1"/>
+
+        <!-- Oja++ feedback arc -->
+        <path id="pmm-oja-arc" d="M 50 188 Q 10 188 10 118 Q 10 58 60 58"
+              fill="none" stroke="rgba(232,197,71,0.3)" stroke-width="1"
+              stroke-dasharray="3 2" marker-end="url(#pmm-arrow-gold)"/>
+
+        <!-- DASM register box -->
+        <rect id="pmm-dasm-box" x="148" y="188" width="60" height="36"
+              fill="rgba(10,245,160,0.06)" stroke="rgba(10,245,160,0.25)" stroke-width="1"/>
+        <text x="178" y="204" text-anchor="middle" font-family="Bebas Neue,sans-serif"
+              font-size="8" fill="rgba(10,245,160,0.7)" letter-spacing="0.5">DASM</text>
+        <text x="178" y="216" text-anchor="middle" font-family="IBM Plex Mono,monospace"
+              font-size="6" fill="rgba(10,245,160,0.45)">SNAPSHOT</text>
+        <line x1="148" y1="206" x2="128" y2="206"
+              stroke="rgba(10,245,160,0.3)" stroke-width="0.8" stroke-dasharray="2 2"/>
+
+        <!-- Arrow markers -->
+        <defs>
+          <marker id="pmm-arrow-blue" markerWidth="6" markerHeight="6"
+                  refX="5" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 z" fill="rgba(0,200,255,0.6)"/>
+          </marker>
+          <marker id="pmm-arrow-gold" markerWidth="6" markerHeight="6"
+                  refX="5" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 z" fill="rgba(232,197,71,0.6)"/>
+          </marker>
+        </defs>
+
+        <!-- RAW INPUT node -->
+        <rect id="pmm-node-input" x="60" y="20" width="100" height="32"
+              fill="rgba(13,13,26,0.9)" stroke="rgba(107,114,128,0.4)" stroke-width="1"/>
+        <text x="110" y="40" text-anchor="middle" font-family="IBM Plex Mono,monospace"
+              font-size="9" fill="rgba(107,114,128,0.8)">RAW INPUT</text>
+
+        <!-- NPE node -->
+        <rect id="pmm-node-npe" x="50" y="58" width="120" height="34"
+              fill="rgba(0,200,255,0.06)" stroke="rgba(0,200,255,0.35)" stroke-width="1.2"/>
+        <text x="110" y="79" text-anchor="middle" font-family="Bebas Neue,sans-serif"
+              font-size="13" fill="rgba(0,200,255,0.85)" letter-spacing="1">NPE</text>
+
+        <!-- ECF node -->
+        <rect id="pmm-node-ecf" x="50" y="158" width="120" height="34"
+              fill="rgba(0,200,255,0.06)" stroke="rgba(0,200,255,0.35)" stroke-width="1.2"/>
+        <text x="110" y="179" text-anchor="middle" font-family="Bebas Neue,sans-serif"
+              font-size="13" fill="rgba(0,200,255,0.85)" letter-spacing="1">ECF</text>
+
+        <!-- SRC node -->
+        <rect id="pmm-node-src" x="50" y="288" width="120" height="34"
+              fill="rgba(127,90,240,0.06)" stroke="rgba(127,90,240,0.35)" stroke-width="1.2"/>
+        <text x="110" y="309" text-anchor="middle" font-family="Bebas Neue,sans-serif"
+              font-size="13" fill="rgba(127,90,240,0.85)" letter-spacing="1">SRC</text>
+
+        <!-- OUTPUT node -->
+        <rect id="pmm-node-output" x="60" y="410" width="100" height="32"
+              fill="rgba(13,13,26,0.9)" stroke="rgba(10,245,160,0.35)" stroke-width="1"/>
+        <text x="110" y="430" text-anchor="middle" font-family="IBM Plex Mono,monospace"
+              font-size="9" fill="rgba(10,245,160,0.75)">OUTPUT</text>
+
+      </svg>
+
+    </aside>
+
+  </div><!-- /pmm-layout -->
+
+</section>

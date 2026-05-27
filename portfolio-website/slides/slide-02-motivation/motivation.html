@@ -1,0 +1,94 @@
+<section id="slide-02" class="slide slide-02-motivation">
+  <!-- 2px progress bar at very top -->
+  <div class="s2-progress-bar" id="s2-progress-bar"></div>
+
+  <!-- Outer pin wrapper -->
+  <div class="s2-outer" id="s2-outer">
+    <!-- Inner horizontal track: 200vw -->
+    <div class="s2-track" id="s2-track">
+
+      <!-- PANEL A — MOTIVATION -->
+      <div class="s2-panel s2-panel-a" id="s2-panel-a">
+        <div class="s2-vert-label" aria-hidden="true">MOTIVATION</div>
+        <div class="s2-panel-a-content">
+          <div class="s2-section-label">§ ORIGIN</div>
+          <h2 class="s2-heading">Why Does an 18-Year-Old<br>Build an AGI Framework?</h2>
+
+          <div class="s2-cards" id="s2-cards">
+            <div class="s2-card" data-card="0">
+              <div class="s2-card-symbol">①</div>
+              <div class="s2-card-body">
+                <div class="s2-card-title">The Hallucination Problem</div>
+                <p class="s2-card-text">Standard LLMs have no way to know, at inference time, whether they are operating in a healthy regime. I asked: can we build a hardware-observable signal that gates autonomous action? The GIM eigengap answers this question.</p>
+              </div>
+            </div>
+            <div class="s2-card" data-card="1">
+              <div class="s2-card-symbol">②</div>
+              <div class="s2-card-body">
+                <div class="s2-card-title">Stateless Agent Amnesia</div>
+                <p class="s2-card-text">Every existing open-source agent framework forgets between sessions. Biological cognition does not. PMM's KuzuDB world model accumulates belief triples persistently — the system genuinely learns across runs.</p>
+              </div>
+            </div>
+            <div class="s2-card" data-card="2">
+              <div class="s2-card-symbol">③</div>
+              <div class="s2-card-body">
+                <div class="s2-card-title">The Closed-Loop Hardware Gap</div>
+                <p class="s2-card-text">No open-source AI system integrates the full schematic → SPICE → PCB → firmware → flash pipeline. Antigravity is the first. The hardware engineering loop validates the substrate the PMM theories describe.</p>
+              </div>
+            </div>
+          </div>
+
+          <blockquote class="s2-pullquote">"The eigengap is not a heuristic. It is a proof."</blockquote>
+
+          <div class="s2-scroll-hint" id="s2-scroll-hint">
+            <span class="s2-scroll-hint-line"></span>
+            <span class="s2-scroll-hint-text">SCROLL FOR SIMULATIONS</span>
+            <span class="s2-scroll-hint-arrow">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL B — SPICE SIMULATIONS -->
+      <div class="s2-panel s2-panel-b" id="s2-panel-b">
+        <div class="s2-panel-b-content">
+          <div class="s2-section-label">§ EMPIRICAL GROUNDING</div>
+          <h2 class="s2-heading s2-heading-b">Five Simulations,<br>Five Theorems Validated</h2>
+
+          <div class="s2-sim-grid" id="s2-sim-grid">
+            <div class="s2-sim-card" data-sim="01">
+              <div class="s2-sim-badge s2-badge-01">THM 6.1 · NOISE</div>
+              <div class="s2-sim-plot" id="plot-sim01" data-svg="assets/spice-plots/sim01_noise_density.svg"></div>
+              <div class="s2-sim-result">ε_arith = 1.004×10⁻¹² ≪ 10⁻³ &nbsp;✓</div>
+            </div>
+            <div class="s2-sim-card" data-sim="02">
+              <div class="s2-sim-badge s2-badge-02">THM 6.2 · CHS</div>
+              <div class="s2-sim-plot" id="plot-sim02" data-svg="assets/spice-plots/sim02_chs_shielding.svg"></div>
+              <div class="s2-sim-result">V_noise = 2.77μV &lt; V_LSB = 976μV &nbsp;✓&nbsp;(10⁵× suppression)</div>
+            </div>
+            <div class="s2-sim-card" data-sim="03">
+              <div class="s2-sim-badge s2-badge-03">THM 6.3 · DASM</div>
+              <div class="s2-sim-plot" id="plot-sim03" data-svg="assets/spice-plots/sim03_dasm_rollback.svg"></div>
+              <div class="s2-sim-result">E[error_rollback] ≡ 0 &nbsp;(zero-drift confirmed) &nbsp;✓</div>
+            </div>
+            <div class="s2-sim-card" data-sim="04">
+              <div class="s2-sim-badge s2-badge-04">THM 6.4 · GIM</div>
+              <div class="s2-sim-plot" id="plot-sim04" data-svg="assets/spice-plots/sim04_gim_trigger.svg"></div>
+              <div class="s2-sim-result">GIM fires at t=481, recovers at t=603. 0 false positives.</div>
+            </div>
+            <div class="s2-sim-card s2-sim-card-wide" data-sim="05">
+              <div class="s2-sim-badge s2-badge-05">THM 6.5 · OJA++</div>
+              <div class="s2-sim-plot" id="plot-sim05" data-svg="assets/spice-plots/sim05_stiefel_convergence.svg"></div>
+              <div class="s2-sim-result">Quicksand Oja++ converges 4.2× faster than standard Oja under adversarial injection.<br>Residual error floor: O(η_t B⁴/δ_k) confirmed.</div>
+            </div>
+          </div>
+
+          <div class="s2-equation-block">
+            <div class="s2-katex-render" id="s2-gim-equation"></div>
+            <div class="s2-equation-label">Equation 2.3 — Global Integrity Monitor Predicate</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /s2-track -->
+  </div><!-- /s2-outer -->
+</section>

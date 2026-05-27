@@ -105,7 +105,9 @@
 
   /* ── View Toggle (Tech/Layman) ── */
   function initToggle() {
-    const toggleBtn = document.getElementById("apux-toggle") || document.querySelector(".pmm-toggle");
+    // Target only the toggle inside slide-03, not apux-toggle on slide-04
+    const slide03 = document.getElementById("slide-03");
+    const toggleBtn = slide03 ? slide03.querySelector(".pmm-toggle") : document.getElementById("pmm-toggle");
     if (!toggleBtn) return;
     
     const options = toggleBtn.querySelectorAll(".pmm-toggle-option");

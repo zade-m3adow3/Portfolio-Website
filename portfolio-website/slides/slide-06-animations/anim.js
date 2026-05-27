@@ -95,7 +95,8 @@
       else if(time >= 5 && time < 5.5) { phase = 2; }
       else if(time >= 5.5 && time < 7) { phase = 3; }
       else if(time >= 7 && time < 9) { phase = 4; }
-      else if(time >= 11) { time = 0; } // loop
+      else if(time >= 9 && time < 11) { phase = 5; } // 2s pause
+      else if(time >= 11) { time = 0; phase = 0; } // loop
       
       // Transitions logic
       if (phase === 0) {

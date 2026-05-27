@@ -56,27 +56,27 @@
 
           <div class="s2-sim-grid" id="s2-sim-grid">
             <div class="s2-sim-card" data-sim="01">
-              <div class="s2-sim-badge s2-badge-01">THM 6.1 · NOISE</div>
+              <div class="s2-sim-badge s2-badge-01">THM 6.4 / LEM 6.5 · NOISE</div>
               <div class="s2-sim-plot" id="plot-sim01" data-svg="assets/spice-plots/sim01_noise_density.svg"></div>
               <div class="s2-sim-result">ε_arith = 1.004×10⁻¹² ≪ 10⁻³ &nbsp;✓</div>
             </div>
             <div class="s2-sim-card" data-sim="02">
-              <div class="s2-sim-badge s2-badge-02">THM 6.2 · CHS</div>
+              <div class="s2-sim-badge s2-badge-02">THM 6.3 · CHS</div>
               <div class="s2-sim-plot" id="plot-sim02" data-svg="assets/spice-plots/sim02_chs_shielding.svg"></div>
-              <div class="s2-sim-result">V_noise = 2.77μV &lt; V_LSB = 976μV &nbsp;✓&nbsp;(10⁵× suppression)</div>
+              <div class="s2-sim-result">V_noise = 2.77μV &lt; V_LSB = 976μV &nbsp;✓ (10⁵× suppression)</div>
             </div>
             <div class="s2-sim-card" data-sim="03">
-              <div class="s2-sim-badge s2-badge-03">THM 6.3 · DASM</div>
+              <div class="s2-sim-badge s2-badge-03">LEM 6.2 · DASM</div>
               <div class="s2-sim-plot" id="plot-sim03" data-svg="assets/spice-plots/sim03_dasm_rollback.svg"></div>
               <div class="s2-sim-result">E[error_rollback] ≡ 0 &nbsp;(zero-drift confirmed) &nbsp;✓</div>
             </div>
             <div class="s2-sim-card" data-sim="04">
-              <div class="s2-sim-badge s2-badge-04">THM 6.4 · GIM</div>
+              <div class="s2-sim-badge s2-badge-04">THM 3.2 · GIM</div>
               <div class="s2-sim-plot" id="plot-sim04" data-svg="assets/spice-plots/sim04_gim_trigger.svg"></div>
               <div class="s2-sim-result">GIM fires at t=481, recovers at t=603. 0 false positives.</div>
             </div>
             <div class="s2-sim-card s2-sim-card-wide" data-sim="05">
-              <div class="s2-sim-badge s2-badge-05">THM 6.5 · OJA++</div>
+              <div class="s2-sim-badge s2-badge-05">THM 3.2 · OJA++</div>
               <div class="s2-sim-plot" id="plot-sim05" data-svg="assets/spice-plots/sim05_stiefel_convergence.svg"></div>
               <div class="s2-sim-result">Quicksand Oja++ converges 4.2× faster than standard Oja under adversarial injection.<br>Residual error floor: O(η_t B⁴/δ_k) confirmed.</div>
             </div>

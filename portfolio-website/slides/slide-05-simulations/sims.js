@@ -391,8 +391,18 @@
 
       const lineGen = d3.line().x(d => x(d.x)).y(d => y(d.y));
 
+      // Streaming PCA — diverges at t=480 (blueprint requirement)
+      const dataStreamingPCA = d3.range(0, 1000, 10).map(t => ({
+        x: t,
+        y: Math.max(0.001, t < 480 ? Math.exp(-t/180) : Math.min(10, Math.exp(-480/180) * Math.exp((t-480)/80)))
+      }));
+
       svg.append('path').datum(dataOja)
         .attr('fill', 'none').attr('stroke', '#6b7280').attr('stroke-width', 1.5).attr('stroke-dasharray', '4 4')
+        .attr('d', lineGen);
+
+      svg.append('path').datum(dataStreamingPCA)
+        .attr('fill', 'none').attr('stroke', '#7f5af0').attr('stroke-width', 1.5).attr('stroke-dasharray', '2 4')
         .attr('d', lineGen);
         
       svg.append('path').datum(dataTheory)
@@ -403,11 +413,40 @@
         .attr('fill', 'none').attr('stroke', '#00c8ff').attr('stroke-width', 2)
         .attr('d', lineGen);
         
-      // Adv injection line
+      // Adversarial injection marker
       svg.append('line')
         .attr('x1', x(480)).attr('y1', margins.top)
         .attr('x2', x(480)).attr('y2', height - margins.bottom)
         .attr('stroke', '#ff3864').attr('stroke-width', 1).attr('stroke-dasharray', '2 2');
+
+      // Annotation: injection label
+      svg.append('text')
+        .attr('x', x(490)).attr('y', margins.top + 12)
+        .attr('fill', '#ff3864').attr('font-size', '9px').attr('font-family', '"IBM Plex Mono", monospace')
+        .text('← Adversarial Injection');
+
+      // Annotation: QuicksandOja++ recovers
+      svg.append('text')
+        .attr('x', x(620)).attr('y', y(0.008))
+        .attr('fill', '#00c8ff').attr('font-size', '9px').attr('font-family', '"IBM Plex Mono", monospace')
+        .text('Oja++ recovers ↓');
+
+      // Legend
+      const legendData = [
+        { label: 'QuicksandOja++', color: '#00c8ff', dash: null },
+        { label: 'Standard Oja', color: '#6b7280', dash: '4 4' },
+        { label: 'Streaming PCA', color: '#7f5af0', dash: '2 4' },
+        { label: 'Theory Bound', color: '#e8c547', dash: null },
+      ];
+      legendData.forEach((d, i) => {
+        const lx = margins.left + 4, ly = margins.top + 8 + i * 14;
+        svg.append('line').attr('x1', lx).attr('y1', ly).attr('x2', lx + 14).attr('y2', ly)
+          .attr('stroke', d.color).attr('stroke-width', 1.5)
+          .attr('stroke-dasharray', d.dash || null);
+        svg.append('text').attr('x', lx + 18).attr('y', ly + 3)
+          .attr('fill', 'rgba(107,114,128,0.8)').attr('font-size', '8px').attr('font-family', '"IBM Plex Mono", monospace')
+          .text(d.label);
+      });
     }
     
     // Chart 2: FPR
@@ -492,6 +531,24 @@
         .attr('x1', x(0)).attr('y1', y(0.3))
         .attr('x2', x(3)).attr('y2', y(0.9))
         .attr('stroke', '#00c8ff').attr('stroke-width', 2);
+
+      // 95% CI band (blueprint requirement)
+      const ciArea = d3.area()
+        .x(d => x(d))
+        .y0(d => y(0.3 + (d/3)*0.6 - 0.07))
+        .y1(d => y(0.3 + (d/3)*0.6 + 0.07));
+      const ciDomain = d3.range(0, 3.1, 0.1);
+      svg.append('path').datum(ciDomain)
+        .attr('fill', 'rgba(0,200,255,0.08)')
+        .attr('d', ciArea);
+
+      // r² = 0.73 annotation (blueprint: key empirical validation)
+      svg.append('text')
+        .attr('x', x(1.6)).attr('y', y(0.18))
+        .attr('fill', '#e8c547')
+        .attr('font-size', '10px')
+        .attr('font-family', '"IBM Plex Mono", monospace')
+        .text('r² = 0.73, p < 0.001');
     }
     
     // Delay drawing slightly to ensure containers have dimensions

@@ -164,27 +164,68 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
     currentAction = action;
   }
 
-  /* ── 2. Handle Model Animation Modes ───────────────────── */
   function setAnimationMode(mode) {
     animationMode = mode;
     
-    // Reset opacities
-    layerObjects.forEach(mesh => {
+    // Reset opacities and default material if leaving thermal mode
+    layerObjects.forEach((mesh, index) => {
       gsap.to(mesh.material, {
         opacity: 1.0,
         transparent: mesh.userData.originalMaterial.transparent,
+        r: mesh.userData.originalMaterial.color.r,
+        g: mesh.userData.originalMaterial.color.g,
+        b: mesh.userData.originalMaterial.color.b,
         duration: 0.4
       });
     });
 
     if (mode === "idle") {
       playAction("idle_rotate_track") || playAction("idle_rotate");
+      // Reset procedural explode
+      layerObjects.forEach(mesh => {
+        if (mesh.userData.originalPosition) {
+          gsap.to(mesh.position, {
+            y: mesh.userData.originalPosition.y,
+            duration: 1.0,
+            ease: "power2.inOut"
+          });
+        }
+      });
     } 
     else if (mode === "explode") {
+      // Procedural explode on Y-axis
+      layerObjects.forEach((mesh, index) => {
+        if (!mesh.userData.originalPosition) mesh.userData.originalPosition = mesh.position.clone();
+        gsap.to(mesh.position, {
+          y: mesh.userData.originalPosition.y + (index * 2), // separate by 2 units
+          duration: 1.5,
+          ease: "power2.out"
+        });
+      });
       playAction("explode_view");
     }
     else if (mode === "thermal") {
+      // Procedural thermal coloring
+      const thermalColors = [0x0000ff, 0x00ffff, 0x00ff00, 0xffff00, 0xff0000, 0xff00ff, 0xffffff];
+      layerObjects.forEach((mesh, index) => {
+        const color = new THREE.Color(thermalColors[index % thermalColors.length]);
+        gsap.to(mesh.material.color, {
+          r: color.r, g: color.g, b: color.b,
+          duration: 1.0
+        });
+      });
       playAction("thermal_view");
+      
+      // Also reset position if exploded
+      layerObjects.forEach(mesh => {
+        if (mesh.userData.originalPosition) {
+          gsap.to(mesh.position, {
+            y: mesh.userData.originalPosition.y,
+            duration: 1.0,
+            ease: "power2.inOut"
+          });
+        }
+      });
     }
   }
 

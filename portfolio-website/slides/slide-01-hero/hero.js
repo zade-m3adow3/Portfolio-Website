@@ -218,6 +218,7 @@
             }
         }, 8000);
     }
+  } // <-- Added closing brace for initHero
 
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", initHero);

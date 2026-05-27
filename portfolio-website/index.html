@@ -91,8 +91,13 @@
         const s = document.createElement("script");
         s.src = src;
         s.type = type;
-        s.onload = resolve;
-        s.onerror = reject;
+        let timeout = setTimeout(() => {
+          console.warn(`Timeout loading ${src}`);
+          resolve(); // Resolve anyway so we don't break the whole site
+        }, 5000);
+        
+        s.onload = () => { clearTimeout(timeout); resolve(); };
+        s.onerror = (e) => { clearTimeout(timeout); reject(e); };
         document.body.appendChild(s);
       });
     }
@@ -130,8 +135,13 @@
         end: "+=80%",
         pin: false,
         onUpdate(self) {
-          const p = Math.min(1, self.progress * 1.4);
-          outgoing.style.clipPath = `inset(0 0 ${p * 100}% 0)`;
+          const p = self.progress;
+          const scale = 1 - (p * 0.15);
+          const opacity = 1 - p;
+          
+          outgoing.style.transformOrigin = "top center";
+          outgoing.style.transform = `scale(${scale}) translateY(${p * 50}px)`;
+          outgoing.style.opacity = opacity;
         },
       });
     }
@@ -173,13 +183,23 @@
         loadHTML("slide-06-container", "slides/slide-06-animations/anim.html"),
       ]);
 
-      /* Load slide scripts sequentially (order matters for init) */
-      await loadScript("slides/slide-01-hero/hero.js");
-      await loadScript("slides/slide-02-motivation/motivation.js");
-      await loadScript("slides/slide-03-pmm-technical/pmm.js");
-      await loadScript("slides/slide-04-apux-substrate/apux.js", "module");
-      await loadScript("slides/slide-05-simulations/sims.js", "module");
-      await loadScript("slides/slide-06-animations/anim.js", "module");
+      /* Load scripts robustly so one failure doesn't halt the others */
+      const scripts = [
+        ["slides/slide-01-hero/hero.js", "text/javascript"],
+        ["slides/slide-02-motivation/motivation.js", "text/javascript"],
+        ["slides/slide-03-pmm-technical/pmm.js", "text/javascript"],
+        ["slides/slide-04-apux-substrate/apux.js", "module"],
+        ["slides/slide-05-simulations/sims.js", "module"],
+        ["slides/slide-06-animations/anim.js", "module"]
+      ];
+      
+      for (const [src, type] of scripts) {
+        try {
+          await loadScript(src, type);
+        } catch (err) {
+          console.error(`Failed to load ${src}`, err);
+        }
+      }
 
       /* Wire inter-slide transitions */
       wireSlideTransition("#slide-01", "#slide-02");

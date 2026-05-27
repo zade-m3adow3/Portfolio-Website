@@ -100,15 +100,16 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
       ];
       
       model.traverse((child) => {
-        if (child.isMesh && expectedNames.includes(child.name)) {
+        if (child.isMesh) {
           // Keep original material to restore later
           child.userData.originalMaterial = child.material.clone();
+          child.userData.originalPosition = child.position.clone();
           layerObjects.push(child);
         }
       });
       
-      // Sort layers by name just in case
-      layerObjects.sort((a, b) => a.name.localeCompare(b.name));
+      // Sort layers by Y position (bottom to top)
+      layerObjects.sort((a, b) => a.position.y - b.position.y);
 
       // ANIMATIONS
       if (gltf.animations && gltf.animations.length > 0) {
@@ -135,6 +136,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
     });
 
     const clock = new THREE.Clock();
+    window.apuxIdleRotate = true; // Start rotating by default
     
     function animate() {
       requestAnimationFrame(animate);
@@ -142,6 +144,10 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
       const delta = clock.getDelta();
       if (mixer) mixer.update(delta);
       if (controls) controls.update();
+      
+      if (window.apuxIdleRotate && model) {
+        model.rotation.y += 0.15 * delta;
+      }
       
       composer.render();
     }
@@ -165,32 +171,26 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
   }
 
   function setAnimationMode(mode) {
-    animationMode = mode;
-    
-    // Reset opacities and default material if leaving thermal mode
+    // Reset colors and positions before applying new mode
     layerObjects.forEach((mesh, index) => {
-      gsap.to(mesh.material, {
-        opacity: 1.0,
-        transparent: mesh.userData.originalMaterial.transparent,
-        r: mesh.userData.originalMaterial.color.r,
-        g: mesh.userData.originalMaterial.color.g,
-        b: mesh.userData.originalMaterial.color.b,
-        duration: 0.4
-      });
+      // Ensure material uses vertex colors if it was originally setup that way, or just reset color
+      if (mesh.userData.originalMaterial) {
+        mesh.material.color.copy(mesh.userData.originalMaterial.color);
+      }
+      if (mesh.userData.originalPosition) {
+        gsap.to(mesh.position, {
+          y: mesh.userData.originalPosition.y,
+          duration: 1.0,
+          ease: "power2.inOut"
+        });
+      }
     });
 
+    window.apuxIdleRotate = false; // Turn off procedural idle by default
+
     if (mode === "idle") {
-      playAction("idle_rotate_track") || playAction("idle_rotate");
-      // Reset procedural explode
-      layerObjects.forEach(mesh => {
-        if (mesh.userData.originalPosition) {
-          gsap.to(mesh.position, {
-            y: mesh.userData.originalPosition.y,
-            duration: 1.0,
-            ease: "power2.inOut"
-          });
-        }
-      });
+      playAction("idle_rotate");
+      window.apuxIdleRotate = true;
     } 
     else if (mode === "explode") {
       // Procedural explode on Y-axis
@@ -248,11 +248,21 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
     if (layerObjects[idx]) {
       const box = new THREE.Box3().setFromObject(layerObjects[idx]);
       const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z, 2);
       
       gsap.to(controls.target, {
         x: center.x,
         y: center.y,
         z: center.z,
+        duration: 1,
+        ease: "power2.inOut"
+      });
+      
+      gsap.to(camera.position, {
+        x: center.x + maxDim * 1.5,
+        y: center.y + maxDim * 0.5,
+        z: center.z + maxDim * 1.5,
         duration: 1,
         ease: "power2.inOut"
       });

@@ -25,8 +25,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     const container = document.getElementById('sims-stiefel-canvas');
     if (!container) return;
 
-    const width = container.clientWidth;
-    const height = container.clientHeight;
+    const width = container.clientWidth || 600;
+    const height = container.clientHeight || 400;
 
     const scene = new THREE.Scene();
     

@@ -41,6 +41,14 @@
   border-right:1px solid rgba(255,255,255,0.06); 
 }
 
+#sims-stiefel-canvas {
+  flex: 1;
+  min-height: 400px;
+  background: var(--void);
+  position: relative;
+  overflow: hidden;
+}
+
 .sims-canvas-outer { 
   flex:1; 
   position:relative; 

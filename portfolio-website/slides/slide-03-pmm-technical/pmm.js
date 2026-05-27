@@ -15,7 +15,7 @@
     document.querySelectorAll(".pmm-katex-block").forEach(el => {
       const tex = el.dataset.katex;
       if (tex) {
-        katex.render(tex, el, { displayMode: true, throwOnError: false, output: "html" });
+        katex.render(tex, el, { displayMode: true, throwOnError: false });
       }
     });
   }

@@ -17,7 +17,7 @@
     katex.render(
       String.raw`\mathcal{I}(t) = \mathcal{I}_{\text{neural}}(t) \;\wedge\; \mathcal{I}_{\text{spectral}}(t) \;\wedge\; \mathcal{I}_{\text{symbolic}}(t) \;\wedge\; \mathcal{I}_{\text{capability}}(t) \;\wedge\; \mathcal{I}_{\text{load}}(t) \;\wedge\; \mathcal{I}_{\text{physical}}(t) \;\wedge\; \mathcal{I}_{\text{ethical}}(t)`,
       el,
-      { displayMode: true, throwOnError: false, output: "html" }
+      { displayMode: true, throwOnError: false }
     );
   }
 

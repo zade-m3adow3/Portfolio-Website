@@ -3,6 +3,9 @@
  * Three.js Stiefel manifold, D3 Banach animation, D3 SOTA charts.
  */
 
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
 (function(){
   'use strict';
 
@@ -12,7 +15,7 @@
     document.querySelectorAll('[data-katex]').forEach(el => {
       const tex = el.dataset.katex;
       if (tex) {
-        katex.render(tex, el, { displayMode: true, throwOnError: false, output: 'html' });
+        katex.render(tex, el, { displayMode: true, throwOnError: false });
       }
     });
   }
@@ -20,7 +23,7 @@
   // ── PANEL A: Three.js Stiefel Manifold ──
   function initStiefel() {
     const container = document.getElementById('sims-stiefel-canvas');
-    if (!container || typeof THREE === 'undefined') return;
+    if (!container) return;
 
     const width = container.clientWidth;
     const height = container.clientHeight;
@@ -39,11 +42,8 @@
     container.appendChild(renderer.domElement);
 
     // Controls (OrbitControls if available)
-    let controls;
-    if (typeof THREE.OrbitControls !== 'undefined') {
-      controls = new THREE.OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-    }
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
 
     // Sphere (wireframe)
     const geometry = new THREE.SphereGeometry(1, 32, 32);

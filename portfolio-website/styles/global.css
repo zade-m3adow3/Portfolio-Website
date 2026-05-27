@@ -20,3 +20,10 @@ body {
 }
 
 /* Base utility classes can go here */
+.slide {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--void);
+  z-index: 10;
+}

@@ -11,7 +11,7 @@
     if (typeof katex === 'undefined') return;
     document.querySelectorAll('[data-katex]').forEach(el => {
       const tex = el.dataset.katex;
-      if (tex) katex.render(tex, el, { displayMode: true, throwOnError: false, output: 'html' });
+      if (tex) katex.render(tex, el, { displayMode: true, throwOnError: false });
     });
   }
 

@@ -9,16 +9,69 @@
   const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
   const GSAP_EASE = "power4.out";
 
-  /* ── KaTeX equation ─────────────────────────────────────── */
+  /* ── KaTeX equations ─────────────────────────────────────── */
   function renderEquations() {
-    const el = document.getElementById("s2-gim-equation");
-    if (!el || typeof katex === "undefined") return;
+    if (typeof katex === "undefined") return;
 
-    katex.render(
-      String.raw`\mathcal{I}(t) = \mathcal{I}_{\text{neural}}(t) \;\wedge\; \mathcal{I}_{\text{spectral}}(t) \;\wedge\; \mathcal{I}_{\text{symbolic}}(t) \;\wedge\; \mathcal{I}_{\text{capability}}(t) \;\wedge\; \mathcal{I}_{\text{load}}(t) \;\wedge\; \mathcal{I}_{\text{physical}}(t) \;\wedge\; \mathcal{I}_{\text{ethical}}(t)`,
-      el,
-      { displayMode: true, throwOnError: false }
-    );
+    // GIM integrity predicate
+    const el = document.getElementById("s2-gim-equation");
+    if (el) {
+      katex.render(
+        String.raw`\mathcal{I}(t) = \mathcal{I}_{\text{neural}}(t) \;\wedge\; \mathcal{I}_{\text{spectral}}(t) \;\wedge\; \mathcal{I}_{\text{symbolic}}(t) \;\wedge\; \mathcal{I}_{\text{capability}}(t) \;\wedge\; \mathcal{I}_{\text{load}}(t) \;\wedge\; \mathcal{I}_{\text{physical}}(t) \;\wedge\; \mathcal{I}_{\text{ethical}}(t)`,
+        el,
+        { displayMode: true, throwOnError: false }
+      );
+    }
+
+    // SIM-01 — Crossbar Thermal Noise
+    const el01 = document.getElementById("sim01-equation");
+    if (el01) {
+      katex.render(
+        String.raw`V_{\text{noise}} = 2.77\,\mu V < V_{\text{LSB}}`,
+        el01,
+        { displayMode: false, throwOnError: false }
+      );
+    }
+
+    // SIM-02 — CHS Shielding
+    const el02 = document.getElementById("sim02-equation");
+    if (el02) {
+      katex.render(
+        String.raw`\delta_{\text{shield}} \leq 10^{-5} \Rightarrow 10^5\times\text{ suppression}`,
+        el02,
+        { displayMode: false, throwOnError: false }
+      );
+    }
+
+    // SIM-03 — DASM Zero-Drift Rollback
+    const el03 = document.getElementById("sim03-equation");
+    if (el03) {
+      katex.render(
+        String.raw`\mathbb{E}[\text{error}_{\text{rollback}}] \equiv 0`,
+        el03,
+        { displayMode: false, throwOnError: false }
+      );
+    }
+
+    // SIM-04 — Eigengap Collapse / GIM Trigger
+    const el04 = document.getElementById("sim04-equation");
+    if (el04) {
+      katex.render(
+        String.raw`\hat{\delta}_k \to 0^+ \Rightarrow \text{GIM triggers at } t=481`,
+        el04,
+        { displayMode: false, throwOnError: false }
+      );
+    }
+
+    // SIM-05 — Stiefel Convergence
+    const el05 = document.getElementById("sim05-equation");
+    if (el05) {
+      katex.render(
+        String.raw`\limsup_{t\to\infty}\mathbb{E}[V(\hat{W}_t)] \leq \tfrac{\eta_t B^4}{2\delta_k} + O(\sigma^2_{\text{noise}})`,
+        el05,
+        { displayMode: false, throwOnError: false }
+      );
+    }
   }
 
   /* ── Synthetic SVG Fallback ─────────────────────────────── */

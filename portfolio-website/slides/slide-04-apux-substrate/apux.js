@@ -48,6 +48,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
     controls.enablePan = false;
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
+    controls.zoomSpeed = 2.5; // FIX: Increase zoom speed per user request
 
     // POST PROCESSING (BLOOM)
     const renderScene = new RenderPass(scene, camera);

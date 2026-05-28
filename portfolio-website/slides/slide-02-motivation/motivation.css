@@ -230,6 +230,19 @@
   border-top:1px solid rgba(255,255,255,0.05); 
 }
 
+/* KaTeX results get centered with proper vertical room */
+.s2-katex-result {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.s2-katex-result .katex {
+  font-size: 0.85em;
+}
+
 .s2-equation-block { 
   text-align:center; 
   padding:16px; 

@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>PMM-Abraxas — AGI Thesis Portfolio · Rounak Mukherjee</title>
   <meta name="description" content="Complete technical portfolio for the Post-Mitigated Abraxas Model — a neuro-spectral-symbolic cognitive architecture for trajectory-stable AGI on commodity hardware. By Rounak Mukherjee, 18.">
+  <meta name="theme-color" content="#05050c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <!-- ── Fonts ───────────────────────────────────────────── -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,6 +43,9 @@
     }
   </script>
   
+  <!-- Performance & capability detection (synchronous — sets globals before any slide script runs) -->
+  <script src="scripts/performance.js"></script>
+
   <!-- GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
@@ -106,7 +112,8 @@
     /* ── Global progress dots ─────────────────────────── */
     function initProgressDots() {
       const dots = document.querySelectorAll(".gp-dot");
-      const slides = ["#slide-01", "#slide-02", "#slide-03", "#slide-04", "#slide-05", "#slide-06"];
+      // After slide swap: APU-X (id=slide-04) is DOM pos 3; PMM (id=slide-03) is DOM pos 4
+      const slides = ["#slide-01", "#slide-02", "#slide-04", "#slide-03", "#slide-05", "#slide-06"];
 
       slides.forEach((sel, i) => {
         const el = document.querySelector(sel);
@@ -147,7 +154,30 @@
       });
     }
 
-    /* ── Main ─────────────────────────────────────────── */
+    /* ── Transition: APU-X zooms INTO the 3D model on exit ── */
+    function wireZoomOutTransition(outgoingId) {
+      const outgoing = document.querySelector(outgoingId);
+      if (!outgoing) return;
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      ScrollTrigger.create({
+        trigger: outgoing,
+        start: "top top",
+        end: "+=80%",
+        pin: false,
+        onUpdate(self) {
+          const p = self.progress;
+          const scale   = 1 + (p * 1.5); // 1 → 2.5
+          const opacity = 1 - p;
+          outgoing.style.transformOrigin = "center center";
+          outgoing.style.transform = `scale(${scale})`;
+          outgoing.style.opacity   = opacity;
+        },
+      });
+    }
+
+    /* ── Main ────────────────────────────────────────────── */
     async function bootstrap() {
       // Wait for GSAP + friends
       await new Promise(r => {
@@ -180,20 +210,24 @@
       await Promise.all([
         loadHTML("slide-01-container", "slides/slide-01-hero/hero.html"),
         loadHTML("slide-02-container", "slides/slide-02-motivation/motivation.html"),
-        loadHTML("slide-03-container", "slides/slide-03-pmm-technical/pmm.html"),
-        loadHTML("slide-04-container", "slides/slide-04-apux-substrate/apux.html"),
+        // FIX 2 — APU-X (slide-04) loads into container 3 so it appears before PMM (slide-03)
+        loadHTML("slide-03-container", "slides/slide-04-apux-substrate/apux.html"),
+        loadHTML("slide-04-container", "slides/slide-03-pmm-technical/pmm.html"),
         loadHTML("slide-05-container", "slides/slide-05-simulations/sims.html"),
         loadHTML("slide-06-container", "slides/slide-06-animations/anim.html"),
       ]);
 
       /* Load scripts robustly so one failure doesn't halt the others */
       const scripts = [
-        ["slides/slide-01-hero/hero.js", "text/javascript"],
-        ["slides/slide-02-motivation/motivation.js", "text/javascript"],
-        ["slides/slide-03-pmm-technical/pmm.js", "text/javascript"],
-        ["slides/slide-04-apux-substrate/apux.js", "module"],
-        ["slides/slide-05-simulations/sims.js", "module"],
-        ["slides/slide-06-animations/anim.js", "module"]
+        ["slides/slide-01-hero/hero.js",           "text/javascript"],
+        ["slides/slide-02-motivation/motivation.js","text/javascript"],
+        // FIX 2 — load APU-X script before PMM to match new visual order
+        ["slides/slide-04-apux-substrate/apux.js",  "module"],
+        ["slides/slide-03-pmm-technical/pmm.js",    "text/javascript"],
+        ["slides/slide-05-simulations/sims.js",     "module"],
+        ["slides/slide-06-animations/anim.js",      "module"],
+        // FIX 3 — InspectOverlay for SPICE sim cards
+        ["scripts/inspect-overlay.js",              "text/javascript"],
       ];
       
       for (const [src, type] of scripts) {
@@ -205,12 +239,13 @@
       }
 
       /* Wire inter-slide transitions */
-      // NOTE: slide-02 is intentionally excluded — it has its own
-      // GSAP pin (horizontal scroll) that handles its own exit.
-      // Adding a wireSlideTransition on it conflicts and kills the pin.
+      // NOTE: slide-02 excluded — its own GSAP pin handles exit.
+      // After FIX 2 swap: APU-X=id#slide-04 (pos 3), PMM=id#slide-03 (pos 4)
       wireSlideTransition("#slide-01", "#slide-02");
-      wireSlideTransition("#slide-03", "#slide-04");
-      wireSlideTransition("#slide-04", "#slide-05");
+      // APU-X exit: zoom scale-up (1→2.5) to give impression of diving into the hardware
+      wireZoomOutTransition("#slide-04");
+      // PMM exit: standard clip transition into Simulations slide
+      wireSlideTransition("#slide-03", "#slide-05");
       wireSlideTransition("#slide-05", "#slide-06");
 
       /* Global progress dots */

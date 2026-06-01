@@ -162,8 +162,11 @@
 .s2-sim-grid { 
   display:grid; 
   grid-template-columns:1fr 1fr; 
-  gap:8px; 
+  gap: 16px; 
   flex:1; 
+  overflow-y: auto;
+  padding-right: 16px;
+  margin-top: 16px;
 }
 
 .s2-sim-card { 

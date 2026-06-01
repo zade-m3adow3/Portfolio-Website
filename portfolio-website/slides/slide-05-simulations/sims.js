@@ -629,8 +629,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
           }
         }
       });
-      terminalOutput.textContent += 'Pyodide loaded. Installing packages: numpy, matplotlib...\n';
-      await pyodideInstance.loadPackage(['numpy', 'matplotlib']);
+      terminalOutput.textContent += 'Pyodide loaded. Installing packages: numpy, matplotlib, pandas, scipy, tqdm...\n';
+      await pyodideInstance.loadPackage(['numpy', 'matplotlib', 'pandas', 'scipy', 'micropip']);
+      await pyodideInstance.runPythonAsync(`
+import micropip
+await micropip.install('tqdm')
+      `);
       terminalOutput.textContent += 'Environment ready.\n\n';
       pyodideIsLoading = false;
       return pyodideInstance;

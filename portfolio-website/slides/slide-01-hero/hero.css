@@ -1,7 +1,7 @@
 .slide-01-hero {
     position: relative;
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -209,7 +209,7 @@
         font-size: 52px;
     }
     .hero-right {
-        margin-top: 48px;
+        margin-top: 24px;
         justify-content: flex-start;
     }
 }

@@ -602,18 +602,65 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     }
   }
 
-  /* ── Inspector Modal ────────────────────────────────────────────── */
+  /* ── Inspector Modal & Pyodide ──────────────────────────────────── */
+  let pyodideInstance = null;
+  let pyodideIsLoading = false;
+
+  async function loadPyodideRuntime() {
+    if (pyodideInstance) return pyodideInstance;
+    if (pyodideIsLoading) return new Promise(resolve => setTimeout(() => loadPyodideRuntime().then(resolve), 500));
+    
+    pyodideIsLoading = true;
+    const terminalOutput = document.getElementById('sims-pyodide-output');
+    terminalOutput.textContent += 'Initializing Pyodide WASM runtime... (this may take a moment)\n';
+    
+    try {
+      pyodideInstance = await loadPyodide({
+        stdout: (text) => {
+          if (terminalOutput) {
+            terminalOutput.textContent += text + '\n';
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+          }
+        },
+        stderr: (text) => {
+          if (terminalOutput) {
+            terminalOutput.textContent += 'ERROR: ' + text + '\n';
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+          }
+        }
+      });
+      terminalOutput.textContent += 'Pyodide loaded. Installing packages: numpy, matplotlib...\n';
+      await pyodideInstance.loadPackage(['numpy', 'matplotlib']);
+      terminalOutput.textContent += 'Environment ready.\n\n';
+      pyodideIsLoading = false;
+      return pyodideInstance;
+    } catch (err) {
+      terminalOutput.textContent += '\nFailed to load Pyodide: ' + err.message;
+      pyodideIsLoading = false;
+      throw err;
+    }
+  }
+
   function initInspector() {
     const modal = document.getElementById('sims-inspector-modal');
     const closeBtn = document.getElementById('sims-modal-close');
     const codeViewer = document.getElementById('sims-modal-code');
     const filenameLabel = document.getElementById('sims-modal-filename');
     const sidebarLinks = document.querySelectorAll('.sims-sidebar-link');
+    const runBtn = document.getElementById('sims-btn-run-py');
+    const terminalWrap = document.getElementById('sims-pyodide-terminal');
+    const terminalOutput = document.getElementById('sims-pyodide-output');
+    const plotWrap = document.getElementById('sims-pyodide-plot');
+    
+    let currentCode = '';
     
     if (!modal) return;
 
     function openModal(filePath) {
       modal.classList.remove('sims-hidden');
+      terminalWrap.classList.add('sims-hidden');
+      terminalOutput.textContent = '';
+      plotWrap.innerHTML = '';
       loadFile(filePath);
     }
 
@@ -625,16 +672,24 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
       filenameLabel.textContent = filePath;
       codeViewer.textContent = 'Loading...';
       codeViewer.style.color = '#a9b7c6';
+      currentCode = '';
       
       // Update active state in sidebar
       sidebarLinks.forEach(l => l.classList.remove('active'));
       const activeLink = Array.from(sidebarLinks).find(l => l.dataset.path === filePath);
       if (activeLink) activeLink.classList.add('active');
 
+      if (filePath.endsWith('.py')) {
+        runBtn.classList.remove('sims-hidden');
+      } else {
+        runBtn.classList.add('sims-hidden');
+      }
+
       try {
         const resp = await fetch('assets/simulations/' + filePath);
         if (!resp.ok) throw new Error(resp.statusText);
         const text = await resp.text();
+        currentCode = text;
         codeViewer.textContent = text;
         
         // Basic naive syntax coloring based on extension
@@ -648,7 +703,59 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
       }
     }
 
+    runBtn.addEventListener('click', async () => {
+      terminalWrap.classList.remove('sims-hidden');
+      terminalOutput.textContent = '> Running simulation...\n';
+      plotWrap.innerHTML = '';
+      
+      try {
+        const py = await loadPyodideRuntime();
+        
+        // We override matplotlib show() and savefig() to render to DOM
+        const pycode = `
+import io, base64
+import matplotlib.pyplot as plt
+from js import document
+
+def custom_show(*args, **kwargs):
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight')
+    buf.seek(0)
+    img_b64 = base64.b64encode(buf.read()).decode('utf-8')
+    img_data = f"data:image/png;base64,{img_b64}"
+    
+    # Send to JS wrapper
+    img_el = document.createElement('img')
+    img_el.src = img_data
+    img_el.style.maxWidth = '100%'
+    document.getElementById('sims-pyodide-plot').appendChild(img_el)
+    plt.clf()
+
+plt.show = custom_show
+plt.savefig = custom_show
+
+# Execute user script
+${currentCode.split('\\n').join('\\n')}
+`;
+        
+        await py.runPythonAsync(pycode);
+        terminalOutput.textContent += '\n> Execution finished.\n';
+      } catch(err) {
+        terminalOutput.textContent += '\nRuntime Error:\n' + err;
+      }
+    });
+
     closeBtn.addEventListener('click', closeModal);
+
+    // Main header button
+    const mainBtn = document.getElementById('sims-btn-main-inspect');
+    if(mainBtn) {
+      mainBtn.addEventListener('click', () => {
+        openModal('python/ch3_oja_convergence/ch3_oja_convergence.py');
+      });
+    }
+
+
     
     // Close on overlay click
     modal.addEventListener('click', e => {

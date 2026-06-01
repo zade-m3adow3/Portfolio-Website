@@ -1,7 +1,10 @@
 <section id="slide-05" class="slide slide-05-sims">
-  <div class="sims-header">
-    <span class="sims-label">§ SIMULATIONS &amp; EMPIRICAL VALIDATION</span>
-    <h2 class="sims-title">Proving the Mathematics Holds</h2>
+  <div class="sims-header" style="display:flex; justify-content:space-between; align-items:flex-end;">
+    <div>
+      <span class="sims-label">§ SIMULATIONS &amp; EMPIRICAL VALIDATION</span>
+      <h2 class="sims-title">Proving the Mathematics Holds</h2>
+    </div>
+    <button class="sims-btn sims-btn-danger" id="sims-btn-main-inspect" style="margin-bottom:16px;">INSPECT CODE &amp; LOGS</button>
   </div>
 
   <div class="sims-main-grid">
@@ -92,63 +95,7 @@
     </div>
   </div>
 
-  <!-- PANEL D: Actual simulation SVG outputs from Python/SPICE runs -->
-  <div class="sims-panel-d">
-    <div class="sims-panel-head">
-      <h3 class="sims-panel-title">D. Raw Simulation Outputs — GIM Trigger (SIM-04) &amp; Stiefel Convergence (SIM-05)</h3>
-      <span class="sims-badge" style="color:var(--gold);">THESIS-VERIFIED</span>
-    </div>
-    <div class="sims-svg-outputs-row">
-      <!-- SIM-04: GIM Eigengap Collapse trigger plot -->
-      <div class="sims-svg-output-wrap">
-        <div class="sims-chart-head">
-          <span class="sims-chart-title">SIM-04 · GIM Trigger — Eigengap Collapse (THM 3.2)</span>
-          <span class="sims-sim-result-tag" style="color:var(--rollback-red);">δ̂_k → 0⁺ ⇒ GIM fires t=481</span>
-          <button class="sims-inspect-btn" data-file="python/ch5_gim_lyapunov/ch5_boundary_damping.py">INSPECT CODE &amp; LOGS</button>
-        </div>
-        <div class="sims-svg-output"
-             data-svg="slides/slide-02-motivation/assets/spice-plots/sim04_gim_trigger.svg"
-             style="flex:1;min-height:180px;background:#06060f;overflow:hidden;display:flex;align-items:center;justify-content:center;">
-        </div>
-        <div class="sims-svg-meta">
-          <span class="sims-meta-tag">Python · ch5_gim_lyapunov</span>
-          <span class="sims-meta-tag" style="color:var(--neural-green);">✓ 0 false positives · recovers t=603</span>
-        </div>
-      </div>
-      <!-- SIM-05: Stiefel Manifold Convergence plot -->
-      <div class="sims-svg-output-wrap">
-        <div class="sims-chart-head">
-          <span class="sims-chart-title">SIM-05 · Stiefel Convergence — QuicksandOja++ vs Standard Oja</span>
-          <span class="sims-sim-result-tag" style="color:var(--spectral-1);">4.2× faster · O(η_t B⁴/δ_k) bound confirmed</span>
-          <button class="sims-inspect-btn" data-file="python/ch3_oja_convergence/ch3_oja_convergence.py">INSPECT CODE &amp; LOGS</button>
-        </div>
-        <div class="sims-svg-output"
-             data-svg="slides/slide-02-motivation/assets/spice-plots/sim05_stiefel_convergence.svg"
-             style="flex:1;min-height:180px;background:#06060f;overflow:hidden;display:flex;align-items:center;justify-content:center;">
-        </div>
-        <div class="sims-svg-meta">
-          <span class="sims-meta-tag">Python · ch3_oja_convergence</span>
-          <span class="sims-meta-tag" style="color:var(--neural-green);">✓ Adversarial injection recovered · residual floor validated</span>
-        </div>
-      </div>
-      <!-- SIM-01: Analog crossbar thermal noise -->
-      <div class="sims-svg-output-wrap">
-        <div class="sims-chart-head">
-          <span class="sims-chart-title">SIM-01 · Crossbar Thermal Noise Density (THM 6.4 / LEM 6.5)</span>
-          <span class="sims-sim-result-tag" style="color:var(--spectral-1);">V_noise = 2.77μV ≪ V_LSB = 976μV</span>
-          <button class="sims-inspect-btn" data-file="spice/ch4_quantization_noise/ch4_switched_cap_noise.cir">INSPECT SPICE</button>
-        </div>
-        <div class="sims-svg-output"
-             data-svg="slides/slide-02-motivation/assets/spice-plots/sim01_noise_density.svg"
-             style="flex:1;min-height:180px;background:#06060f;overflow:hidden;display:flex;align-items:center;justify-content:center;">
-        </div>
-        <div class="sims-svg-meta">
-          <span class="sims-meta-tag">LTSpice · ch4_switched_cap_noise.cir</span>
-          <span class="sims-meta-tag" style="color:var(--neural-green);">✓ ε_arith = 1.004×10⁻¹² ≪ 10⁻³</span>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Removed redundant Panel D (SVG Outputs are displayed in Slide 02 & 03) -->
 
   <!-- SIMULATIONS INSPECTOR MODAL -->
   <div id="sims-inspector-modal" class="sims-modal-overlay sims-hidden">
@@ -156,6 +103,7 @@
       <div class="sims-modal-header">
         <h2 class="sims-modal-title">Simulation Data Inspector</h2>
         <span class="sims-modal-subtitle" id="sims-modal-filename">python/ch5_gim_lyapunov/ch5_boundary_damping.py</span>
+        <button id="sims-btn-run-py" class="sims-btn sims-btn-danger sims-hidden" style="margin-right:16px;">▶ RUN IN BROWSER</button>
         <button id="sims-modal-close" class="sims-modal-close">&times;</button>
       </div>
       <div class="sims-modal-body">
@@ -175,8 +123,13 @@
             <a href="#" class="sims-sidebar-link" data-path="spice/ch6_apux_hardware/ch6_2_sram_bitcell_noise_margin.cir">ch6_2_sram_bitcell.cir</a>
           </div>
         </div>
-        <div class="sims-modal-content">
-          <pre id="sims-modal-code" class="sims-code-viewer">Loading file contents...</pre>
+        <div class="sims-modal-content" style="display:flex;flex-direction:column;">
+          <pre id="sims-modal-code" class="sims-code-viewer" style="flex:1;">Loading file contents...</pre>
+          <div id="sims-pyodide-terminal" class="sims-hidden" style="border-top:1px solid #333; padding-top:10px; margin-top:10px;">
+            <div style="font-family:'Bebas Neue',sans-serif;color:var(--gold);margin-bottom:8px;">PYODIDE RUNTIME EXECUTION OUTPUT:</div>
+            <pre id="sims-pyodide-output" style="color:#00ff00; background:#000; padding:10px; min-height:100px; font-family:'IBM Plex Mono',monospace; font-size:11px; white-space:pre-wrap;"></pre>
+            <div id="sims-pyodide-plot" style="margin-top:10px; background:#fff;"></div>
+          </div>
         </div>
       </div>
     </div>

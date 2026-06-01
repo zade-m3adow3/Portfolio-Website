@@ -34,7 +34,7 @@ rng = np.random.default_rng(2024)
 # ─────────────────────────────────────────────────────────────
 # APU-X crossbar hardware parameters
 # ─────────────────────────────────────────────────────────────
-N_NODES       = 1000     # memory graph nodes
+N_NODES       = 999      # memory graph nodes
 D_EMBED       = 64       # crossbar embedding dimension
 K_NEIGHBORS   = 10       # k-NN for recovery
 CORRUPT_FRAC  = 0.10     # Protocol 8.1: 10% corruption
@@ -290,6 +290,7 @@ plt.suptitle(f"APU-X Protocol 8.1 — Memory Graph Recovery ({N_TRIALS} trials, 
 plt.tight_layout()
 plt.savefig(out_dir / "protocol81_plot.png", dpi=180, bbox_inches="tight",
             facecolor=fig.get_facecolor())
+plt.savefig(out_dir / "protocol81_plot.svg", format="svg", bbox_inches="tight", facecolor=fig.get_facecolor())
 plt.close()
 print(f"\nPlot saved → {out_dir / 'protocol81_plot.png'}")
 print(f"CSV  saved → {out_dir / 'protocol81_results.csv'}")

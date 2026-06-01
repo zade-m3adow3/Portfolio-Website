@@ -1,0 +1,13 @@
+experiment,param,steady_state_error,convergence_iter
+sigma_sweep,0.0,8.878759062633806,
+sigma_sweep,0.001,8.072326038391626,
+sigma_sweep,0.005,8.205590775216528,
+sigma_sweep,0.01,8.288431225675962,
+sigma_sweep,0.05,8.288272090565844,
+sigma_sweep,0.1,8.267606668162083,
+delta_k_sweep,0.5,,2000.0
+delta_k_sweep,1.0,,2000.0
+delta_k_sweep,2.0,,2000.0
+delta_k_sweep,4.0,,2000.0
+delta_k_sweep,8.0,,2000.0
+delta_k_sweep,16.0,,2000.0

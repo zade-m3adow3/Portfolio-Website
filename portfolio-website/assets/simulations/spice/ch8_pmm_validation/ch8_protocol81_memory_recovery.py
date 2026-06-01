@@ -290,6 +290,7 @@ plt.suptitle(f"APU-X Protocol 8.1 — Memory Graph Recovery ({N_TRIALS} trials, 
 plt.tight_layout()
 plt.savefig(out_dir / "protocol81_plot.png", dpi=180, bbox_inches="tight",
             facecolor=fig.get_facecolor())
+plt.savefig(out_dir / "protocol81_plot.svg", format="svg", bbox_inches="tight", facecolor=fig.get_facecolor())
 plt.close()
 print(f"\nPlot saved → {out_dir / 'protocol81_plot.png'}")
 print(f"CSV  saved → {out_dir / 'protocol81_results.csv'}")

@@ -179,6 +179,7 @@ plt.suptitle("APU-X Ch6 §6.5 — CHS Electromagnetic Decoupling Noise Budget",
 plt.tight_layout()
 plt.savefig(out_dir / "chs_noise_plot.png", dpi=180, bbox_inches="tight",
             facecolor=fig.get_facecolor())
+plt.savefig(out_dir / "chs_noise_plot.svg", format="svg", bbox_inches="tight", facecolor=fig.get_facecolor())
 plt.close()
 print(f"\nPlot saved → {out_dir / 'chs_noise_plot.png'}")
 print(f"CSV  saved → {out_dir / 'chs_noise_verification.csv'}")

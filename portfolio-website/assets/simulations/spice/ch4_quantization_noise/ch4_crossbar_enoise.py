@@ -226,6 +226,7 @@ plt.suptitle("APU-X Ch4 — Theorem 4.3 Submodular Preservation ‖E_noise‖₂
 plt.tight_layout()
 plt.savefig(out_dir / "crossbar_enoise_plot.png", dpi=180, bbox_inches="tight",
             facecolor=fig.get_facecolor())
+plt.savefig(out_dir / "crossbar_enoise_plot.svg", format="svg", bbox_inches="tight", facecolor=fig.get_facecolor())
 plt.close()
 print(f"\nPlot saved → {out_dir / 'crossbar_enoise_plot.png'}")
 print(f"CSV  saved → {out_dir / 'crossbar_enoise_results.csv'}")

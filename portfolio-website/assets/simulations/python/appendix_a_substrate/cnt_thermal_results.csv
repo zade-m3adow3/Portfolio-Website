@@ -1,0 +1,8 @@
+fill_fraction,kappa_eff_Kim2001_W_mK,kappa_eff_lower_W_mK,meets_1400_Kim,meets_1400_lower
+0.2,601.12,201.12,False,False
+0.25,751.05,251.05,False,False
+0.3,900.98,300.98,False,False
+0.35,1050.91,350.91,False,False
+0.4,1200.84,400.84,False,False
+0.5,1500.7,500.7,True,False
+0.6,1800.56,600.56,True,False

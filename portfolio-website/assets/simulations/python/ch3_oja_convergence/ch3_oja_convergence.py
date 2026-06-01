@@ -247,6 +247,7 @@ plt.suptitle("APU-X Chapter 3 — Quicksand Oja++ Convergence (Theorems 3.1 & 3.
 plt.tight_layout()
 plt.savefig(out_dir / "oja_convergence_plot.png", dpi=180, bbox_inches="tight",
             facecolor=fig.get_facecolor())
+plt.savefig(out_dir / "oja_convergence_plot.svg", format="svg", bbox_inches="tight", facecolor=fig.get_facecolor())
 plt.close()
 print(f"\nPlot saved → {out_dir / 'oja_convergence_plot.png'}")
 print(f"CSV  saved → {out_dir / 'oja_convergence_results.csv'}")

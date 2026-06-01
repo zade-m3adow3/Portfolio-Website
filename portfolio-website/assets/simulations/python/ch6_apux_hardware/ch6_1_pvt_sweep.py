@@ -242,6 +242,7 @@ plt.suptitle("APU-X Chapter 6 §6.2 — 250-Stage 14nm FinFET Delay PVT Analysis
 plt.tight_layout()
 plt.savefig(out_dir / "pvt_corner_plot.png", dpi=180, bbox_inches="tight",
             facecolor=fig.get_facecolor())
+plt.savefig(out_dir / "pvt_corner_plot.svg", format="svg", bbox_inches="tight", facecolor=fig.get_facecolor())
 plt.close()
 print(f"\nPlot saved → {out_dir / 'pvt_corner_plot.png'}")
 print(f"CSV  saved → {out_dir / 'pvt_sweep_results.csv'}")

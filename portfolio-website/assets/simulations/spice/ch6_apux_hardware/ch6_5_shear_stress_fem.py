@@ -178,6 +178,7 @@ plt.suptitle("APU-X Ch6 §6.7 — Mechanical Shear Stress Bound Validation",
 plt.tight_layout()
 plt.savefig(out_dir / "shear_stress_plot.png", dpi=180, bbox_inches="tight",
             facecolor=fig.get_facecolor())
+plt.savefig(out_dir / "shear_stress_plot.svg", format="svg", bbox_inches="tight", facecolor=fig.get_facecolor())
 plt.close()
 print(f"\nPlot saved → {out_dir / 'shear_stress_plot.png'}")
 print(f"CSV  saved → {out_dir / 'shear_stress_results.csv'}")

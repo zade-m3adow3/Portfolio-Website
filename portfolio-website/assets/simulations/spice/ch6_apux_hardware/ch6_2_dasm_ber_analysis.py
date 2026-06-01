@@ -191,6 +191,7 @@ plt.suptitle("APU-X Ch6 §6.4 — DASM Zero-Drift Rollback & SRAM BER Analysis",
 plt.tight_layout()
 plt.savefig(out_dir / "dasm_ber_plot.png", dpi=180, bbox_inches="tight",
             facecolor=fig.get_facecolor())
+plt.savefig(out_dir / "dasm_ber_plot.svg", format="svg", bbox_inches="tight", facecolor=fig.get_facecolor())
 plt.close()
 print(f"\nPlot saved → {out_dir / 'dasm_ber_plot.png'}")
 print(f"CSV  saved → {out_dir / 'dasm_ber_analysis.csv'}")

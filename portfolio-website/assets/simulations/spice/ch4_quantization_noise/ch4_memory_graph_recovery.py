@@ -295,6 +295,7 @@ plt.suptitle("APU-X Ch4 — Protocol 8.1 Memory Graph Recovery & Theorem 4.5 Bi-
 plt.tight_layout()
 plt.savefig(out_dir / "memory_graph_recovery_plot.png", dpi=180, bbox_inches="tight",
             facecolor=fig.get_facecolor())
+plt.savefig(out_dir / "memory_graph_recovery_plot.svg", format="svg", bbox_inches="tight", facecolor=fig.get_facecolor())
 plt.close()
 print(f"\nPlot saved → {out_dir / 'memory_graph_recovery_plot.png'}")
 print(f"CSV  saved → {out_dir / 'memory_graph_recovery_results.csv'}")

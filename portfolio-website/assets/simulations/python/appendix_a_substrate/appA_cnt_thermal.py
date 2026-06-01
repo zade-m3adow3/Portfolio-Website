@@ -248,6 +248,7 @@ plt.suptitle("APU-X Appendix A — Theorem A.3: CNT Pillar Vertical κ ≥ 1400 
 plt.tight_layout()
 plt.savefig(out_dir / "cnt_thermal_plot.png", dpi=180, bbox_inches="tight",
             facecolor=fig.get_facecolor())
+plt.savefig(out_dir / "cnt_thermal_plot.svg", format="svg", bbox_inches="tight", facecolor=fig.get_facecolor())
 plt.close()
 print(f"\nPlot saved → {out_dir / 'cnt_thermal_plot.png'}")
 print(f"CSV  saved → {out_dir / 'cnt_thermal_results.csv'}")

@@ -218,6 +218,7 @@ plt.suptitle("APU-X Chapter 3 — Theorem 3.1 Margin Gain Analysis",
 plt.tight_layout()
 plt.savefig(out_dir / "margin_gain_plot.png", dpi=180, bbox_inches="tight",
             facecolor=fig.get_facecolor())
+plt.savefig(out_dir / "margin_gain_plot.svg", format="svg", bbox_inches="tight", facecolor=fig.get_facecolor())
 plt.close()
 print(f"\nPlot saved → {out_dir / 'margin_gain_plot.png'}")
 print(f"CSV  saved → {out_dir / 'margin_gain_results.csv'}")

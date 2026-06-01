@@ -52,38 +52,92 @@
       <div class="s2-panel s2-panel-b" id="s2-panel-b">
         <div class="s2-panel-b-content">
           <div class="s2-section-label">§ EMPIRICAL GROUNDING</div>
-          <h2 class="s2-heading s2-heading-b">Five Simulations,<br>Five Theorems Validated</h2>
+          <h2 class="s2-heading s2-heading-b">Fourteen Simulations,<br>Fourteen Theorems Validated</h2>
 
           <div class="s2-sim-grid" id="s2-sim-grid">
-            <div class="s2-sim-card" data-sim="01" data-sim-id="sim01" style="position:relative;">
-              <div class="s2-sim-badge s2-badge-01">THM 6.4 / LEM 6.5 · NOISE</div>
-              <button class="s2-inspect-btn" aria-label="Inspect SIM-01 parameters">⚙ INSPECT</button>
-              <div class="s2-sim-plot" id="plot-sim01" data-svg="assets/spice-plots/sim01_noise_density.svg"></div>
+            <div class="s2-sim-card s2-sim-card-wide" data-sim="01" data-sim-id="sim01" style="position:relative;">
+              <div class="s2-sim-badge s2-badge-01">CH3 · OJA++</div>
+              <button class="s2-inspect-btn" aria-label="Inspect SIM-01 parameters">? INSPECT</button>
+              <div class="s2-sim-plot" id="plot-sim01" data-svg="assets/spice-plots/oja_convergence_plot.svg"></div>
               <div class="s2-sim-result s2-katex-result" id="sim01-equation"></div>
             </div>
             <div class="s2-sim-card" data-sim="02" data-sim-id="sim02" style="position:relative;">
-              <div class="s2-sim-badge s2-badge-02">THM 6.3 · CHS</div>
-              <button class="s2-inspect-btn" aria-label="Inspect SIM-02 parameters">⚙ INSPECT</button>
-              <div class="s2-sim-plot" id="plot-sim02" data-svg="assets/spice-plots/sim02_chs_shielding.svg"></div>
+              <div class="s2-sim-badge s2-badge-02">CH3 · MARGIN GAIN</div>
+              <button class="s2-inspect-btn" aria-label="Inspect SIM-02 parameters">? INSPECT</button>
+              <div class="s2-sim-plot" id="plot-sim02" data-svg="assets/spice-plots/margin_gain_plot.svg"></div>
               <div class="s2-sim-result s2-katex-result" id="sim02-equation"></div>
             </div>
             <div class="s2-sim-card" data-sim="03" data-sim-id="sim03" style="position:relative;">
-              <div class="s2-sim-badge s2-badge-03">LEM 6.2 · DASM</div>
-              <button class="s2-inspect-btn" aria-label="Inspect SIM-03 parameters">⚙ INSPECT</button>
-              <div class="s2-sim-plot" id="plot-sim03" data-svg="assets/spice-plots/sim03_dasm_rollback.svg"></div>
+              <div class="s2-sim-badge s2-badge-03">CH4 · E-NOISE</div>
+              <button class="s2-inspect-btn" aria-label="Inspect SIM-03 parameters">? INSPECT</button>
+              <div class="s2-sim-plot" id="plot-sim03" data-svg="assets/spice-plots/crossbar_enoise_plot.svg"></div>
               <div class="s2-sim-result s2-katex-result" id="sim03-equation"></div>
             </div>
-            <div class="s2-sim-card" data-sim="04" data-sim-id="sim04" style="position:relative;">
-              <div class="s2-sim-badge s2-badge-04">THM 3.2 · GIM</div>
-              <button class="s2-inspect-btn" aria-label="Inspect SIM-04 parameters">⚙ INSPECT</button>
-              <div class="s2-sim-plot" id="plot-sim04" data-svg="assets/spice-plots/sim04_gim_trigger.svg"></div>
+            <div class="s2-sim-card s2-sim-card-wide" data-sim="04" data-sim-id="sim04" style="position:relative;">
+              <div class="s2-sim-badge s2-badge-04">CH4 · RECOVERY</div>
+              <button class="s2-inspect-btn" aria-label="Inspect SIM-04 parameters">? INSPECT</button>
+              <div class="s2-sim-plot" id="plot-sim04" data-svg="assets/spice-plots/memory_graph_recovery_plot.svg"></div>
               <div class="s2-sim-result s2-katex-result" id="sim04-equation"></div>
             </div>
-            <div class="s2-sim-card s2-sim-card-wide" data-sim="05" data-sim-id="sim05" style="position:relative;">
-              <div class="s2-sim-badge s2-badge-05">THM 3.2 · OJA++</div>
-              <button class="s2-inspect-btn" aria-label="Inspect SIM-05 parameters">⚙ INSPECT</button>
-              <div class="s2-sim-plot" id="plot-sim05" data-svg="assets/spice-plots/sim05_stiefel_convergence.svg"></div>
+            <div class="s2-sim-card" data-sim="05" data-sim-id="sim05" style="position:relative;">
+              <div class="s2-sim-badge s2-badge-05">CH5 · GIM DAMPING</div>
+              <button class="s2-inspect-btn" aria-label="Inspect SIM-05 parameters">? INSPECT</button>
+              <div class="s2-sim-plot" id="plot-sim05" data-svg="assets/spice-plots/boundary_damping_plot.svg"></div>
               <div class="s2-sim-result s2-katex-result" id="sim05-equation"></div>
+            </div>
+            <div class="s2-sim-card" data-sim="06" data-sim-id="sim06" style="position:relative;">
+              <div class="s2-sim-badge s2-badge-06">CH5 · L-CONTRACT</div>
+              <button class="s2-inspect-btn" aria-label="Inspect SIM-06 parameters">? INSPECT</button>
+              <div class="s2-sim-plot" id="plot-sim06" data-svg="assets/spice-plots/lcontract_sweep_plot.svg"></div>
+              <div class="s2-sim-result s2-katex-result" id="sim06-equation"></div>
+            </div>
+            <div class="s2-sim-card s2-sim-card-wide" data-sim="07" data-sim-id="sim07" style="position:relative;">
+              <div class="s2-sim-badge s2-badge-07">CH6 · PVT SWEEP</div>
+              <button class="s2-inspect-btn" aria-label="Inspect SIM-07 parameters">? INSPECT</button>
+              <div class="s2-sim-plot" id="plot-sim07" data-svg="assets/spice-plots/pvt_corner_plot.svg"></div>
+              <div class="s2-sim-result s2-katex-result" id="sim07-equation"></div>
+            </div>
+            <div class="s2-sim-card" data-sim="08" data-sim-id="sim08" style="position:relative;">
+              <div class="s2-sim-badge s2-badge-08">CH6 · DASM BER</div>
+              <button class="s2-inspect-btn" aria-label="Inspect SIM-08 parameters">? INSPECT</button>
+              <div class="s2-sim-plot" id="plot-sim08" data-svg="assets/spice-plots/dasm_ber_plot.svg"></div>
+              <div class="s2-sim-result s2-katex-result" id="sim08-equation"></div>
+            </div>
+            <div class="s2-sim-card" data-sim="09" data-sim-id="sim09" style="position:relative;">
+              <div class="s2-sim-badge s2-badge-09">CH6 · CHS NOISE</div>
+              <button class="s2-inspect-btn" aria-label="Inspect SIM-09 parameters">? INSPECT</button>
+              <div class="s2-sim-plot" id="plot-sim09" data-svg="assets/spice-plots/chs_noise_plot.svg"></div>
+              <div class="s2-sim-result s2-katex-result" id="sim09-equation"></div>
+            </div>
+            <div class="s2-sim-card s2-sim-card-wide" data-sim="10" data-sim-id="sim10" style="position:relative;">
+              <div class="s2-sim-badge s2-badge-10">CH6 · THERMAL PREC.</div>
+              <button class="s2-inspect-btn" aria-label="Inspect SIM-10 parameters">? INSPECT</button>
+              <div class="s2-sim-plot" id="plot-sim10" data-svg="assets/spice-plots/thermal_precision_plot.svg"></div>
+              <div class="s2-sim-result s2-katex-result" id="sim10-equation"></div>
+            </div>
+            <div class="s2-sim-card" data-sim="11" data-sim-id="sim11" style="position:relative;">
+              <div class="s2-sim-badge s2-badge-11">CH6 · SHEAR STRESS</div>
+              <button class="s2-inspect-btn" aria-label="Inspect SIM-11 parameters">? INSPECT</button>
+              <div class="s2-sim-plot" id="plot-sim11" data-svg="assets/spice-plots/shear_stress_plot.svg"></div>
+              <div class="s2-sim-result s2-katex-result" id="sim11-equation"></div>
+            </div>
+            <div class="s2-sim-card" data-sim="12" data-sim-id="sim12" style="position:relative;">
+              <div class="s2-sim-badge s2-badge-12">CH8 · PROTOCOL 8.1</div>
+              <button class="s2-inspect-btn" aria-label="Inspect SIM-12 parameters">? INSPECT</button>
+              <div class="s2-sim-plot" id="plot-sim12" data-svg="assets/spice-plots/protocol81_plot.svg"></div>
+              <div class="s2-sim-result s2-katex-result" id="sim12-equation"></div>
+            </div>
+            <div class="s2-sim-card s2-sim-card-wide" data-sim="13" data-sim-id="sim13" style="position:relative;">
+              <div class="s2-sim-badge s2-badge-13">CH8 · PROTOCOL 8.2</div>
+              <button class="s2-inspect-btn" aria-label="Inspect SIM-13 parameters">? INSPECT</button>
+              <div class="s2-sim-plot" id="plot-sim13" data-svg="assets/spice-plots/protocol82_plot.svg"></div>
+              <div class="s2-sim-result s2-katex-result" id="sim13-equation"></div>
+            </div>
+            <div class="s2-sim-card" data-sim="14" data-sim-id="sim14" style="position:relative;">
+              <div class="s2-sim-badge s2-badge-14">APP-A · CNT THERMAL</div>
+              <button class="s2-inspect-btn" aria-label="Inspect SIM-14 parameters">? INSPECT</button>
+              <div class="s2-sim-plot" id="plot-sim14" data-svg="assets/spice-plots/cnt_thermal_plot.svg"></div>
+              <div class="s2-sim-result s2-katex-result" id="sim14-equation"></div>
             </div>
           </div>
 

@@ -250,6 +250,7 @@ plt.suptitle("APU-X Chapter 5 — Lemma 5.1: Boundary Damping Prevents Eigengap 
 plt.tight_layout()
 plt.savefig(out_dir / "boundary_damping_plot.png", dpi=180, bbox_inches="tight",
             facecolor=fig.get_facecolor())
+plt.savefig(out_dir / "boundary_damping_plot.svg", format="svg", bbox_inches="tight", facecolor=fig.get_facecolor())
 plt.close()
 print(f"\nPlot saved → {out_dir / 'boundary_damping_plot.png'}")
 print(f"CSV  saved → {out_dir / 'boundary_damping_results.csv'}")

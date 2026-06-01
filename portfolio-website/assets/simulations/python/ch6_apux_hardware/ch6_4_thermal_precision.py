@@ -191,6 +191,7 @@ plt.suptitle("APU-X Ch6 §6.6 Lemma 6.5 — Thermal Precision Bound & ε_arith V
 plt.tight_layout()
 plt.savefig(out_dir / "thermal_precision_plot.png", dpi=180, bbox_inches="tight",
             facecolor=fig.get_facecolor())
+plt.savefig(out_dir / "thermal_precision_plot.svg", format="svg", bbox_inches="tight", facecolor=fig.get_facecolor())
 plt.close()
 print(f"\nPlot saved → {out_dir / 'thermal_precision_plot.png'}")
 print(f"CSV  saved → {out_dir / 'thermal_precision_results.csv'}")

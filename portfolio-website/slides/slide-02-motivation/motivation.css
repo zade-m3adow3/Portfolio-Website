@@ -164,8 +164,6 @@
   grid-template-columns:1fr 1fr; 
   gap: 16px; 
   flex:1; 
-  overflow-y: auto;
-  padding-right: 16px;
   margin-top: 16px;
 }
 

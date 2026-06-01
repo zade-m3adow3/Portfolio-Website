@@ -274,7 +274,7 @@
         pin: true,
         scrub: 1,
         start: "top top",
-        end: "+=350%",           // Extra scroll distance for the inner vertical scroll
+        end: "+=1200%",           // Extra scroll distance for 14 simulations
         anticipatePin: 1,
         onUpdate(self) {
           // Progress bar spans across both panels

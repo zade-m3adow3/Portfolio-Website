@@ -183,14 +183,19 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     
     animate();
 
-    // Handle resize
-    window.addEventListener('resize', () => {
-      const w = container.clientWidth;
-      const h = container.clientHeight;
+    // Touch-action: none so OrbitControls can handle touch gestures
+    renderer.domElement.style.touchAction = 'none';
+
+    // ResizeObserver: reliable resize on mobile/orientation-change
+    const ro = new ResizeObserver(() => {
+      const w = container.clientWidth || 400;
+      const h = container.clientHeight || 300;
+      if (w === 0 || h === 0) return;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
     });
+    ro.observe(container);
   }
 
   // ── PANEL B: Banach D3 Animation ──
@@ -565,12 +570,116 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     });
   }
 
+  // ── Panel D: Load actual SVG simulation outputs ──
+  async function initSVGOutputs() {
+    const plotEls = document.querySelectorAll('.sims-svg-output[data-svg]');
+    if (!plotEls.length) return;
+
+    for (const el of plotEls) {
+      const src = el.dataset.svg;
+      el.innerHTML = '<span style="color:var(--text-muted);font-family:var(--font-mono);font-size:10px;padding:8px;">Loading…</span>';
+      try {
+        const resp = await fetch(src);
+        if (!resp.ok) throw new Error(resp.statusText);
+        const text = await resp.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'image/svg+xml');
+        const svg = doc.querySelector('svg');
+        if (svg) {
+          svg.removeAttribute('width');
+          svg.removeAttribute('height');
+          svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+          svg.style.width = '100%';
+          svg.style.height = '100%';
+          el.innerHTML = '';
+          el.appendChild(svg);
+        } else {
+          throw new Error('No SVG found');
+        }
+      } catch (err) {
+        el.innerHTML = `<span style="color:var(--rollback-red);font-family:var(--font-mono);font-size:10px;padding:8px;">[SVG unavailable]</span>`;
+      }
+    }
+  }
+
+  /* ── Inspector Modal ────────────────────────────────────────────── */
+  function initInspector() {
+    const modal = document.getElementById('sims-inspector-modal');
+    const closeBtn = document.getElementById('sims-modal-close');
+    const codeViewer = document.getElementById('sims-modal-code');
+    const filenameLabel = document.getElementById('sims-modal-filename');
+    const sidebarLinks = document.querySelectorAll('.sims-sidebar-link');
+    
+    if (!modal) return;
+
+    function openModal(filePath) {
+      modal.classList.remove('sims-hidden');
+      loadFile(filePath);
+    }
+
+    function closeModal() {
+      modal.classList.add('sims-hidden');
+    }
+
+    async function loadFile(filePath) {
+      filenameLabel.textContent = filePath;
+      codeViewer.textContent = 'Loading...';
+      codeViewer.style.color = '#a9b7c6';
+      
+      // Update active state in sidebar
+      sidebarLinks.forEach(l => l.classList.remove('active'));
+      const activeLink = Array.from(sidebarLinks).find(l => l.dataset.path === filePath);
+      if (activeLink) activeLink.classList.add('active');
+
+      try {
+        const resp = await fetch('assets/simulations/' + filePath);
+        if (!resp.ok) throw new Error(resp.statusText);
+        const text = await resp.text();
+        codeViewer.textContent = text;
+        
+        // Basic naive syntax coloring based on extension
+        if (filePath.endsWith('.py')) codeViewer.style.color = '#a9b7c6'; // Python
+        else if (filePath.endsWith('.cir')) codeViewer.style.color = '#cc7832'; // SPICE
+        else if (filePath.endsWith('.log')) codeViewer.style.color = '#6a8759'; // Logs
+        
+      } catch (err) {
+        codeViewer.textContent = 'Error loading file: ' + err.message + '\n\nMake sure the file exists in assets/simulations/' + filePath;
+        codeViewer.style.color = 'var(--rollback-red)';
+      }
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    
+    // Close on overlay click
+    modal.addEventListener('click', e => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Inspect buttons
+    document.querySelectorAll('.sims-inspect-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const path = btn.dataset.file;
+        if (path) openModal(path);
+      });
+    });
+
+    // Sidebar links
+    sidebarLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        openModal(link.dataset.path);
+      });
+    });
+  }
+
   // ── Init ──
   function init(){ 
     renderEquations(); 
     initStiefel(); 
     initBanach(); 
-    initCharts(); 
+    initCharts();
+    initSVGOutputs();
+    initInspector();
   }
   
   if(document.readyState === 'loading'){

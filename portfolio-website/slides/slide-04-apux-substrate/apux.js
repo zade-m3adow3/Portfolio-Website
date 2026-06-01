@@ -127,14 +127,20 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
       console.error("Error loading GLB:", error);
     });
 
-    // Resize handler
-    window.addEventListener("resize", () => {
+    // Touch-action: none so OrbitControls gets all touch events
+    renderer.domElement.style.touchAction = 'none';
+
+    // ResizeObserver: more reliable than window resize on mobile
+    const resizeObserver = new ResizeObserver(() => {
       if (!container) return;
-      camera.aspect = container.clientWidth / container.clientHeight;
+      const w = container.clientWidth;
+      const h = container.clientHeight || 400;
+      camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      renderer.setSize(container.clientWidth, container.clientHeight);
-      composer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setSize(w, h);
+      composer.setSize(w, h);
     });
+    resizeObserver.observe(container);
 
     const clock = new THREE.Clock();
     window.apuxIdleRotate = true; // Start rotating by default
@@ -370,6 +376,9 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
     if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
     gsap.registerPlugin(ScrollTrigger);
 
+    // Skip GSAP pin on mobile/tablet — content is already natural-height
+    if (window.innerWidth <= 1024) return;
+
     ScrollTrigger.create({
       trigger: "#slide-04",
       pin: true,
@@ -379,7 +388,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
     });
   }
 
-  /* ── 5. Math Rendering ─────────────────────────────────── */
+  /* ── 5. Math Rendering ────────────────────────────── */
   function renderEquations() {
     if (typeof katex === "undefined") return;
     document.querySelectorAll(".apux-katex-block").forEach(el => {
@@ -394,9 +403,38 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
     });
   }
 
-  /* ── Init ──────────────────────────────────────────────── */
+  /* ── 6. Load mini SVG plots in accordion cards ──────── */
+  async function loadMiniPlots() {
+    const plots = document.querySelectorAll('.apux-sim-mini-plot[data-svg-apux]');
+    for (const el of plots) {
+      const src = el.dataset.svgApux;
+      el.innerHTML = '<span style="color:var(--text-muted);font-family:monospace;font-size:9px;padding:6px;">Loading…</span>';
+      try {
+        const resp = await fetch(src);
+        if (!resp.ok) throw new Error(resp.statusText);
+        const text = await resp.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'image/svg+xml');
+        const svg = doc.querySelector('svg');
+        if (svg) {
+          svg.removeAttribute('width');
+          svg.removeAttribute('height');
+          svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+          svg.style.width = '100%';
+          svg.style.height = '100%';
+          el.innerHTML = '';
+          el.appendChild(svg);
+        } else { throw new Error('No SVG'); }
+      } catch(err) {
+        el.innerHTML = '<span style="color:var(--rollback-red);font-family:monospace;font-size:9px;padding:6px;">[unavailable]</span>';
+      }
+    }
+  }
+
+  /* ── Init ──────────────────────────────────────── */
   function init() {
     renderEquations();
+    loadMiniPlots();
     initThreeScene();
     initUI();
     initScroll();

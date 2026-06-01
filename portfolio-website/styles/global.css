@@ -4,11 +4,27 @@
   padding: 0;
 }
 
+html {
+  /* Prevent horizontal overflow globally */
+  overflow-x: hidden;
+  /* Smooth scroll fallback (Lenis overrides this on desktop) */
+  scroll-behavior: auto;
+}
+
 body {
   background-color: var(--void);
   color: var(--text-primary);
   font-family: var(--font-body);
   overflow-x: hidden;
+  /* iOS momentum scrolling */
+  -webkit-overflow-scrolling: touch;
+  /* Prevent tap flash on mobile */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Contain scroll bounce to the page (not body overflow) */
+#app {
+  overscroll-behavior-y: auto;
 }
 
 .slide-out-up {
@@ -26,4 +42,10 @@ body {
   min-height: 100vh;
   background-color: var(--void);
   z-index: 10;
+}
+
+/* Disable GSAP pin on mobile via class (added by JS) */
+.mobile-no-pin {
+  transform: none !important;
+  position: relative !important;
 }

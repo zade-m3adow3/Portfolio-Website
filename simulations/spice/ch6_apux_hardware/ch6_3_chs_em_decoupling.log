@@ -1,0 +1,20 @@
+LTspice 26.0.2 for Windows
+Circuit: C:\Users\rovim\.gemini\antigravity\scratch\SPICE Simulation\ch6_apux_hardware\ch6_3_chs_em_decoupling.cir
+Start Time: Mon Jun  1 15:42:53 2026
+Options:RELTOL=1e-8 ACCURATE
+solver = Normal
+Maximum thread count: 8
+tnom = 27
+temp = 27
+method = trap
+reltol = 1e-08
+.OP point found by inspection.
+.OP point found by inspection.
+Total elapsed time: 0.044 seconds.
+
+Files loaded:
+C:\Users\rovim\.gemini\antigravity\scratch\SPICE Simulation\ch6_apux_hardware\ch6_3_chs_em_decoupling.cir
+
+v_noise_1ghz: V(VNOISE_OUT) =(-213.362545957dB,-41.1117695366°) at 1000000000
+v_noise_max: MAX(V(VNOISE_OUT))=(-212.219707658dB,-0.0429714665919°) FROM 1000000 TO 100000000000
+margin_vslsb: '9.76e-4 - V_noise_1GHz'=(-60.2110037906dB,8.28821702011e-07°)

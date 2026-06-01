@@ -6,6 +6,33 @@
      Tiny    : max-width 480px
 ═══════════════════════════════════════════════════════════════ */
 
+/* ── Global: touch-action & tap highlight ───────────────────── */
+canvas {
+  touch-action: none;  /* Let Three.js / D3 own all touch on canvas */
+}
+
+button, [role="button"], .apux-btn, .sims-btn, .pmm-toggle,
+.apux-card-header, .pmm-rail-item {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* ── dvh polyfill: prefer dynamic viewport height on mobile ─── */
+@supports (height: 100dvh) {
+  .slide-01-hero,
+  .slide-02-motivation,
+  .slide-03-pmm,
+  .slide-04-apux,
+  .slide-05-sims,
+  .slide-06-anim {
+    min-height: 100dvh;
+  }
+  .s2-outer,
+  .s2-panel,
+  .s2-track { height: 100dvh; }
+  .apux-layout { height: 100dvh; }
+}
+
 /* ── Global progress dots: hide on small screens ────────────── */
 @media (max-width: 767px) {
   #global-progress { display: none; }
@@ -136,6 +163,12 @@
   .s2-card-text { font-size: 13px; }
   .s2-pullquote { font-size: 18px; }
   .s2-panel-b-content { padding: 24px 12px; }
+  /* Make expanded plot go full screen on mobile */
+  .s2-plot-expanded {
+    inset: 5vh 5vw !important;
+    width: 90vw !important;
+    height: 90vh !important;
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -162,6 +195,7 @@
     padding: 0;
     border-right: none;
     border-bottom: 1px solid rgba(255,255,255,0.05);
+    -webkit-overflow-scrolling: touch;
   }
   .pmm-rail-title { display: none; }
   .pmm-rail-line { display: none; }
@@ -198,6 +232,15 @@
     padding: 24px 20px;
   }
   .pmm-pane-title { font-size: 24px; }
+
+  /* Simulation evidence panels on tablet */
+  .pmm-sim-evidence {
+    margin-top: 20px;
+    padding: 16px;
+  }
+  .pmm-sim-evidence-plot {
+    min-height: 140px;
+  }
 }
 
 @media (max-width: 767px) {
@@ -210,10 +253,20 @@
   .pmm-katex-block { padding: 12px; }
   .pmm-toggle-wrap { position: static; margin-top: 12px; }
   .pmm-toggle-wrap { display: flex; justify-content: flex-end; padding: 0 14px 12px; }
+
+  .pmm-sim-evidence {
+    padding: 12px;
+    margin-top: 16px;
+  }
+  .pmm-sim-evidence-plot {
+    min-height: 120px;
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════
    SLIDE 04 — APU-X SUBSTRATE
+   FIX: Was incorrectly targeting .apux-viewer (doesn't exist).
+        The actual element is #apux-canvas.
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 1024px) {
   .slide-04-apux {
@@ -225,18 +278,25 @@
     flex-direction: column;
     height: auto !important;
   }
-  /* 3D viewer: full width, fixed height */
-  .apux-viewer {
+  /* 3D viewer: full width, fixed height (was .apux-viewer, now #apux-canvas) */
+  #apux-canvas {
     width: 100% !important;
     height: 50vw !important;
     min-height: 260px;
     max-height: 420px;
+    position: relative;
   }
-  #apux-canvas { height: 100%; }
+  #apux-canvas canvas {
+    width: 100% !important;
+    height: 100% !important;
+    touch-action: none;
+  }
   .apux-controls {
     bottom: 12px;
     flex-wrap: wrap;
     gap: 8px;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .apux-btn { font-size: 11px; padding: 5px 12px; }
 
@@ -259,10 +319,16 @@
   }
   .apux-card-title { font-size: 17px; }
   .apux-card-badge { font-size: 16px; }
+
+  /* Sim badge in accordion cards */
+  .apux-sim-badge-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
 }
 
 @media (max-width: 767px) {
-  .apux-viewer {
+  #apux-canvas {
     height: 56vw !important;
     min-height: 220px;
   }
@@ -297,6 +363,9 @@
   .sims-canvas-outer {
     min-height: 280px;
   }
+  #sims-stiefel-canvas canvas {
+    touch-action: none;
+  }
   .sims-panel-right {
     height: auto;
   }
@@ -321,6 +390,20 @@
   .sims-d3-chart { min-height: 160px; }
   .sims-banach-layout { flex-direction: column; }
   .sims-banach-svg, .sims-banach-line-chart { min-height: 160px; }
+
+  /* Panel D: simulation outputs */
+  .sims-panel-d {
+    height: auto !important;
+  }
+  .sims-svg-outputs-row {
+    flex-direction: column;
+    height: auto !important;
+  }
+  .sims-svg-output-wrap {
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    min-height: 200px;
+  }
 }
 
 @media (max-width: 767px) {
@@ -333,6 +416,7 @@
   .sims-panel-head { padding: 8px 12px; }
   .sims-panel-title { font-size: 10px; }
   .sims-chart-wrap { min-height: 180px; padding: 4px; }
+  .sims-slider-wrap { flex-wrap: wrap; }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -397,4 +481,24 @@
   .pmm-katex-block { overflow-x: auto; }
   .apux-katex-block { overflow-x: auto; }
   .s2-equation-block { overflow-x: auto; }
+  .sims-katex-overlay { overflow-x: auto; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SHARED — Tiny screens (360px, portrait phones)
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .sims-title,
+  .apux-title,
+  .s2-heading,
+  .pmm-pane-title {
+    font-size: clamp(20px, 6vw, 28px);
+  }
+  .hero-heading {
+    font-size: clamp(36px, 12vw, 52px);
+  }
+  .apux-katex-block,
+  .pmm-katex-block {
+    font-size: 90%;
+  }
 }

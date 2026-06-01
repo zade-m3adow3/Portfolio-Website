@@ -1,0 +1,102 @@
+* ============================================================
+* ch6_3_chs_em_decoupling.cir
+* CHS Coaxial-Shield Electromagnetic Decoupling Verification
+* Purpose : Verify V_noise ≈ 2.77e-9 V from Maxwell-derived formula
+*           Geometry: r_s=50nm sleeve, D=200nm line separation, L_z=100µm
+*           Must satisfy V_noise << V_LSB = 9.76e-4 V
+* Simulator: ngspice / LTspice
+* ============================================================
+
+* ---- Parameters (matched to thesis §6.5) ----
+.PARAM delta_shield = 1e-5      ; shielding attenuation factor
+.PARAM f_signal     = 1e9       ; operating frequency 1 GHz
+.PARAM V_drive      = 0.8       ; signal amplitude (V)
+.PARAM r_s          = 50e-9     ; shield sleeve radius (m) → expressed in SPICE metres
+.PARAM D_sep        = 200e-9    ; inter-line separation (m)
+.PARAM L_z          = 100e-6    ; line length (m)
+.PARAM eps_r        = 3.9       ; SiO2 permittivity
+.PARAM eps0         = 8.854e-12
+.PARAM mu0          = 1.2566e-6
+
+* ---- Derived coupling impedance (per-unit-length, simplified) ----
+* Mutual capacitance per unit length between coaxial lines:
+*   C_m = 2*pi*eps0*eps_r / ln(D/r_s)  * delta_shield
+* At D=200nm, r_s=50nm: ln(D/r_s)=ln(4)=1.386
+.PARAM C_m_pul = {2*3.14159*eps0*eps_r / 1.386 * delta_shield}
+.PARAM C_m_tot = {C_m_pul * L_z}
+
+* Mutual inductance per unit length:
+*   L_m = mu0/(2*pi) * ln(D/r_s) * delta_shield
+.PARAM L_m_pul = {mu0/(2*3.14159) * 1.386 * delta_shield}
+.PARAM L_m_tot = {L_m_pul * L_z}
+
+* ============================================================
+* Circuit topology: aggressor line → shield → victim line
+* ============================================================
+
+* ---- Aggressor source ----
+* FIX: Added AC 1 so the AC engine has a phasor stimulus to compute V_noise/V_aggressor
+VAGG  AGGR_IN  0  SIN(0 {V_drive} {f_signal} 0 0) AC 1
+
+* ---- Aggressor line (50-ohm transmission line model) ----
+RAGG1 AGGR_IN  AGGR_MID  25
+CAGG1 AGGR_MID 0          {1/(2*3.14159*f_signal*50)}
+RAGG2 AGGR_MID AGGR_OUT   25
+RTERM_AGG AGGR_OUT 0  50
+
+* ---- Shield: lossy resistive sleeve ----
+* R_shield = rho_Al * L_z / (2*pi*r_s*t_s), t_s ≈ 5nm
+.PARAM rho_Al  = 2.65e-8     ; Al resistivity Ω·m
+.PARAM t_s     = 5e-9        ; shield thickness
+.PARAM R_shield = {rho_Al * L_z / (2*3.14159*r_s*t_s)}
+RSHIELD SHIELD_A SHIELD_B {R_shield}
+VSHIELD_REF SHIELD_A 0 DC 0   ; shield grounded at one end
+
+* ---- Mutual capacitive coupling: aggressor → victim via shield ----
+* First coupling stage: aggressor to shield
+CCOUP1 AGGR_MID SHIELD_B {C_m_tot * 0.5}
+* Second coupling: shield leakage to victim
+CCOUP2 SHIELD_B VIC_MID  {C_m_tot * delta_shield}
+
+* ---- Mutual inductive coupling (modelled as VCVS) ----
+* V_mut = L_m * dI/dt ≈ L_m * (2*pi*f) * I_agg
+* Approximated as VCVS with gain = j*omega*L_m (use resistor for DC gain)
+RMUT_SRC AGGR_MID AGGR_MID2 0.001
+EMUT VIC_NOISE 0 AGGR_MID 0 {2*3.14159*f_signal*L_m_tot}
+
+* ---- Victim line ----
+RVIC1 VIC_IN   VIC_MID  25
+CVIC  VIC_MID  0        {1/(2*3.14159*f_signal*50)}
+RVIC2 VIC_MID  VIC_OUT  25
+RTERM_VIC VIC_OUT 0 50
+VIC_SRC VIC_IN 0 DC 0   ; victim idle
+
+* ---- Noise summing node ----
+RVIC_NOISE VIC_NOISE VIC_MID 1Meg
+
+* ---- Output measurement node ----
+ROUT VNOISE_OUT 0 50
+EVNOISE VNOISE_OUT 0 VIC_MID 0 1.0
+
+* ============================================================
+* AC Analysis: measure |V_noise| at victim across frequency
+* ============================================================
+.AC DEC 20 1MEG 100GHZ
+
+.MEAS AC V_noise_1GHz FIND V(VNOISE_OUT) AT=1G
+.MEAS AC V_noise_max  MAX V(VNOISE_OUT)
+
+* Verify against thesis claim: V_noise ≈ 2.77e-9 V
+.MEAS AC margin_vsLSB PARAM='9.76e-4 - V_noise_1GHz'
+
+* ============================================================
+* Transient: time-domain noise pulse at worst-case frequency
+* ============================================================
+* .TRAN 1p 5n
+
+B_VNOISE_ABS V_ABS 0 V='ABS(V(VNOISE_OUT))'
+.MEAS TRAN V_noise_pk MAX V(V_ABS) FROM=1n TO=5n
+
+.OPTIONS RELTOL=1e-8 ACCURATE
+
+.END

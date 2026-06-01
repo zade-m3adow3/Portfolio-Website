@@ -1,0 +1,23 @@
+LTspice 26.0.2 for Windows
+Circuit: C:\Users\rovim\.gemini\antigravity\scratch\SPICE Simulation\ch6_apux_hardware\ch6_6_sot_mram_frequency.cir
+Start Time: Mon Jun  1 15:43:27 2026
+Options:ACCURATE RELTOL=1e-7
+solver = Normal
+Maximum thread count: 8
+tnom = 27
+temp = 27
+method = trap
+reltol = 1e-07
+Per .tran options, skipping operating point for transient analysis.
+Total elapsed time: 0.081 seconds.
+
+Files loaded:
+C:\Users\rovim\.gemini\antigravity\scratch\SPICE Simulation\ch6_apux_hardware\ch6_6_sot_mram_frequency.cir
+
+i_write_max: MAX(V(I_ABS) )=0.00159999355674 FROM 1e-09 TO 2e-08
+t_rise=1.59999999762e-11 FROM 1.00200000002e-09 TO 1.018e-09
+f_effective: '0.35/t_rise'=21875000032.6
+f_limit_val: '1/tau_phonon'=76923076923.1
+frequency_margin: 'f_limit_val - f_effective'=55048076890.5
+v_read_p: AVG(V(V_READ_OUT) )=0.0500000007451 FROM 3e-09 TO 4e-09
+r_drift_total: '{(R_MTJ_drifted - R_MTJ_P)/R_MTJ_P * 100}'=0.1

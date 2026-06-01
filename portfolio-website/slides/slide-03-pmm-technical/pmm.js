@@ -20,6 +20,36 @@
     });
   }
 
+  /* ── Load SVG simulation evidence plots ── */
+  async function loadSimEvidence() {
+    const plots = document.querySelectorAll('.pmm-sim-evidence-plot[data-svg-pmm]');
+    for (const el of plots) {
+      const src = el.dataset.svgPmm;
+      el.innerHTML = '<span style="color:var(--text-muted);font-family:monospace;font-size:10px;padding:8px;">Loading…</span>';
+      try {
+        const resp = await fetch(src);
+        if (!resp.ok) throw new Error(resp.statusText);
+        const text = await resp.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'image/svg+xml');
+        const svg = doc.querySelector('svg');
+        if (svg) {
+          svg.removeAttribute('width');
+          svg.removeAttribute('height');
+          svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+          svg.style.width = '100%';
+          svg.style.height = '100%';
+          el.innerHTML = '';
+          el.appendChild(svg);
+        } else {
+          throw new Error('No SVG');
+        }
+      } catch (err) {
+        el.innerHTML = '<span style="color:var(--rollback-red);font-family:monospace;font-size:10px;padding:8px;">[SVG unavailable]</span>';
+      }
+    }
+  }
+
   /* ── Diagram Highlight ── */
   function highlightDiagramNode(id) {
     if (typeof gsap === "undefined") return;
@@ -144,6 +174,7 @@
   /* ── Init ── */
   function init() {
     renderEquations();
+    loadSimEvidence();
     initToggle();
 
     // Bind rail clicks
@@ -156,8 +187,8 @@
       });
     });
 
-    // Pinning
-    if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
+    // Pinning — skip on mobile/tablet
+    if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined" && window.innerWidth > 1024) {
       gsap.registerPlugin(ScrollTrigger);
       ScrollTrigger.create({
         trigger: "#slide-03",

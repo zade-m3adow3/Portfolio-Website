@@ -290,4 +290,230 @@ input[type=range] {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 10px;
   color: var(--text-muted);
+  border-radius: 4px;
 }
+
+/* ── Panel D: Actual simulation SVG outputs ─────────────── */
+.sims-panel-d {
+  flex-shrink: 0;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  flex-direction: column;
+  background: var(--substrate);
+}
+
+.sims-svg-outputs-row {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 240px;
+}
+
+.sims-svg-output-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(255,255,255,0.05);
+  padding: 8px;
+  gap: 6px;
+}
+
+.sims-svg-output-wrap:last-child {
+  border-right: none;
+}
+
+.sims-svg-output {
+  flex: 1;
+  min-height: 160px;
+  background: #06060f;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-in;
+  transition: box-shadow 0.3s;
+}
+
+.sims-svg-output:hover {
+  box-shadow: 0 0 16px rgba(0,200,255,0.12);
+}
+
+.sims-svg-output svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.sims-svg-meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sims-meta-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.sims-sim-result-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.5px;
+}
+
+/* ── INSPECTOR MODAL ────────────────────────────────────────── */
+.sims-inspect-btn {
+  background: transparent;
+  border: 1px solid var(--spectral-1);
+  color: var(--spectral-1);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: auto;
+}
+
+.sims-inspect-btn:hover {
+  background: rgba(0, 200, 255, 0.1);
+  box-shadow: 0 0 8px rgba(0, 200, 255, 0.2);
+}
+
+.sims-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.sims-modal-overlay.sims-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sims-modal-window {
+  width: 90%;
+  max-width: 1200px;
+  height: 85vh;
+  background: var(--void);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 200, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.sims-modal-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.sims-modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.sims-modal-subtitle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--gold);
+  flex: 1;
+}
+
+.sims-modal-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+.sims-modal-close:hover { color: var(--text-primary); }
+
+.sims-modal-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.sims-modal-sidebar {
+  width: 250px;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--substrate);
+  overflow-y: auto;
+  padding: 16px 0;
+}
+
+.sims-sidebar-group {
+  margin-bottom: 24px;
+}
+
+.sims-sidebar-group-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  padding: 0 16px;
+  margin-bottom: 8px;
+}
+
+.sims-sidebar-link {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 6px 16px 6px 24px;
+  border-left: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sims-sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+}
+
+.sims-sidebar-link.active {
+  border-left-color: var(--spectral-1);
+  color: var(--spectral-1);
+  background: rgba(0, 200, 255, 0.05);
+}
+
+.sims-modal-content {
+  flex: 1;
+  background: #000;
+  overflow: auto;
+  padding: 24px;
+}
+
+.sims-code-viewer {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #a9b7c6; /* syntax highlight base */
+  margin: 0;
+  tab-size: 4;
+}
+

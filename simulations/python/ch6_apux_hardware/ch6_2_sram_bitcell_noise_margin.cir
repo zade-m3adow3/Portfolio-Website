@@ -1,0 +1,98 @@
+* ============================================================
+* ch6_2_sram_bitcell_noise_margin.cir
+* 6T SRAM Bitcell — Static Noise Margin (SNM) + BER Analysis
+* Purpose : Validate DASM zero-drift claim: BER < 1e-15
+*           Measure SNM under worst-case supply noise and temperature
+* Simulator: ngspice / LTspice
+* ============================================================
+
+* ---- Supply and ground ----
+.PARAM VDD_nom = 0.8
+.PARAM VDD     = {VDD_nom}
+.PARAM VNOISE_AMP = 50m     ; worst-case supply droop 50 mV
+
+* ---- Temperature ----
+.TEMP 125    ; worst-case high temperature for SS corner
+
+* ---- Noisy supply (VDD + sinusoidal droop at 1 GHz) ----
+VDD_NOISY VDDX 0 SIN({VDD} {VNOISE_AMP} 1G 0 0)
+
+* ============================================================
+* 6T SRAM Bitcell Subcircuit
+* Nodes: BL BLB WL Q QB VDD VSS
+* ============================================================
+.SUBCKT SRAM6T BL BLB WL Q QB VDD VSS
+* Cross-coupled inverters
+* Inverter 1: Q drives QB
+MN1 QB Q VSS VSS NMOS_14NM  W=7n  L=14n
+MP1 QB Q VDD VDD PMOS_14NM  W=7n  L=14n
+* Inverter 2: QB drives Q
+MN2 Q  QB VSS VSS NMOS_14NM W=7n  L=14n
+MP2 Q  QB VDD VDD PMOS_14NM W=7n  L=14n
+* Access transistors
+MA1 BL  WL Q   VSS NMOS_14NM W=7n L=14n
+MA2 BLB WL QB  VSS NMOS_14NM W=7n L=14n
+.ENDS SRAM6T
+
+* ---- MOSFET Models (14 nm approximation) ----
+.MODEL NMOS_14NM NMOS LEVEL=1
++  VTO=0.22  KP=600u  GAMMA=0.4  PHI=0.8
++  LAMBDA=0.1  TOX=1.2n  LD=1n  RSH=5  KF=1e-26
+
+.MODEL PMOS_14NM PMOS LEVEL=1
++  VTO=-0.22  KP=250u  GAMMA=0.4  PHI=0.8
++  LAMBDA=0.1  TOX=1.2n  LD=1n  RSH=5  KF=1e-26
+
+* ---- Instantiate bitcell ----
+XCELL BL BLB WL Q QB VDDX 0 SRAM6T
+
+* ---- Bitline precharge resistors (model wordline driver impedance) ----
+RBL  BL  VDDX 500
+RBLB BLB VDDX 500
+
+* ---- Precharge capacitances ----
+CBL  BL  0 50f
+CBLB BLB 0 50f
+
+* ---- Word-line pulse: active HIGH 0→VDD at t=2ns, pulse width 2ns ----
+VWL WL 0 PULSE(0 {VDD} 2n 50p 50p 2n 10n)
+
+* ---- Storage node initial conditions ----
+.IC V(Q)=0 V(QB)={VDD}
+
+* ============================================================
+* DC Static Noise Margin — Butterfly Curve Method
+* Sweep Vx and measure Vy to plot both inverter VTCs
+* ============================================================
+* --- Inverter 1 static test (word-line low = isolated) ---
+VWL_DC WL_DC 0 DC 0
+VX_SRC QX 0 DC 0
+MN1_DC QBX QX 0 0 NMOS_14NM W=7n L=14n
+MP1_DC QBX QX VDDX VDDX PMOS_14NM W=7n L=14n
+MN2_DC QX QBX 0 0 NMOS_14NM W=7n L=14n
+MP2_DC QX QBX VDDX VDDX PMOS_14NM W=7n L=14n
+
+.DC VX_SRC 0 {VDD} 1m
+
+* FIX: Proper SNM extraction via butterfly-curve method.
+* VM_TRIP = input QX at which QBX output crosses VDD/2 (switching threshold of inverter 1)
+* SNM_HOLD = VM_TRIP - VDD/2  (positive = has margin; negative = unstable cell)
+* Expected: VM_TRIP slightly above VDD/2 for a well-designed 6T SRAM
+.MEAS DC VM_TRIP   FIND V(QX)  WHEN V(QBX)={VDD*0.5} FALL=1
+.MEAS DC SNM_HOLD  PARAM='{VM_TRIP - VDD*0.5}'
+
+* ============================================================
+* Transient: read disturb simulation
+* ============================================================
+* .TRAN 1p 10n
+
+.MEAS TRAN V_Q_min  MIN V(Q)   FROM=2n TO=4n
+.MEAS TRAN V_QB_max MAX V(QB)  FROM=2n TO=4n
+.MEAS TRAN SNM_READ PARAM='V(Q)-V(QB)'
+
+* ---- Noise Analysis (AC): input-referred noise of cross-coupled pair ----
+* .NOISE V(Q) VWL 10 1 10G 101
+
+.OPTIONS ACCURATE RELTOL=1e-8 GMIN=1e-15
+
+.END

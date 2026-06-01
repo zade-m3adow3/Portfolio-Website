@@ -192,19 +192,28 @@
         check();
       });
 
-      /* Lenis smooth scroll */
-      const lenis = new Lenis({
-        duration: 1.2,
-        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true,
-      });
-      window.lenisInstance = lenis;
+      /* Lenis smooth scroll — disabled on touch/mobile to avoid iOS conflicts */
+      const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      let lenis = null;
 
-      // Tie Lenis to GSAP ticker AND feed scroll events to ScrollTrigger
-      // Without this, GSAP pins don't work with Lenis smooth scroll
-      lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add(time => lenis.raf(time * 1000));
-      gsap.ticker.lagSmoothing(0);
+      if (!isTouchDevice) {
+        lenis = new Lenis({
+          duration: 1.2,
+          easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smoothWheel: true,
+          touchMultiplier: 0,  // disable on touch even if somehow enabled
+        });
+        window.lenisInstance = lenis;
+
+        // Tie Lenis to GSAP ticker AND feed scroll events to ScrollTrigger
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add(time => lenis.raf(time * 1000));
+        gsap.ticker.lagSmoothing(0);
+      } else {
+        // On touch devices: feed native scroll directly to ScrollTrigger
+        window.addEventListener('scroll', ScrollTrigger.update, { passive: true });
+        window.lenisInstance = null;
+      }
 
       /* Load slide HTML concurrently */
       await Promise.all([
@@ -253,6 +262,22 @@
 
       /* Refresh ScrollTrigger after all DOM is settled */
       setTimeout(() => ScrollTrigger.refresh(), 200);
+
+      /* Re-refresh on orientation change (mobile) */
+      window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+          ScrollTrigger.refresh(true);
+          // Redraw any D3 charts
+          window.dispatchEvent(new Event('resize'));
+        }, 300);
+      });
+
+      /* Re-refresh on resize (catches virtual keyboard, etc.) */
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 150);
+      });
 
       console.log("[PMM Portfolio] All slides loaded ✓");
     }

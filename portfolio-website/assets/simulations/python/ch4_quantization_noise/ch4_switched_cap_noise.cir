@@ -1,0 +1,137 @@
+* ============================================================
+* ch4_switched_cap_noise.cir
+* Switched-Capacitor Quantizer — AC + Transient Noise Analysis
+* Purpose : Model E_noise in 10-bit crossbar quantizer
+*           Validate ‖E_noise‖₂ < λ_k  (Theorem 4.3)
+* Simulator: ngspice / LTspice
+* ============================================================
+
+* ---- Parameters ----
+.PARAM VDD      = 1.8      ; analog supply
+.PARAM VCM      = 0.9      ; common-mode voltage
+.PARAM C_S      = 1p       ; sampling capacitor 1 pF
+.PARAM C_H      = 1p       ; hold capacitor 1 pF
+.PARAM C_INT    = 4p       ; integrator capacitor
+.PARAM R_SW_on  = 200      ; switch on-resistance  200 Ω
+.PARAM f_clk    = 100MEG   ; sample clock 100 MHz
+.PARAM BITS     = 10       ; 10-bit quantizer
+
+* ── Derived ──
+.PARAM T_period = {1/f_clk}
+.PARAM V_LSB    = {VDD / (2**BITS)}    ; 10-bit LSB ≈ 1.76 mV
+
+* ============================================================
+* Switched-Capacitor Track-and-Hold Core
+* Phase 1 (CLK high): track — switch closed, C_S charges to V_IN
+* Phase 2 (CLK low):  hold  — switch open,  C_H retains sample
+* ============================================================
+
+* ---- Analog input signal ----
+VIN  V_IN  0  SIN({VCM} {VDD*0.45} {f_clk*0.07} 0 0)
+
+* ---- Two-phase non-overlapping clock ----
+VCLK1  CLK1  0  PULSE(0 {VDD} 0 100p 100p {T_period*0.45} {T_period})
+VCLK2  CLK2  0  PULSE(0 {VDD} {T_period*0.5} 100p 100p {T_period*0.45} {T_period})
+
+* ============================================================
+* Track-and-Hold: Phase-1 sampling switch + C_S
+* ============================================================
+* Switch: voltage-controlled resistor approximation
+.MODEL SW_IDEAL SW RON={R_SW_on} ROFF=1MEG VT={VDD*0.5} VH={VDD*0.1}
+
+S_TRACK  V_IN   V_SAMPLED  CLK1 0  SW_IDEAL
+C_SAMP   V_SAMPLED  0   {C_S}
+
+* ---- Phase-2 hold switch ----
+S_HOLD   V_SAMPLED  V_HELD  CLK2 0  SW_IDEAL
+C_HOLD   V_HELD     0   {C_H}
+R_HOLD_LEAK V_HELD  0   10G    ; hold pedestal leakage
+
+* ============================================================
+* Comparator (regenerative latch, simplified)
+* ============================================================
+.SUBCKT COMPARATOR INP INN OUTP OUTN VDD VSS
+* Preamplifier gain stage
+EPRE VPRE 0 VALUE={20*(V(INP)-V(INN))}
+RPRE VPRE VPRE_CLM 100
+CPRE VPRE_CLM 0 50f
+* Latch (regeneration)
+ELATCH_P OUTP 0 VALUE={TANH(100*(V(VPRE_CLM))/VDD)*VDD/2+VDD/2}
+ELATCH_N OUTN 0 VALUE={VDD - V(OUTP)}
+.ENDS COMPARATOR
+
+XCOMP  V_HELD  {VCM}  VOUT_P  VOUT_N  {VDD}  0  COMPARATOR
+
+* ============================================================
+* Thermal noise model
+* kT/C noise at sampling capacitor: V²_n = kT/C_S
+* At T=300K, C_S=1pF: V_n,rms = sqrt(1.38e-23*300/1e-12) ≈ 64 µV
+* ============================================================
+.PARAM kB       = 1.38e-23
+.PARAM T_K      = 300
+.PARAM V2_n_kTC = {kB * T_K / C_S}
+.PARAM V_n_rms  = {sqrt(V2_n_kTC)}
+
+* ---- Thermal noise source modelled as voltage source in series ----
+* (White noise spectral density: S_v = 4*kB*T*R_SW_on)
+.PARAM S_v_SW   = {4 * kB * T_K * R_SW_on}    ; V²/Hz
+
+VNOISE_SRC  V_SAMPLED_NOISY  V_SAMPLED  DC 0
+* Specify noise: in ngspice, add .NOISE analysis below
+
+* ============================================================
+* Flicker noise in switch MOSFET (1/f)
+* S_flicker = KF * IDS / (Cox * L²) / f
+* Modelled parametrically
+* ============================================================
+.PARAM KF_n     = 1e-26    ; flicker noise constant (NMOS 14nm)
+.PARAM Cox      = 40e-3    ; F/m² gate capacitance density
+.PARAM L_sw     = 14e-9    ; switch gate length
+
+* ============================================================
+* AC Noise Analysis
+* Measures total integrated noise from 1 Hz to f_clk/2
+* Spot noise at output vs frequency
+* ============================================================
+* .AC DEC 30 1 {f_clk/2}
+
+* AC source for noise analysis
+* VAC_SRC V_IN 0 AC 1
+
+* Noise analysis: referred to V_IN at output node V_HELD
+* .NOISE V(V_HELD) VAC_SRC DEC 30 1 {f_clk/2}
+
+.MEAS AC V_noise_integrated INTEG sqrt(onoise_spectrum) FROM=1 TO={f_clk/2}
+.MEAS AC V_noise_spot_1MHz   FIND sqrt(onoise_spectrum) AT=1MEG
+.MEAS AC V_noise_spot_10MHz  FIND sqrt(onoise_spectrum) AT=10MEG
+.MEAS AC ENOB_AC PARAM='{BITS - log(V_noise_integrated/V_LSB)/log(2)}'
+
+* ============================================================
+* Transient noise simulation
+* ============================================================
+.TRAN 100p 200n
+
+.MEAS TRAN V_held_rms   RMS V(V_HELD)   FROM=50n TO=200n
+.MEAS TRAN V_in_rms     RMS V(V_IN)     FROM=50n TO=200n
+* FIX: Gate error signal to HOLD phase only (CLK1 low) to avoid measuring tracking transient.
+* During track (CLK1 high): gate=0 → V_ERR=0. During hold (CLK1 low): V_ERR = |V_HELD-V_IN| = hold error.
+B_ERR V_ERR 0 V='if(V(CLK1)<{VDD*0.5}, ABS(V(V_HELD)-V(V_IN)), 0)'
+.MEAS TRAN V_error_pk   MAX V(V_ERR) FROM=50n TO=200n
+
+* ---- Monte Carlo: 10-point variation (run 10x) ----
+* Vary C_S ±5%, R_SW_on ±10%, T ±30K
+* .STEP PARAM C_S LIST 0.95p 1.0p 1.05p
+* .STEP PARAM T_K LIST 270 300 330
+
+* ============================================================
+* Norm of E_noise for Theorem 4.3 validation
+* ‖E_noise‖₂ ≈ V_error_pk (max settled hold error) / V_LSB  (normalised)
+* Must be < λ_k (submodular kernel eigenvalue gap)
+* V_error_pk now measures ONLY hold-phase settled error (tracking transient excluded).
+* Expected kT/C noise: sqrt(kT/C) = sqrt(1.38e-23*300/1e-12) ≈ 64 µV << V_LSB
+* ============================================================
+.MEAS TRAN E_noise_norm PARAM='{V_error_pk / V_LSB}'
+
+.OPTIONS ACCURATE RELTOL=1e-8
+
+.END

@@ -179,6 +179,18 @@
               Hardware eBPF watchdog enforces at Ring 0.
             </p>
             <div class="pmm-katex-block" data-katex="\dot{V}(U_t) \leq -2\delta_k\, V(U_t)"></div>
+            <!-- Simulation Evidence: SIM-04 GIM Trigger -->
+            <div class="pmm-sim-evidence">
+              <div class="pmm-sim-evidence-header">
+                <span class="pmm-sim-evidence-badge" style="background:var(--rollback-red);color:#fff;">SIM-04 · THM 3.2</span>
+                <span class="pmm-sim-evidence-label">GIM Eigengap Collapse → Rollback Trigger</span>
+                <span class="pmm-sim-evidence-result" style="color:var(--neural-green);">✓ δ̂_k → 0⁺ ⇒ GIM fires t=481 · 0 false positives</span>
+              </div>
+              <div class="pmm-sim-evidence-plot"
+                   data-svg-pmm="slides/slide-02-motivation/assets/spice-plots/sim04_gim_trigger.svg">
+              </div>
+              <div class="pmm-sim-evidence-meta">Python · ch5_gim_lyapunov/ch5_boundary_damping.py · Lyapunov V(U_t) validated</div>
+            </div>
           </div>
 
           <div class="pmm-view pmm-view-layman">
@@ -243,6 +255,18 @@
               Asymptotic convergence: lim sup <em>E[V(Ŵ<sub>t</sub>)] ≤ η<sub>t</sub>B⁴/(2δ<sub>k</sub>) + O(σ²<sub>noise</sub>)</em>.
             </p>
             <div class="pmm-katex-block" data-katex="\eta_t^{\text{eff}} = \frac{\eta_0}{1 + \hat{\sigma}^2_t / \delta_{\min}}"></div>
+            <!-- Simulation Evidence: SIM-05 Stiefel Convergence -->
+            <div class="pmm-sim-evidence">
+              <div class="pmm-sim-evidence-header">
+                <span class="pmm-sim-evidence-badge" style="background:var(--gold);color:#000;">SIM-05 · THM 3.2</span>
+                <span class="pmm-sim-evidence-label">Stiefel Manifold Convergence: QuicksandOja++ vs Standard Oja</span>
+                <span class="pmm-sim-evidence-result" style="color:var(--neural-green);">✓ 4.2× faster · residual floor O(η_t B⁴/δ_k) confirmed</span>
+              </div>
+              <div class="pmm-sim-evidence-plot"
+                   data-svg-pmm="slides/slide-02-motivation/assets/spice-plots/sim05_stiefel_convergence.svg">
+              </div>
+              <div class="pmm-sim-evidence-meta">Python · ch3_oja_convergence/ch3_oja_convergence.py · Adversarial injection at t=480; Oja++ recovers, standard Oja diverges</div>
+            </div>
           </div>
 
           <div class="pmm-view pmm-view-layman">

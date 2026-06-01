@@ -1,0 +1,196 @@
+LTspice 26.0.2 for Windows
+Circuit: C:\Users\rovim\.gemini\antigravity\scratch\SPICE Simulation\appendix_a_substrate\appA_schmitt_trigger_audit.cir
+Start Time: Mon Jun  1 15:39:42 2026
+Options:ACCURATE RELTOL=1e-7
+
+.step temp=-40°
+solver = Normal
+Maximum thread count: 8
+tnom = 27
+temp = -40
+method = trap
+reltol = 1e-07
+Model "nmos_14nm": Oxide thickness thinner than recommended for a level 1 MOSFET.
+Instance "xschmitt:MN_MAIN": Length shorter than recommended for a level 1 MOSFET.
+Instance "xschmitt:MN_MAIN": Width narrower than recommended for a level 1 MOSFET.
+Instance "xschmitt:MN_FB": Length shorter than recommended for a level 1 MOSFET.
+Instance "xschmitt:MN_FB": Width narrower than recommended for a level 1 MOSFET.
+Instance "xschmitt_dc:MN_MAIN": Length shorter than recommended for a level 1 MOSFET.
+Instance "xschmitt_dc:MN_MAIN": Width narrower than recommended for a level 1 MOSFET.
+Instance "xschmitt_dc:MN_FB": Length shorter than recommended for a level 1 MOSFET.
+Instance "xschmitt_dc:MN_FB": Width narrower than recommended for a level 1 MOSFET.
+Model "pmos_14nm": Oxide thickness thinner than recommended for a level 1 MOSFET.
+Instance "xschmitt:MP_MAIN": Length shorter than recommended for a level 1 MOSFET.
+Instance "xschmitt:MP_MAIN": Width narrower than recommended for a level 1 MOSFET.
+Instance "xschmitt:MP_FB": Length shorter than recommended for a level 1 MOSFET.
+Instance "xschmitt:MP_FB": Width narrower than recommended for a level 1 MOSFET.
+Instance "xschmitt_dc:MP_MAIN": Length shorter than recommended for a level 1 MOSFET.
+Instance "xschmitt_dc:MP_MAIN": Width narrower than recommended for a level 1 MOSFET.
+Instance "xschmitt_dc:MP_FB": Length shorter than recommended for a level 1 MOSFET.
+Instance "xschmitt_dc:MP_FB": Width narrower than recommended for a level 1 MOSFET.
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=-35°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=-30°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=-25°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=-20°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=-15°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=-10°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=-5°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=0°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=5°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=10°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=15°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=20°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=25°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=30°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=35°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=40°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=45°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=50°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=55°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=60°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=65°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=70°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=75°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=80°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=85°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=90°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=95°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=100°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=105°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=110°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=115°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=120°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=125°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=130°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=135°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=140°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=145°
+Direct Newton iteration succeeded in finding operating point.
+
+.step temp=150°
+Direct Newton iteration succeeded in finding operating point.
+Total elapsed time: 3.339 seconds.
+
+Files loaded:
+C:\Users\rovim\.gemini\antigravity\scratch\SPICE Simulation\appendix_a_substrate\appA_schmitt_trigger_audit.cir
+
+Measurement "f_audit" FAIL'ed
+Measurement "f_audit_hz" FAIL'ed
+
+Measurement: f_audit_min_hz
+  step	'{f_per_K * (TEMP+273.15) * audit_fraction}'
+     1	78290076.2878
+     2	79969039.9654
+     3	81648003.6431
+     4	83326967.3207
+     5	85005930.9983
+     6	86684894.6759
+     7	88363858.3536
+     8	90042822.0312
+     9	91721785.7088
+    10	93400749.3865
+    11	95079713.0641
+    12	96758676.7417
+    13	98437640.4193
+    14	100116604.097
+    15	101795567.775
+    16	103474531.452
+    17	105153495.13
+    18	106832458.807
+    19	108511422.485
+    20	110190386.163
+    21	111869349.84
+    22	113548313.518
+    23	115227277.196
+    24	116906240.873
+    25	118585204.551
+    26	120264168.229
+    27	121943131.906
+    28	123622095.584
+    29	125301059.261
+    30	126980022.939
+    31	128658986.617
+    32	130337950.294
+    33	132016913.972
+    34	133695877.65
+    35	135374841.327
+    36	137053805.005
+    37	138732768.682
+    38	140411732.36
+    39	142090696.038
+Measurement "f_margin" FAIL'ed
+Measurement "f_passes" FAIL'ed

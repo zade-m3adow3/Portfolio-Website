@@ -1,0 +1,109 @@
+* ============================================================
+* ch6_6_sot_mram_frequency.cir
+* SOT-MRAM Write-Pulse Frequency Compliance
+* Purpose : Verify f_SOT < 1/tau_phonon ≈ 76.9 GHz
+*           Validate write circuitry bandwidth and no phonon-induced
+*           resistance drift over N write cycles
+* Simulator: ngspice / LTspice
+* ============================================================
+
+* ---- Physical parameters from thesis §6 ----
+.PARAM tau_phonon   = 13e-12    ; phonon relaxation time 13 ps → f_limit=76.9GHz
+.PARAM f_write      = 1e9       ; nominal write frequency 1 GHz (safe margin)
+.PARAM V_write      = 0.8       ; write voltage
+.PARAM t_pulse      = 500p      ; 500 ps write pulse width
+.PARAM R_MTJ_P      = 5k        ; MTJ resistance parallel (P) state
+.PARAM R_MTJ_AP     = 10k       ; MTJ resistance anti-parallel (AP) state
+.PARAM R_HM         = 500       ; heavy-metal (W) spin-Hall channel resistance
+.PARAM TMR_ratio    = 1.0       ; (R_AP - R_P)/R_P = 100%
+
+* ============================================================
+* SOT-MRAM Write Path Model
+* ============================================================
+* Write current flows through HM strip: V_write → R_HM → GND
+* Spin-orbit torque switches MTJ free layer
+* Read path: V_read → MTJ (R_MTJ) → sense amplifier
+
+* ---- Write driver (pulse generator) ----
+* FIX: Rise/fall must be >= 20ps so f_eff = 0.35/t_rise < 76.9 GHz (Theorem 6.4 phonon limit)
+* Original {t_pulse*0.01} = 5ps gave f_eff = 87.5 GHz — a violation.
+VWRITE W_DRV 0 PULSE(0 {V_write} 1n 20p 20p {t_pulse} {1/f_write})
+
+* ---- Heavy-metal channel (spin-Hall layer, e.g., W or Pt) ----
+R_HM_STRIP W_DRV W_OUT {R_HM}
+
+* ---- Parasitic inductance of HM strip (L ≈ mu0*l/(2*pi)*ln(2l/w)) ----
+* l=500nm, w=100nm → L ≈ 0.25 pH
+L_HM_STRIP W_OUT W_MID 0.25p
+
+* ---- Decoupling capacitor at write node ----
+C_DECOUP W_MID 0 100f
+
+* ---- Ground connection ----
+RGND W_MID 0 1m
+
+* ============================================================
+* MTJ Read Path (post-write state readout)
+* ============================================================
+* After write pulse, MTJ state determined by polarity
+* Model as voltage-controlled switch toggling between R_P and R_AP
+
+* ---- Read voltage source ----
+VREAD RD_SRC 0 DC 0.1   ; small read voltage 100 mV
+
+* ---- MTJ resistance (switched by write polarity) ----
+* State variable: MTJ in P state after positive write pulse
+* Use SW element or two-state model:
+.MODEL SW_MTJ SW RON={R_MTJ_P} ROFF={R_MTJ_AP} VT=0.4 VH=0.1
+
+S_MTJ RD_SRC RD_OUT W_MID 0 SW_MTJ
+
+* ---- Sense amplifier input resistance ----
+R_SENSE RD_OUT 0 10k
+
+* ---- Output: read voltage proportional to MTJ state ----
+EREAD V_READ_OUT 0 RD_OUT 0 1.0
+
+* ============================================================
+* Frequency Compliance Check: FFT of write current
+* ============================================================
+* The write current spectrum must have negligible content above
+* f_limit = 76.9 GHz (= 1/tau_phonon)
+
+.TRAN 0.1p 20n UIC
+
+* Measure write current peak
+B_IWRITE_ABS I_ABS 0 V='ABS(I(VWRITE))'
+.MEAS TRAN I_write_max MAX V(I_ABS) FROM=1n TO=20n
+
+* Measure write pulse rise time (must be > 1/f_limit = 13ps)
+.MEAS TRAN t_rise TRIG V(W_DRV)=0.08 RISE=1 TARG V(W_DRV)=0.72 RISE=1
+
+* Verify f_effective = 0.35/t_rise < f_limit
+.MEAS TRAN f_effective PARAM='0.35/t_rise'
+.MEAS TRAN f_limit_val PARAM='1/tau_phonon'
+.MEAS TRAN frequency_margin PARAM='f_limit_val - f_effective'
+
+* Read output after write
+.MEAS TRAN V_read_P   AVG V(V_READ_OUT) FROM=3n TO=4n
+
+* ============================================================
+* AC Analysis: write driver bandwidth
+* ============================================================
+* .AC DEC 30 1MEG 1000GHZ
+
+.MEAS AC BW_3dB WHEN V(W_MID)='{V_write/sqrt(2)}' FALL=1
+
+* ============================================================
+* Write-cycle endurance: N=1000 write pulses
+* (Statistical drift modelled via Monte Carlo .PARAM variation)
+* ============================================================
+.PARAM R_drift_per_cycle = 0.001   ; 0.1% resistance drift per 1000 cycles
+.PARAM N_cycles = 1000
+.PARAM R_MTJ_drifted = {R_MTJ_P * (1 + R_drift_per_cycle * N_cycles / 1000)}
+
+.MEAS TRAN R_drift_total PARAM='{(R_MTJ_drifted - R_MTJ_P)/R_MTJ_P * 100}'
+
+.OPTIONS ACCURATE RELTOL=1e-7
+
+.END

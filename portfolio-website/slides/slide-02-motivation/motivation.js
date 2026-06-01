@@ -267,40 +267,16 @@
 
     if (!track || !outer) return;
 
-    // Horizontal pan: move track left by 100vw
-    const tl_s2 = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#slide-02",
-        pin: true,
-        scrub: 1,
-        start: "top top",
-        end: "+=1200%",           // Extra scroll distance for 14 simulations
-        anticipatePin: 1,
-        onUpdate(self) {
-          // Progress bar spans across both panels
-          if (progressBar) {
-            progressBar.style.width = (self.progress * 100) + "%";
-          }
-        },
+    // Progress bar for the new vertical layout
+    ScrollTrigger.create({
+      trigger: "#slide-02",
+      start: "top top",
+      end: "bottom bottom",
+      onUpdate(self) {
+        if (progressBar) {
+          progressBar.style.width = (self.progress * 100) + "%";
+        }
       },
-    });
-
-    tl_s2.to(track, {
-      x: () => -(track.scrollWidth - window.innerWidth) + "px",
-      ease: "none",
-    });
-
-    // Inner scroll effect for Panel B (Empirical Grounding / 5 Simulations)
-    const simGrid = document.getElementById("s2-sim-grid");
-    const panelContent = document.querySelector(".s2-panel-b-content");
-    
-    tl_s2.to(simGrid, {
-      y: () => {
-        if (!simGrid || !panelContent) return 0;
-        const overflow = simGrid.scrollHeight - panelContent.clientHeight + 64; // pad the bottom
-        return overflow > 0 ? -overflow + "px" : "0px";
-      },
-      ease: "none",
     });
 
     /* ── Sim card stagger (Panel B) ───────────────────────── */
@@ -308,10 +284,10 @@
     gsap.set(simCards, { opacity: 0, y: 20 });
 
     ScrollTrigger.create({
-      trigger: "#slide-02",
-      start: "top top",          // fires when panel B comes into view via scroll
+      trigger: "#s2-panel-b",
+      start: "top 80%",          // fires when panel B comes into view via natural scroll
       onUpdate(self) {
-        if (self.progress > 0.5) {
+        if (self.progress > 0) {
           simCards.forEach((card, i) => {
             if (card.dataset.animated) return;
             gsap.to(card, {

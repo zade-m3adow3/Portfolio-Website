@@ -267,36 +267,31 @@
 
     if (!track || !outer) return;
 
-    // Progress bar for the new vertical layout
-    ScrollTrigger.create({
-      trigger: "#slide-02",
-      start: "top top",
-      end: "bottom bottom",
-      onUpdate(self) {
-        if (progressBar) {
-          progressBar.style.width = (self.progress * 100) + "%";
-        }
+    // Horizontal pan: move track left exactly by its full width offset
+    const tl_s2 = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#slide-02",
+        pin: true,
+        scrub: 1,
+        start: "top top",
+        end: () => "+=" + track.scrollWidth, // Map scroll distance exactly to track width
+        anticipatePin: 1,
+        onUpdate(self) {
+          if (progressBar) {
+            progressBar.style.width = (self.progress * 100) + "%";
+          }
+        },
       },
     });
 
-    /* ── Sim card stagger (Panel B) ───────────────────────── */
-    const simCards = document.querySelectorAll(".s2-sim-card");
-    gsap.set(simCards, { opacity: 0, y: 20 });
-
-    ScrollTrigger.create({
-      trigger: "#s2-panel-b",
-      start: "top 90%",
-      once: true,
-      onEnter: () => {
-        gsap.to(simCards, {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: GSAP_EASE,
-          stagger: 0.05,
-        });
-      }
+    tl_s2.to(track, {
+      x: () => -(track.scrollWidth - window.innerWidth) + "px",
+      ease: "none",
     });
+
+    /* ── Cards are fully visible instantly in horizontal mode ───────────────────────── */
+    const simCards = document.querySelectorAll(".s2-sim-card");
+    simCards.forEach(c => c.dataset.animated = "1");
   }
 
   /* ── Sim plot expand on click (lightbox feel) ────────────── */

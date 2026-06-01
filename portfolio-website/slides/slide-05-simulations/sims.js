@@ -721,6 +721,8 @@ import io, base64
 import matplotlib.pyplot as plt
 from js import document
 
+__file__ = "sim.py"
+
 def custom_show(*args, **kwargs):
     buf = io.BytesIO()
     plt.savefig(buf, format='png', bbox_inches='tight')

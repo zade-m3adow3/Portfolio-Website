@@ -285,22 +285,17 @@
 
     ScrollTrigger.create({
       trigger: "#s2-panel-b",
-      start: "top 80%",          // fires when panel B comes into view via natural scroll
-      onUpdate(self) {
-        if (self.progress > 0) {
-          simCards.forEach((card, i) => {
-            if (card.dataset.animated) return;
-            gsap.to(card, {
-              opacity: 1,
-              y: 0,
-              duration: 0.6,
-              ease: GSAP_EASE,
-              delay: i * 0.1,
-            });
-            card.dataset.animated = "1";
-          });
-        }
-      },
+      start: "top 90%",
+      once: true,
+      onEnter: () => {
+        gsap.to(simCards, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: GSAP_EASE,
+          stagger: 0.05,
+        });
+      }
     });
   }
 

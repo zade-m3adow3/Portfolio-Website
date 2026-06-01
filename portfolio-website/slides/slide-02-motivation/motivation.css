@@ -31,7 +31,7 @@
 
 .s2-panel { 
   width:100vw; 
-  min-height:100vh; 
+  height:auto; 
   display:flex; 
   align-items:stretch; 
 }
@@ -192,7 +192,7 @@
 
 .s2-sim-plot { 
   flex:1; 
-  min-height:80px; 
+  min-height:280px; 
   background:#08080f; 
   cursor:zoom-in; 
   display:flex; 

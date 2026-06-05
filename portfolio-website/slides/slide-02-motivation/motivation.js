@@ -240,58 +240,60 @@
   /* ── GSAP horizontal scroll ─────────────────────────────── */
   function initHorizontalScroll() {
     if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
-    // On tablet / mobile the CSS stacks panels vertically — skip the GSAP pin
-    if (window.innerWidth <= 1024) {
-      // Make sim cards immediately visible via a simple IntersectionObserver
-      const simCards = document.querySelectorAll(".s2-sim-card");
-      const simObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const el = entry.target;
-            el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
-            el.style.opacity = "1";
-            el.style.transform = "translateY(0)";
-            simObserver.unobserve(el);
-          }
-        });
-      }, { threshold: 0.1 });
-      simCards.forEach((c) => simObserver.observe(c));
-      return;
-    }
-
+    
     gsap.registerPlugin(ScrollTrigger);
 
-    const track     = document.getElementById("s2-track");
-    const outer     = document.getElementById("s2-outer");
-    const progressBar = document.getElementById("s2-progress-bar");
+    ScrollTrigger.matchMedia({
+      // Desktop: Horizontal Scroll Pin
+      "(min-width: 1025px)": function() {
+        const track     = document.getElementById("s2-track");
+        const outer     = document.getElementById("s2-outer");
+        const progressBar = document.getElementById("s2-progress-bar");
 
-    if (!track || !outer) return;
+        if (!track || !outer) return;
 
-    // Horizontal pan: move track left exactly by its full width offset
-    const tl_s2 = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#slide-02",
-        pin: true,
-        scrub: 1,
-        start: "top top",
-        end: () => "+=" + track.scrollWidth, // Map scroll distance exactly to track width
-        anticipatePin: 1,
-        onUpdate(self) {
-          if (progressBar) {
-            progressBar.style.width = (self.progress * 100) + "%";
-          }
-        },
+        const tl_s2 = gsap.timeline({
+          scrollTrigger: {
+            trigger: "#slide-02",
+            pin: true,
+            scrub: 1,
+            start: "top top",
+            end: () => "+=" + track.scrollWidth,
+            anticipatePin: 1,
+            onUpdate(self) {
+              if (progressBar) {
+                progressBar.style.width = (self.progress * 100) + "%";
+              }
+            },
+          },
+        });
+
+        tl_s2.to(track, {
+          x: () => -(track.scrollWidth - window.innerWidth) + "px",
+          ease: "none",
+        });
+
+        const simCards = document.querySelectorAll(".s2-sim-card");
+        simCards.forEach(c => c.dataset.animated = "1");
       },
+      
+      // Mobile: Vertical flow, simple reveal
+      "(max-width: 1024px)": function() {
+        const simCards = document.querySelectorAll(".s2-sim-card");
+        const simObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const el = entry.target;
+              el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+              el.style.opacity = "1";
+              el.style.transform = "translateY(0)";
+              simObserver.unobserve(el);
+            }
+          });
+        }, { threshold: 0.1 });
+        simCards.forEach((c) => simObserver.observe(c));
+      }
     });
-
-    tl_s2.to(track, {
-      x: () => -(track.scrollWidth - window.innerWidth) + "px",
-      ease: "none",
-    });
-
-    /* ── Cards are fully visible instantly in horizontal mode ───────────────────────── */
-    const simCards = document.querySelectorAll(".s2-sim-card");
-    simCards.forEach(c => c.dataset.animated = "1");
   }
 
   /* ── Sim plot expand on click (lightbox feel) ────────────── */

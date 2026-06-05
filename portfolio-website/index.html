@@ -31,6 +31,7 @@
   <link rel="stylesheet" href="slides/slide-05-simulations/sims.css">
   <link rel="stylesheet" href="slides/slide-06-animations/anim.css">
   <link rel="stylesheet" href="styles/responsive.css">
+  <link rel="stylesheet" href="styles/ai-widget.css">
 
   <!-- ── Libraries (synchronous, before body) ───────────── -->
   <!-- Import Map for ES Modules -->
@@ -82,6 +83,28 @@
     <div id="slide-05-container"></div>
     <div id="slide-06-container"></div>
   </main>
+
+  <!-- ── Global AI Query Widget ──────────────────────── -->
+  <div id="ai-widget-container">
+    <button id="ai-orb-btn" class="ai-orb-btn" aria-label="Ask APU-X">✨</button>
+    
+    <div id="ai-modal" class="ai-modal">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title">APU-X <span>Query Substrate</span></div>
+        <button id="ai-modal-close" class="ai-modal-close">&times;</button>
+      </div>
+      <div id="ai-chat-area" class="ai-chat-area">
+        <div class="ai-msg ai-msg-system">
+          <p>The APU-X substrate is online.</p>
+          <p>Ask a question about the Post-Mitigated Abraxas Model.</p>
+        </div>
+      </div>
+      <div class="ai-input-area">
+        <input type="text" id="ai-input" class="ai-input" placeholder="Query thesis vector space..." autocomplete="off">
+        <button id="ai-submit" class="ai-submit">SEND</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ════════════════════════════════════════════════════
        BOOTSTRAP SCRIPT
@@ -239,6 +262,8 @@
         ["slides/slide-06-animations/anim.js",      "module"],
         // FIX 3 — InspectOverlay for SPICE sim cards
         ["scripts/inspect-overlay.js",              "text/javascript"],
+        // Global AI Widget
+        ["scripts/ai-widget.js",                    "text/javascript"],
       ];
       
       for (const [src, type] of scripts) {

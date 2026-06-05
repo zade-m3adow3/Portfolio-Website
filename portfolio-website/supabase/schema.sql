@@ -13,7 +13,7 @@ CREATE EXTENSION IF NOT EXISTS vector;
 
 -- ───────────────────────────────────────────────────────────────
 -- TABLE 1: thesis_chunks
--- Stores chunked thesis text + OpenAI / Gemini embeddings
+-- Stores chunked thesis text + Gemini text-embedding-004 embeddings (768-dim)
 -- Used for RAG (Retrieval-Augmented Generation) queries
 -- ───────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.thesis_chunks (
@@ -21,8 +21,7 @@ CREATE TABLE IF NOT EXISTS public.thesis_chunks (
   chapter       text          NOT NULL,           -- e.g. "Chapter 3", "Appendix A"
   section_title text          NOT NULL,           -- e.g. "Theorem 3.1 — Oja++ Convergence"
   content_text  text          NOT NULL,           -- raw chunk text (300–800 tokens)
-  embedding     vector(1536)  NOT NULL,           -- OpenAI text-embedding-3-small (1536-dim)
-                                                  -- Use vector(768) for Gemini embeddings
+  embedding     vector(768)   NOT NULL,           -- Gemini text-embedding-004 (768-dim)
   token_count   integer,
   created_at    timestamptz   DEFAULT now()
 );
@@ -31,7 +30,7 @@ CREATE TABLE IF NOT EXISTS public.thesis_chunks (
 CREATE INDEX IF NOT EXISTS thesis_chunks_embedding_idx
   ON public.thesis_chunks
   USING ivfflat (embedding vector_cosine_ops)
-  WITH (lists = 100);
+  WITH (lists = 10);
 
 -- ───────────────────────────────────────────────────────────────
 -- TABLE 2: research_logs
@@ -120,10 +119,11 @@ CREATE POLICY "query_sessions_service_read" ON public.query_sessions
 
 -- ═══════════════════════════════════════════════════════════════
 -- FUNCTION: match_thesis_chunks
--- Called by Edge Function to perform cosine similarity search
+-- Called by the serverless API to perform cosine similarity search
+-- Uses Gemini text-embedding-004 (768-dim) vectors
 -- ═══════════════════════════════════════════════════════════════
 CREATE OR REPLACE FUNCTION public.match_thesis_chunks(
-  query_embedding vector(1536),
+  query_embedding vector(768),
   match_count     int     DEFAULT 5,
   similarity_threshold float DEFAULT 0.70
 )

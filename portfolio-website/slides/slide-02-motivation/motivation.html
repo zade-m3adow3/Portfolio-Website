@@ -4,51 +4,91 @@
 
   <!-- Outer pin wrapper -->
   <div class="s2-outer" id="s2-outer">
-    <!-- Inner horizontal track: 200vw -->
+    <!-- Inner horizontal track: 3 panels wide on desktop -->
     <div class="s2-track" id="s2-track">
 
-      <!-- PANEL A — MOTIVATION -->
+      <!-- ══════════════════════════════════════════════════════
+           PANEL A — THE PROBLEM (Four Flaws SOTA Cannot Fix)
+      ══════════════════════════════════════════════════════ -->
       <div class="s2-panel s2-panel-a" id="s2-panel-a">
         <div class="s2-vert-label" aria-hidden="true">MOTIVATION</div>
         <div class="s2-panel-a-content">
-          <div class="s2-section-label">§ ORIGIN</div>
-          <h2 class="s2-heading">Why Does an 18-Year-Old<br>Build an AGI Framework?</h2>
 
-          <div class="s2-cards" id="s2-cards">
-            <div class="s2-card" data-card="0">
-              <div class="s2-card-symbol">①</div>
+          <div class="s2-section-label">§ THEORETICAL MOTIVATION</div>
+          <h2 class="s2-heading">The Four Flaws<br>SOTA Cannot Fix</h2>
+
+          <!-- Problem row: flaws in current architectures -->
+          <div class="s2-flaw-grid" id="s2-cards">
+
+            <div class="s2-flaw-card" data-card="0">
+              <div class="s2-flaw-tag">FLAW I — ADVERSARIAL DRIFT</div>
               <div class="s2-card-body">
-                <div class="s2-card-title">The Hallucination Problem</div>
-                <p class="s2-card-text">Standard LLMs have no way to know, at inference time, whether they are operating in a healthy regime. I asked: can we build a hardware-observable signal that gates autonomous action? The GIM eigengap answers this question.</p>
+                <div class="s2-card-title">Ungrounded Continuous Manifolds</div>
+                <p class="s2-card-text">Monolithic Transformer architectures operate on continuous vector manifolds with no topological invariant. Any adversarial perturbation that steers the latent geometry is <em>undetectable</em> until catastrophic failure — the system has no self-monitoring signal.</p>
+                <div class="s2-card-fix">
+                  <span class="s2-fix-label">PMM RESOLUTION</span>
+                  <span class="s2-fix-text">GIM tracks the structural eigengap δ̂_k — adversarial steering causes a sharp contraction, triggering a deterministic rollback before subversion completes.</span>
+                </div>
               </div>
             </div>
-            <div class="s2-card" data-card="1">
-              <div class="s2-card-symbol">②</div>
+
+            <div class="s2-flaw-card" data-card="1">
+              <div class="s2-flaw-tag">FLAW II — REPRESENTATIONAL DRIFT</div>
               <div class="s2-card-body">
-                <div class="s2-card-title">Stateless Agent Amnesia</div>
-                <p class="s2-card-text">Every existing open-source agent framework forgets between sessions. Biological cognition does not. PMM's KuzuDB world model accumulates belief triples persistently — the system genuinely learns across runs.</p>
+                <div class="s2-card-title">Infinite Memory Expansion</div>
+                <p class="s2-card-text">SOTA models suffer infinite memory expansion over infinite temporal horizons. Without a finite-memory constraint, catastrophic forgetting is structurally guaranteed. There is no bounded attractor in the weight space that prevents drift under continuous updates.</p>
+                <div class="s2-card-fix">
+                  <span class="s2-fix-label">PMM RESOLUTION</span>
+                  <span class="s2-fix-text">Quicksand Oja++ enforces orthonormality on the Stiefel manifold V_k(ℝ^d), bounding drift via a Lyapunov function V(Ŵ_t) ≤ η_t B⁴/2δ_k. KuzuDB world model accumulates belief-triples with bounded graph cardinality.</span>
+                </div>
               </div>
             </div>
-            <div class="s2-card" data-card="2">
-              <div class="s2-card-symbol">③</div>
+
+            <div class="s2-flaw-card" data-card="2">
+              <div class="s2-flaw-tag">FLAW III — SYMBOLIC DISCONTINUITY</div>
               <div class="s2-card-body">
-                <div class="s2-card-title">The Closed-Loop Hardware Gap</div>
-                <p class="s2-card-text">No open-source AI system integrates the full schematic → SPICE → PCB → firmware → flash pipeline. Antigravity is the first. The hardware engineering loop validates the substrate the PMM theories describe.</p>
+                <div class="s2-card-title">Neural-Logical Interface Gap</div>
+                <p class="s2-card-text">The structural discontinuity between continuous neural vector spaces and discrete logical manifolds introduces severe computational instability in hybrid cognitive systems. No existing architecture formally bridges both domains under a single verification umbrella.</p>
+                <div class="s2-card-fix">
+                  <span class="s2-fix-label">PMM RESOLUTION</span>
+                  <span class="s2-fix-text">PMM-ABRAXAS unifies both under a cross-domain consistency metric C(t). Symbolic logical gates run inside GIM's seven predicates — any logical violation triggers the same rollback as a neural drift event.</span>
+                </div>
               </div>
             </div>
+
+            <div class="s2-flaw-card" data-card="3">
+              <div class="s2-flaw-tag">FLAW IV — HARDWARE BOTTLENECK</div>
+              <div class="s2-card-body">
+                <div class="s2-card-title">Thermal & Inductive Physical Instability</div>
+                <p class="s2-card-text">Mixed-signal crossbar arrays accumulate thermal gradients and parasitic inductance that corrupt arithmetic precision during continuous high-frequency operation. No open-source system co-designs the hardware to enforce physical invariants as engineering tolerance envelopes.</p>
+                <div class="s2-card-fix">
+                  <span class="s2-fix-label">APU-X RESOLUTION</span>
+                  <span class="s2-fix-text">CHS shielding + DASM protocol guarantees ε_arith &lt; 10⁻³ under all PVT corners. ΔT_max = 1.004 × 10⁻⁷ K. Shear stress τ = 3.012 × 10⁻² Pa ≪ σ_yield.</span>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /s2-flaw-grid -->
+
+          <!-- GIM equation strip -->
+          <div class="s2-gim-strip">
+            <div class="s2-gim-strip-label">GIM SAFETY PREDICATE — THEOREM 5.1</div>
+            <div class="s2-gim-eq" data-katex="\mathcal{I}(t) = \mathbf{1}\!\left[\hat{\delta}_k(t) \geq \delta_{\min}\right] \wedge \mathbf{1}\!\left[C(t) \geq \tau_c\right] \wedge \mathbf{1}\!\left[\mathcal{E}(t) \leq \varepsilon_0\right]"></div>
           </div>
 
-          <blockquote class="s2-pullquote">"The eigengap is not a heuristic. It is a proof."</blockquote>
+          <blockquote class="s2-pullquote">"Any adversarial vector that steers latent topology causes a sharp eigengap contraction — the system diverges before it can be subverted."</blockquote>
 
           <div class="s2-scroll-hint" id="s2-scroll-hint">
             <span class="s2-scroll-hint-line"></span>
-            <span class="s2-scroll-hint-text">SCROLL FOR SIMULATIONS</span>
+            <span class="s2-scroll-hint-text">SCROLL FOR EMPIRICAL EVIDENCE</span>
             <span class="s2-scroll-hint-arrow">→</span>
           </div>
         </div>
-      </div>
+      </div><!-- /panel-a -->
 
-      <!-- PANEL B — SPICE SIMULATIONS -->
+      <!-- ══════════════════════════════════════════════════════
+           PANEL B — EMPIRICAL GROUNDING (14 Simulations)
+      ══════════════════════════════════════════════════════ -->
       <div class="s2-panel s2-panel-b" id="s2-panel-b">
         <div class="s2-panel-b-content">
           <div class="s2-panel-b-title-area">
@@ -148,7 +188,7 @@
             <div class="s2-equation-label">Equation 2.3 — Global Integrity Monitor Predicate</div>
           </div>
         </div>
-      </div>
+      </div><!-- /panel-b -->
 
     </div><!-- /s2-track -->
   </div><!-- /s2-outer -->

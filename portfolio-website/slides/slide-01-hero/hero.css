@@ -53,7 +53,7 @@
 .hero-heading {
     font-family: var(--font-display);
     color: var(--text-primary);
-    font-size: 96px;
+    font-size: clamp(44px, 9vw, 96px);
     line-height: 1.1;
     margin-bottom: 16px;
 }
@@ -134,7 +134,7 @@
     box-shadow: inset 0 0 20px var(--spectral-1-10);
     padding: 24px;
     width: 100%;
-    max-width: 380px;
+    max-width: min(380px, 90vw);
     min-height: 280px;
     color: var(--text-primary);
     line-height: 1.6;

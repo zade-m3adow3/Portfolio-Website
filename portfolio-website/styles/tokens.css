@@ -8,6 +8,9 @@
   --gold: #e8c547;
   --text-primary: #e8e8f0;
   --text-muted: #6b7280;
+  --text-dim: rgba(107, 114, 128, 0.6);
+  --border-dim: rgba(255, 255, 255, 0.06);
+  --gold-30: rgba(232, 197, 71, 0.3);
 
   --spectral-1-30: rgba(0, 200, 255, 0.3);
   --spectral-1-10: rgba(0, 200, 255, 0.1);

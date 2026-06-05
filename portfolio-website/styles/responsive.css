@@ -98,8 +98,7 @@ button, [role="button"], .apux-btn, .sims-btn, .pmm-toggle,
    SLIDE 02 — MOTIVATION (horizontal scroll → vertical on mobile)
 ══════════════════════════════════════════════════════════════ */
 @media (max-width: 1024px) {
-  /* Disable the horizontal GSAP track on tablet/mobile.
-     Stack panels vertically so users can read everything. */
+  /* Disable the horizontal GSAP track on tablet/mobile */
   .slide-02-motivation {
     height: auto !important;
     min-height: 100vh;
@@ -113,63 +112,92 @@ button, [role="button"], .apux-btn, .sims-btn, .pmm-toggle,
     width: 100% !important;
     height: auto !important;
     flex-direction: column !important;
-    transform: none !important; /* kill GSAP inline transform */
+    transform: none !important;
   }
   .s2-panel {
     width: 100% !important;
     height: auto !important;
-    min-height: 100vh;
+    min-height: auto;
     flex-direction: column;
   }
-  /* Hide giant decorative vertical label */
   .s2-vert-label { display: none; }
 
-  .s2-panel-a-content {
-    padding: 40px 28px;
-  }
-  .s2-heading {
-    font-size: clamp(28px, 5vw, 44px);
-    margin-bottom: 24px;
-  }
-  .s2-cards { gap: 16px; margin-bottom: 28px; }
-  .s2-card-symbol { font-size: 48px; }
-  .s2-card-title { font-size: 17px; }
-  .s2-card-text { font-size: 14px; }
-  .s2-pullquote { font-size: 22px; }
-  .s2-scroll-hint { display: none; } /* no longer relevant */
+  /* Panel A */
+  .s2-panel-a-content { padding: 40px 28px; }
+  .s2-heading { font-size: clamp(26px, 4.5vw, 40px); margin-bottom: 20px; }
 
-  /* Panel B: stack sim cards in a single column */
+  /* 4-flaw grid: 2 columns on tablet */
+  .s2-flaw-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .s2-card-title  { font-size: 14px; }
+  .s2-card-text   { font-size: 12px; }
+  .s2-fix-text    { font-size: 11px; }
+
+  /* GIM strip */
+  .s2-gim-strip { padding: 8px 12px; flex-wrap: wrap; gap: 8px; }
+
+  .s2-pullquote   { font-size: clamp(14px, 2vw, 18px); }
+  .s2-scroll-hint { display: none; }
+
+  /* Panel B: switch to vertical title + sim grid */
+  .s2-panel-b { width: 100% !important; padding-right: 0 !important; }
   .s2-panel-b-content {
+    flex-direction: column !important;
     padding: 32px 20px;
     overflow: visible !important;
+    gap: 20px;
   }
+  .s2-panel-b-title-area { min-width: 0 !important; width: 100%; }
+
+  /* Sim grid: 1 column */
   .s2-sim-grid {
-    grid-template-columns: 1fr !important;
+    flex-direction: column !important;
+    height: auto !important;
     gap: 12px;
   }
-  .s2-sim-card-wide {
-    grid-column: 1 !important;
+  .s2-sim-card, .s2-sim-card-wide {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
   }
   .s2-sim-plot { min-height: 160px; }
   .s2-equation-block { padding: 12px; max-width: 100%; }
 }
 
 @media (max-width: 767px) {
-  .s2-panel-a-content { padding: 32px 16px; }
-  .s2-heading { font-size: clamp(26px, 7vw, 36px); }
-  .s2-card { gap: 12px; }
-  .s2-card-symbol { font-size: 36px; }
-  .s2-card-title { font-size: 15px; }
-  .s2-card-text { font-size: 13px; }
-  .s2-pullquote { font-size: 18px; }
+  .s2-panel-a-content { padding: 28px 16px; }
+  .s2-heading         { font-size: clamp(22px, 6vw, 32px); }
+
+  /* 4-flaw grid: 1 column on mobile */
+  .s2-flaw-grid { grid-template-columns: 1fr; gap: 8px; }
+  .s2-flaw-tag  { font-size: 8px; }
+  .s2-card-title { font-size: 13px; }
+  .s2-card-text  { font-size: 11px; }
+  .s2-fix-text   { font-size: 10px; }
+
+  .s2-gim-strip  { display: none; } /* too complex for 320px — hide */
+  .s2-pullquote  { font-size: 14px; }
+
   .s2-panel-b-content { padding: 24px 12px; }
-  /* Make expanded plot go full screen on mobile */
+  .s2-sim-plot { min-height: 140px; }
+
+  /* Expanded plot modal: near full-screen on mobile */
   .s2-plot-expanded {
     inset: 5vh 5vw !important;
     width: 90vw !important;
     height: 90vh !important;
   }
 }
+
+@media (max-width: 480px) {
+  .s2-panel-a-content { padding: 20px 12px; }
+  .s2-flaw-card { padding: 10px 12px; }
+  .s2-card-fix  { padding: 6px 8px; }
+}
+
 
 /* ══════════════════════════════════════════════════════════════
    SLIDE 03 — PMM TECHNICAL

@@ -113,7 +113,7 @@ async function main() {
 
       // Gemini free tier: 1,500 RPM for text-embedding-004
       // 50ms delay is enough; increase to 500ms if you hit quota errors
-      await new Promise(r => setTimeout(r, 50));
+      await new Promise(r => setTimeout(r, 8000));
 
     } catch (err) {
       console.error(`\n❌ Embed error (chunk ${i + 1}):`, err.message);

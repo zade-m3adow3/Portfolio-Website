@@ -1,5 +1,16 @@
 {
+  "name": "portfolio-website",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
   "dependencies": {
+    "@supabase/supabase-js": "^2.107.0",
     "puppeteer": "^25.1.0"
+  },
+  "devDependencies": {
+    "vercel": "^41.0.0"
   }
 }

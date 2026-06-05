@@ -54,7 +54,8 @@ async function generateAnswer(question, chunks) {
 
   const userMessage = `Here are the retrieved thesis sections:\n\n${contextBlock}\n\n---\n\nUser question: ${question}`;
   const apiKey = process.env.GEMINI_API_KEY;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  // gemini-2.0-flash confirmed available for this API key (gemini-1.5-flash is not)
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
   const res = await fetch(url, {
     method: 'POST',

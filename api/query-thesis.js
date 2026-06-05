@@ -98,7 +98,7 @@ export default async function handler(req, res) {
     const embedding = await embedQuestion(q);
     const { data: chunks, error: dbErr } = await supabaseAdmin.rpc(
       'match_thesis_chunks',
-      { query_embedding: embedding, match_count: 5, similarity_threshold: 0.70 }
+      { query_embedding: embedding, match_count: 5, similarity_threshold: 0.40 }
     );
     if (dbErr) throw dbErr;
 

@@ -169,7 +169,7 @@
           // Remove fixed width/height so it scales with container
           svg.removeAttribute("width");
           svg.removeAttribute("height");
-          svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+          svg.setAttribute("preserveAspectRatio", "none");
           svg.style.width = "100%";
           svg.style.height = "100%";
           plot.classList.remove("loading");
@@ -191,7 +191,7 @@
     const slide = document.getElementById("slide-02");
     if (!slide) return;
 
-    const cards = document.querySelectorAll(".s2-card");
+    const cards = document.querySelectorAll(".s2-flaw-card");
     const pullquote = document.querySelector(".s2-pullquote");
     const scrollHint = document.querySelector(".s2-scroll-hint");
 

@@ -21,8 +21,8 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-// ── Gemini text-embedding-004 via REST API (768-dim) ─────────
-const EMBED_MODEL = 'text-embedding-004';
+// ── Gemini Embedding 2 via REST API (768-dim output) ─────────
+const EMBED_MODEL = 'gemini-embedding-2';
 
 async function embedText(text) {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -35,7 +35,7 @@ async function embedText(text) {
     body: JSON.stringify({
       model: `models/${EMBED_MODEL}`,
       content: { parts: [{ text }] },
-      taskType: 'RETRIEVAL_DOCUMENT',
+      outputDimensionality: 768,
     }),
   });
 

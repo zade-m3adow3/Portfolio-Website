@@ -28,8 +28,8 @@ async function embedQuestion(question) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY not set');
 
-  // FIXED: was 'gemini-embedding-2' which does not exist
-  const model = 'text-embedding-004';
+  // gemini-embedding-2 is the correct model for this API key (confirmed via ListModels)
+  const model = 'gemini-embedding-2';
   const url = `https://generativelanguage.googleapis.com/v1/models/${model}:embedContent?key=${apiKey}`;
 
   const res = await fetch(url, {
@@ -38,8 +38,7 @@ async function embedQuestion(question) {
     body: JSON.stringify({
       model: `models/${model}`,
       content: { parts: [{ text: question }] },
-      // text-embedding-004 outputs 768 dims by default; taskType helps relevance
-      taskType: 'RETRIEVAL_QUERY',
+      outputDimensionality: 768,
     }),
   });
 

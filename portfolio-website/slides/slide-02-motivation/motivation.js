@@ -169,7 +169,7 @@
           // Remove fixed width/height so it scales with container
           svg.removeAttribute("width");
           svg.removeAttribute("height");
-          svg.setAttribute("preserveAspectRatio", "none");
+          svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
           svg.style.width = "100%";
           svg.style.height = "100%";
           plot.classList.remove("loading");

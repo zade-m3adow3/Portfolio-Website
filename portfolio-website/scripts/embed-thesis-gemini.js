@@ -10,7 +10,7 @@ import { GoogleGenAI } from '@google/genai';
 import { createClient } from '@supabase/supabase-js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PDF_PATH = path.join(__dirname, '..', 'Final_AGI_Thesis.pdf');
+const PDF_PATH = 'C:\\Users\\rovim\\.gemini\\antigravity\\scratch\\Portfolio-Website\\portfolio-website\\assets\\simulations\\spice\\Final_AGI_Thesis.pdf';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 const supabase = createClient(

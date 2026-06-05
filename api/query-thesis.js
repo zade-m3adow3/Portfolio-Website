@@ -30,7 +30,7 @@ async function embedQuestion(question) {
 
   // FIXED: was 'gemini-embedding-2' which does not exist
   const model = 'text-embedding-004';
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:embedContent?key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1/models/${model}:embedContent?key=${apiKey}`;
 
   const res = await fetch(url, {
     method: 'POST',

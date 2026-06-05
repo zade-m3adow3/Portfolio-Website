@@ -1,7 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api/:path*",
+      "destination": "/portfolio-website/api/:path*"
+    },
+    {
+      "source": "/((?!api/).*)",
       "destination": "/portfolio-website/$1"
     }
   ]

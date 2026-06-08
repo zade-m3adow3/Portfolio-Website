@@ -54,23 +54,29 @@ async function generateAnswer(question, chunks) {
 
   const userMessage = `Here are the retrieved thesis sections:\n\n${contextBlock}\n\n---\n\nUser question: ${question}`;
   const apiKey = process.env.GEMINI_API_KEY;
-  // gemini-2.0-flash confirmed available for this API key (gemini-1.5-flash is not)
+  // gemini-2.0-flash: fast, free-tier available model
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-      contents: [{ role: 'user', parts: [{ text: userMessage }] }],
-      generationConfig: { temperature: 0.2, maxOutputTokens: 800 }
-    }),
-  });
-
-  if (!res.ok) throw new Error(`Gemini LLM failed: ${await res.text()}`);
-  const json = await res.json();
-  return json.candidates[0].content.parts[0].text;
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: [{ role: 'user', parts: [{ text: userMessage }] }],
+        generationConfig: { temperature: 0.2, maxOutputTokens: 800 },
+      }),
+    });
+    if (!res.ok) throw new Error(`Gemini LLM failed: ${await res.text()}`);
+    const json = await res.json();
+    const answerText = json.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+    return answerText;
+  } catch (err) {
+    console.error('generateAnswer error', err);
+    return '';
+  }
 }
+
 
 export default async function handler(req, res) {
   const transaction = Sentry?.startTransaction({ name: 'query-thesis-gemini', op: 'http' });
@@ -95,13 +101,26 @@ export default async function handler(req, res) {
     const q = question.trim();
     const t0 = Date.now();
 
-    const embedding = await embedQuestion(q);
+    let embedding;
+    try {
+      embedding = await embedQuestion(q);
+    } catch (embedErr) {
+      console.error('Embedding failed', embedErr);
+      // Return a generic fallback answer indicating retrieval issue
+      return res.status(200).json({
+        answer: 'Unable to retrieve relevant thesis sections at this time. Please try again later.',
+        sources: [],
+      });
+    }
+
     const { data: chunks, error: dbErr } = await supabaseAdmin.rpc(
       'match_thesis_chunks',
-      // threshold 0.40 — balanced; higher values return zero results
       { query_embedding: embedding, match_count: 5, similarity_threshold: 0.40 }
     );
-    if (dbErr) throw dbErr;
+    if (dbErr) {
+      console.error('Supabase RPC error', dbErr);
+      return res.status(500).json({ error: 'Internal server error.' });
+    }
 
     if (!chunks || chunks.length === 0) {
       return res.status(200).json({
@@ -111,6 +130,15 @@ export default async function handler(req, res) {
     }
 
     const answer = await generateAnswer(q, chunks);
+    // If the model returned no text (empty string or null), provide a graceful fallback
+    if (!answer || answer.trim().length === 0) {
+      console.error('Gemini returned empty answer');
+      return res.status(200).json({
+        answer: 'Unable to generate a response at this time. Please try again later.',
+        sources: [],
+      });
+    }
+
     const latency = Date.now() - t0;
 
     supabaseAdmin.from('query_sessions').insert({

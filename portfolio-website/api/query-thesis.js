@@ -28,16 +28,17 @@ async function embedQuestion(question) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY not set');
 
-  // text-embedding-004 is the stable free-tier embedding model (768 dims)
-  const model = 'text-embedding-004';
+  // gemini-embedding-2 is the required model for this specific API key
+  const model = 'gemini-embedding-2';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:embedContent?key=${apiKey}`;
+
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: `models/${model}`,
       content: { parts: [{ text: question }] },
-      // text-embedding-004 natively outputs 768 dims; outputDimensionality is optional
+      outputDimensionality: 768,
     }),
   });
 

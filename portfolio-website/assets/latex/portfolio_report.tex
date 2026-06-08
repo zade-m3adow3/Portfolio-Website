@@ -3,8 +3,11 @@
 %  Author : Rounak Mukherjee
 %  Class  : XII, Ramakrishna Mission Vidyalaya Narendrapur, Kolkata
 %  Year   : 2026
-%  Desc.  : Full technical report of the APU-X thesis portfolio website,
-%           covering all six presentation slides in academic depth.
+%  Desc.  : Complete technical report of the APU-X thesis portfolio website,
+%           covering all six presentation slides, thesis foundations,
+%           SPICE/Python simulations, Pyodide browser runtime, Google Gemini
+%           RAG AI query integration, full security architecture, and
+%           privacy/legal infrastructure.
 %           Designed for standalone Overleaf compilation.
 %           All figures are coded inline using TikZ/PGFPlots.
 % ============================================================================
@@ -33,8 +36,13 @@
 \usepackage{multirow}
 \usepackage{tabularx}
 \usepackage{mdframed}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{pifont}
 
-\usetikzlibrary{arrows.meta, shapes.geometric, positioning, calc, decorations.pathreplacing}
+\usetikzlibrary{arrows.meta, shapes.geometric, positioning, calc,
+                decorations.pathreplacing, backgrounds, fit, matrix}
 \pgfplotsset{compat=1.18}
 \pgfmathsetseed{1337}
 
@@ -49,6 +57,8 @@
 \definecolor{purplecol}{RGB}{127, 90, 240}
 \definecolor{voidcol}{RGB}{8, 8, 18}
 \definecolor{substratecol}{RGB}{13, 13, 26}
+\definecolor{codebg}{RGB}{18, 18, 32}
+\definecolor{securitycol}{RGB}{255, 165, 0}
 
 % ── Typography ────────────────────────────────────────────────────────────────
 \titleformat{\section}{\large\bfseries\color{cyancol}}{§\,\thesection.}{0.6em}{}[\titlerule]
@@ -68,7 +78,7 @@
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{definition}[theorem]{Definition}
 
-% ── Custom Box ────────────────────────────────────────────────────────────────
+% ── Custom Boxes ──────────────────────────────────────────────────────────────
 \newmdenv[
   linecolor=cyancol,
   linewidth=0.6pt,
@@ -99,14 +109,48 @@
   innerbottommargin=8pt
 ]{greenbox}
 
+\newmdenv[
+  linecolor=securitycol,
+  linewidth=0.6pt,
+  backgroundcolor=securitycol!4,
+  innerleftmargin=10pt,
+  innerrightmargin=10pt,
+  innertopmargin=8pt,
+  innerbottommargin=8pt
+]{secbox}
+
+\newmdenv[
+  linecolor=purplecol,
+  linewidth=0.6pt,
+  backgroundcolor=purplecol!5,
+  innerleftmargin=10pt,
+  innerrightmargin=10pt,
+  innertopmargin=8pt,
+  innerbottommargin=8pt
+]{purplebox}
+
+% ── Code listing style ────────────────────────────────────────────────────────
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codebg!30},
+  frame=single,
+  rulecolor=\color{cyancol!30},
+  keywordstyle=\color{cyancol}\bfseries,
+  stringstyle=\color{goldcol},
+  commentstyle=\color{gray}\itshape,
+  breaklines=true,
+  captionpos=b,
+}
+
 % ── Hyperref ──────────────────────────────────────────────────────────────────
 \hypersetup{
   colorlinks=true,
   linkcolor=cyancol,
   urlcolor=cyancol,
   citecolor=goldcol,
-  pdftitle={APU-X Portfolio Report},
+  pdftitle={APU-X Portfolio Report v2 — Full Technical Coverage},
   pdfauthor={Rounak Mukherjee},
+  pdfsubject={AGI Safety Research, Neuromorphic Architecture, Web Portfolio},
 }
 
 % =============================================================================
@@ -115,14 +159,15 @@
 % ── Title Page ────────────────────────────────────────────────────────────────
 \begin{titlepage}
   \centering
-  \vspace*{3cm}
+  \vspace*{2.5cm}
 
   {\LARGE\bfseries\color{cyancol} PROJECT ANTIGRAVITY\\[0.5em]}
   {\Large\bfseries APU-X Neuromorphic Architecture\\[0.3em]}
-  {\large\color{gray} Portfolio Website Technical Report\\[2cm]}
+  {\large\color{gray} Portfolio Website — Complete Technical Report\\[0.2em]}
+  {\normalsize\color{gray!60} Slides · Thesis · Simulations · Pyodide · AI Query · Security · Privacy\\[1.8cm]}
 
   \begin{tikzpicture}
-    \draw[cyancol, line width=1.5pt] (0,0) rectangle (10,0.04);
+    \draw[cyancol, line width=1.5pt] (0,0) rectangle (12,0.04);
   \end{tikzpicture}
 
   \vspace{1.5cm}
@@ -132,26 +177,28 @@
   \textbf{School:} Ramakrishna Mission Vidyalaya Narendrapur, Kolkata, India\\[0.3em]
   \textbf{Class:} XII\\[0.3em]
   \textbf{Year:} 2026\\[0.3em]
-  \textbf{Purpose:} MIT Application Portfolio / Independent Research\\
+  \textbf{Purpose:} MIT Application Portfolio / Independent Research\\[0.3em]
+  \textbf{Stack:} Vanilla HTML/CSS/JS · Vercel · Supabase · Google Gemini API · Pyodide\\
   }
 
   \vspace{1.5cm}
 
   \begin{tikzpicture}
-    \draw[cyancol!40, line width=0.5pt] (0,0) rectangle (10,0.04);
+    \draw[cyancol!40, line width=0.5pt] (0,0) rectangle (12,0.04);
   \end{tikzpicture}
 
   \vspace{1cm}
 
   {\small\color{gray}
-  This document is a standalone technical report of the six-section portfolio website
-  presenting original independent research on mathematically rigorous frameworks for
-  trajectory-stable artificial general intelligence. All figures in this document are
-  produced in native \LaTeX\ using TikZ/PGFPlots and require no external image files.
+  This document is the complete technical report of the APU-X portfolio website,
+  covering all six slides, mathematical foundations, the full 14-simulation evidence suite,
+  in-browser Pyodide execution, the Google Gemini RAG AI query pipeline, security
+  architecture, and privacy/legal infrastructure. All figures are produced natively
+  in \LaTeX\ using TikZ/PGFPlots.
   }
 
   \vfill
-  {\small\color{gray} Compiled with \LaTeX\ · Overleaf · May 2026}
+  {\small\color{gray} Compiled with \LaTeX\ · Overleaf · June 2026}
 \end{titlepage}
 
 \newpage
@@ -172,18 +219,16 @@ at the intersection of:
 
 \begin{itemize}[noitemsep]
   \item \textbf{Functional Analysis} — Banach Fixed-Point contraction theory, Stiefel manifold geometry
-  \item \textbf{Control Theory} — Lyapunov stability criteria, L-contraction guarantees
+  \item \textbf{Control Theory} — Lyapunov stability criteria, $L$-contraction guarantees
   \item \textbf{Analog Circuit Design} — SPICE-validated crossbar arrays, SOT-MRAM, CNT thermal pillars
   \item \textbf{Machine Learning Theory} — Online subspace tracking, eigengap-driven learning rates
 \end{itemize}
-
-The central claim of the research is formalized in the following guarantee:
 
 \begin{cyanbox}
 \textbf{Core Safety Guarantee.} Given an APU-X system initialized on the Stiefel
 manifold $\mathcal{V}_k(\mathbb{R}^d)$ with a non-degenerate covariance trace
 $\mathrm{Tr}(\mathbf{C}_0) > 0$, and governed by a GIM predicate
-$\mathcal{I}(t)$ enforced at 20\,Hz, the system satisfies:
+$\mathcal{I}(t)$ enforced at 20\,Hz:
 $$
 \dot{V}(U_t) \;\leq\; -2\delta_k\,V(U_t) \quad \text{(Lyapunov decay)}
 $$
@@ -193,27 +238,82 @@ $$
 for all $t \geq 0$, contingent on $L_{\text{contract}} = 1 - \eta_t^{\text{eff}}(2\delta_k - \delta_{\min}) < 1$.
 \end{cyanbox}
 
-\subsection{Website Architecture Overview}
-
-The portfolio is structured as six horizontal slides rendered through a GSAP ScrollTrigger
-horizontal panning experience on the web:
+\subsection{Full Website Architecture}
 
 \begin{table}[H]
   \centering
-  \caption{Portfolio Website Slide Structure}
+  \caption{Portfolio Website Complete Slide Structure}
   \begin{tabularx}{\textwidth}{cXX}
     \toprule
-    \textbf{Slide} & \textbf{Title} & \textbf{Content} \\
+    \textbf{Slide} & \textbf{Title} & \textbf{Key Content} \\
     \midrule
-    01 & Hero & Research statement, thesis abstract, author credentials \\
-    02 & Motivation + Fourteen Simulations & 14 GSAP-animated SVG simulation cards, empirical overview \\
-    03 & PMM-ABRAXAS Technical Architecture & Six-component interactive deep-dive with LaTeX equations \\
+    01 & Hero & Research statement, thesis abstract, author credentials, animated background \\
+    02 & Motivation + 14 Simulations & GSAP-animated SVG simulation cards, KaTeX equations, empirical overview \\
+    03 & PMM-ABRAXAS Architecture & Six-component pipeline, LaTeX equations, interactive deep-dive \\
     04 & APU-X Neuromorphic Substrate & 7-layer 3D hardware model, SPICE badges, accordion cards \\
     05 & SPICE \& Python Simulations & Pyodide in-browser Python runner, SPICE netlist viewer \\
     06 & Live Animations & Three real-time canvas animations (GIM, DASM, Thermal) \\
     \bottomrule
   \end{tabularx}
 \end{table}
+
+\subsection{Technology Stack}
+
+\begin{table}[H]
+  \centering
+  \caption{Full Technology Stack}
+  \small
+  \begin{tabularx}{\textwidth}{lXl}
+    \toprule
+    \textbf{Layer} & \textbf{Technology} & \textbf{Purpose} \\
+    \midrule
+    Frontend & Vanilla HTML5 / CSS3 / JavaScript (ES2022) & No framework overhead \\
+    Animation & GSAP 3 + ScrollTrigger & Horizontal slide panning \\
+    Math render & KaTeX (client-side) & LaTeX equations in browser \\
+    3D graphics & Three.js (WebGL) & APU-X substrate 3D model \\
+    Code runner & Pyodide 0.25 (WASM) & In-browser Python execution \\
+    Hosting & Vercel (serverless edge) & CI/CD, HTTPS, edge functions \\
+    Database & Supabase (PostgreSQL + pgvector) & Embeddings, auth, logs \\
+    AI embeddings & Google Gemini (\texttt{gemini-embedding-2}) & 768-D vector embeddings \\
+    AI generation & Google Gemini (\texttt{gemini-2.5-flash}) & RAG answer synthesis \\
+    Rate limiting & Upstash Redis (sliding window) & 10 req/min/IP cap \\
+    Error tracking & Sentry (Node.js SDK) & Production error capture \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+% =============================================================================
+\section{Slide 01: Hero — Research Statement}
+\label{sec:slide01}
+% =============================================================================
+
+\subsection{Visual Design}
+
+The hero slide presents the research identity with:
+\begin{itemize}[noitemsep]
+  \item An animated particle-field canvas background (pure JavaScript, 2D Canvas API) — 200 nodes with WebGL-accelerated connections forming a real-time neural graph
+  \item A fixed-width monospace ``terminal'' typewriter animation cycling through the five safety theorems
+  \item GSAP entrance animations: title fades in at 1.2s, abstract at 1.8s, credential badge at 2.4s
+  \item A scroll-indicator chevron with a subtle bounce loop (CSS keyframe at 60 fps)
+\end{itemize}
+
+\subsection{Thesis Abstract (Full)}
+
+The Full AGI Thesis PDF (\texttt{Final\_AGI\_Thesis.pdf}, 563\,KB) is embedded directly
+in the hero section via a PDF viewer widget, allowing visitors to read the complete
+176-page document in-browser without downloading. The abstract reads:
+
+\begin{cyanbox}
+\small
+``This thesis develops a mathematically complete framework — the Post-Mitigated Abraxas
+Model (PMM) with APU-X Neuromorphic Substrate — for provably trajectory-stable artificial
+general intelligence. We prove five interconnected theorems guaranteeing: (1) Lyapunov
+exponential convergence at rate $\geq 2\delta_k$, (2) Oja++ manifold contraction with
+residual floor $O(\eta_t B^4/\delta_k)$, (3) DASM zero-drift rollback with BER
+$< 10^{-15}$, (4) SRC discretisation robustness in $B(x^*, r)$, and (5) Banach
+fixed-point uniqueness under $L_{\text{contract}} < 1$. All five are empirically
+validated by 14 SPICE-corroborated simulations and 7 validated SPICE netlists.''
+\end{cyanbox}
 
 % =============================================================================
 \section{Slide 02: Empirical Motivation — Fourteen Simulations}
@@ -222,20 +322,18 @@ horizontal panning experience on the web:
 
 \subsection{Section Purpose}
 
-The Motivation slide has two panels:
+The Motivation slide renders two panels simultaneously:
 \begin{enumerate}[noitemsep]
-  \item \textbf{Panel A:} The mathematical and physical motivation for the APU-X project, arguing that existing AI safety approaches lack the hardware-level rigour required.
-  \item \textbf{Panel B:} A horizontally-scrolling gallery of 14 simulation cards, each containing an SVG graph and a KaTeX-rendered theorem equation, forming an empirical evidence base.
+  \item \textbf{Panel A:} Mathematical/physical motivation arguing existing AI safety approaches lack hardware-level rigour.
+  \item \textbf{Panel B:} A horizontally-scrolling gallery of 14 simulation cards, each with an animated SVG plot and a KaTeX-rendered theorem equation.
 \end{enumerate}
 
-The 14 simulations span Chapters 3–8 and Appendix A of the thesis.
+Each card's SVG animation uses GSAP's \texttt{drawSVG} plugin to progressively draw the
+curve on scroll entry. The 14 simulations span Chapters 3--8 and Appendix A.
 
 \subsection{Fourteen Simulation Evidence Suite}
 
 \subsubsection{SIM-01: Oja++ Manifold Convergence (Theorem 3.1)}
-
-The Quicksand Oja++ update rule drives the weight matrix $\hat{W}_t$ onto the
-$k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathbf{G}\mathbf{G}^\top$.
 
 \begin{figure}[H]
   \centering
@@ -260,12 +358,11 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
   \addplot[greencol, dotted, domain=0:300, samples=3]
     { 0.018 };
   \addlegendentry{\small Residual floor $O(\eta_t B^4/\delta_k)$}
-  % Adversarial injection marker
   \draw[redcol, dashed] (axis cs:200, 0) -- (axis cs:200, 0.45);
   \node[redcol, font=\tiny] at (axis cs:200, 0.48) {Adversarial injection $t{=}200$};
   \end{axis}
   \end{tikzpicture}
-  \caption{SIM-01 (CH3 · OJA++): Empirical confirmation of Oja++ convergence on the Stiefel manifold. Post-adversarial recovery to residual floor $O(\eta_t B^4/\delta_k)$ is achieved within 50 epochs.}
+  \caption{SIM-01 (CH3 · OJA++): Post-adversarial recovery to residual floor within 50 epochs.}
   \label{fig:sim01}
 \end{figure}
 
@@ -280,8 +377,7 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
     ylabel={Margin Gain $\gamma_{\text{margin}} = \alpha K_1 - \alpha^2 K_2$},
     grid=major, grid style={dashed,gray!25},
     title={SIM-02: Optimal Margin Gain Analysis},
-    title style={font=\small},
-    label style={font=\small},
+    title style={font=\small}, label style={font=\small},
   ]
   \addplot[goldcol, thick, domain=0:0.12, samples=120]
     { 400*x*(0.1 - x) };
@@ -290,7 +386,7 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
   \node[redcol!80, font=\tiny] at (axis cs:0.055, 0.9) {$\alpha^* = 0.05$};
   \end{axis}
   \end{tikzpicture}
-  \caption{SIM-02 (CH3 · MARGIN GAIN): The quadratic margin gain profile confirms the existence of a unique optimal step size $\alpha^* = K_1 / (2K_2)$ that maximises Theorem 3.2's margin bound.}
+  \caption{SIM-02 (CH3 · MARGIN GAIN): Unique optimal step $\alpha^* = K_1 / (2K_2)$.}
   \label{fig:sim02}
 \end{figure}
 
@@ -301,14 +397,11 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
   \begin{tikzpicture}
   \begin{axis}[
     width=0.82\textwidth, height=5cm,
-    xlabel={Crossbar Density $N$ (nodes)},
-    ylabel={Effective Noise Power (dBm)},
-    xmode=log,
-    grid=major, grid style={dashed,gray!25},
+    xlabel={Crossbar Density $N$ (nodes)}, ylabel={Effective Noise Power (dBm)},
+    xmode=log, grid=major, grid style={dashed,gray!25},
     legend pos=north west,
     title={SIM-03: Crossbar Quantization and Thermal Noise Floors},
-    title style={font=\small},
-    label style={font=\small},
+    title style={font=\small}, label style={font=\small},
   ]
   \addplot[purplecol, thick, domain=10:65536, samples=60]
     { -90 + 10*log10(x) };
@@ -320,7 +413,7 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
   \addlegendentry{\small Noise tolerance limit}
   \end{axis}
   \end{tikzpicture}
-  \caption{SIM-03 (CH4 · E-NOISE): Spectral analysis of quantization boundaries and thermal $kT/C$ drift in the 64-D crossbar embedding array.}
+  \caption{SIM-03 (CH4 · E-NOISE): 64-D crossbar thermal and quantization noise floors.}
   \label{fig:sim03}
 \end{figure}
 
@@ -331,13 +424,11 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
   \begin{tikzpicture}
   \begin{axis}[
     width=0.82\textwidth, height=5cm,
-    xlabel={Time Step $t$},
-    ylabel={Eigengap $\hat{\delta}_k$},
+    xlabel={Time Step $t$}, ylabel={Eigengap $\hat{\delta}_k$},
     grid=major, grid style={dashed,gray!25},
     legend pos=north east,
     title={SIM-04: GIM Eigengap Collapse → Rollback Trigger at $t{=}481$},
-    title style={font=\small},
-    label style={font=\small},
+    title style={font=\small}, label style={font=\small},
   ]
   \addplot[greencol, thick, domain=0:480, samples=200]
     { 2.5 + 0.3*rand };
@@ -351,11 +442,11 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
   \node[redcol, font=\tiny, rotate=90] at (axis cs:496, 1.6) {GIM FIRES · ROLLBACK};
   \end{axis}
   \end{tikzpicture}
-  \caption{SIM-04 (CH4 · RECOVERY): The GIM fires at $t=481$ with zero false positives. The eigengap $\hat{\delta}_k$ collapses below $\delta_{\min}=0.5$ under adversarial perturbation; DASM restores $\theta_t$ exactly.}
+  \caption{SIM-04 (CH4 · RECOVERY): Zero false positives; DASM restores $\theta_t$ exactly.}
   \label{fig:sim04}
 \end{figure}
 
-\subsubsection{SIM-05 \& 06: Lyapunov Boundary Damping \& L-Contract Sweep (Chapter 5)}
+\subsubsection{SIM-05 \& 06: Lyapunov Damping \& L-Contract Sweep (Chapter 5)}
 
 \begin{figure}[H]
   \centering
@@ -381,8 +472,7 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
     \begin{tikzpicture}
     \begin{axis}[
       width=\textwidth, height=5cm,
-      xlabel={\small Temperature ($^\circ$C)},
-      ylabel={\small $L_{\text{contract}}$},
+      xlabel={\small Temperature ($^\circ$C)}, ylabel={\small $L_{\text{contract}}$},
       grid=major, grid style={dashed,gray!25},
       title={\small SIM-06: L-Contract Sweep},
       label style={font=\tiny}, tick label style={font=\tiny}
@@ -396,13 +486,13 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
     \node[goldcol, font=\tiny] at (axis cs:88, 0.62) {$85^\circ$C};
     \end{axis}
     \end{tikzpicture}
-    \caption{Stability preserved below $85^\circ$C}
+    \caption{$L_{\text{contract}} < 1$ below $85^\circ$C}
   \end{subfigure}
-  \caption{SIM-05 \& 06 (CH5 · LYAPUNOV): Left — damped boundary oscillation confirms finite stopping time. Right — $L_{\text{contract}} < 1$ guaranteed below $T < 85^\circ$C.}
+  \caption{SIM-05 \& 06 (CH5 · LYAPUNOV): Finite stopping time and thermal stability bounds.}
   \label{fig:sim05_06}
 \end{figure}
 
-\subsubsection{SIMs 07–10: APU-X Hardware Diagnostics (Chapter 6)}
+\subsubsection{SIMs 07--10: APU-X Hardware Diagnostics (Chapter 6)}
 
 \begin{figure}[H]
   \centering
@@ -421,10 +511,9 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
     \addlegendentry{\tiny TT $25^\circ$C}
     \addplot[cyancol, thick, domain=0.85:1.15, samples=20] { 100 + 38/(x-0.5) };
     \addlegendentry{\tiny FF $-40^\circ$C}
-    \addplot[white!60!gray, dashed, domain=0.85:1.15] { 12900 };
     \end{axis}
     \end{tikzpicture}
-    \caption{PVT corners all below $1/f_{\text{clock}}$}
+    \caption{PVT corners below $1/f_{\text{clock}}$}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
@@ -442,22 +531,18 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
     \node[redcol, font=\tiny] at (axis cs:180, 1e-13) {Target BER $<10^{-15}$};
     \end{axis}
     \end{tikzpicture}
-    \caption{DASM BER below $10^{-15}$ at nominal swing}
+    \caption{BER $< 10^{-15}$ at nominal swing}
   \end{subfigure}
-
-  \vspace{0.5cm}
-
+  \vspace{0.4cm}
   \begin{subfigure}[b]{0.48\textwidth}
     \begin{tikzpicture}
     \begin{axis}[
       width=\textwidth, height=5cm,
       xmode=log, ymode=log,
-      xlabel={\small Freq (Hz)},
-      ylabel={\small $S_V$ (V/$\sqrt{\text{Hz}}$)},
+      xlabel={\small Freq (Hz)}, ylabel={\small $S_V$ (V/$\sqrt{\text{Hz}}$)},
       grid=major, grid style={dashed,gray!25},
       title={\small SIM-09: V-Noise Verification},
-      legend style={font=\tiny},
-      label style={font=\tiny}, tick label style={font=\tiny}
+      legend style={font=\tiny}, label style={font=\tiny}, tick label style={font=\tiny}
     ]
     \addplot[redcol, thick, domain=1e3:1e9, samples=70]
       { 1e-4 / sqrt(x) + 1e-8 };
@@ -467,15 +552,14 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
     \addlegendentry{\tiny With CHS decap}
     \end{axis}
     \end{tikzpicture}
-    \caption{$10^5\times$ EM noise suppression via CHS}
+    \caption{$10^5\times$ EM noise suppression}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.48\textwidth}
     \begin{tikzpicture}
     \begin{axis}[
       width=\textwidth, height=5cm,
-      xlabel={\small Temperature ($^\circ$C)},
-      ylabel={\small Effective Bits},
+      xlabel={\small Temperature ($^\circ$C)}, ylabel={\small Effective Bits},
       grid=major, grid style={dashed,gray!25},
       title={\small SIM-10: Thermal Precision Degradation},
       label style={font=\tiny}, tick label style={font=\tiny}
@@ -486,10 +570,9 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
     \node[font=\tiny] at (axis cs:75, 5.3) {5-bit floor};
     \end{axis}
     \end{tikzpicture}
-    \caption{Precision drops from 8→5 bits above $80^\circ$C}
+    \caption{Precision 8→5 bits above $80^\circ$C}
   \end{subfigure}
-
-  \caption{SIM-07 to SIM-10 (CH6 · APU-X HARDWARE): Four SPICE-corroborated hardware validation diagnostics on the physical APU-X substrate.}
+  \caption{SIM-07--10 (CH6 · APU-X HARDWARE): SPICE-corroborated hardware validation.}
   \label{fig:sim07_10}
 \end{figure}
 
@@ -500,8 +583,7 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
   \begin{tikzpicture}
   \begin{axis}[
     width=0.82\textwidth, height=5cm,
-    xlabel={3D Vertical Stack Layer Index},
-    ylabel={Shear Stress $\tau$ (MPa)},
+    xlabel={3D Stack Layer Index}, ylabel={Shear Stress $\tau$ (MPa)},
     grid=major, grid style={dashed,gray!25},
     title={SIM-11: Multi-Physics FEM Shear Stress across TSV Stack},
     title style={font=\small}, label style={font=\small},
@@ -513,7 +595,7 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
   \node[redcol, font=\tiny] at (axis cs:4, 111) {Design limit $\sigma_{\text{yield}}/4$};
   \end{axis}
   \end{tikzpicture}
-  \caption{SIM-11 (CH6 · SHEAR FEM): Peak shear accumulates at the mid-stack layers (7–9). All values remain below the structural yield limit, confirming mechanical integrity of the 7-layer APU-X stack.}
+  \caption{SIM-11 (CH6 · SHEAR FEM): Mid-stack peak below structural yield limit.}
   \label{fig:sim11}
 \end{figure}
 
@@ -524,13 +606,10 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
   \begin{tikzpicture}
   \begin{axis}[
     width=0.82\textwidth, height=5cm,
-    ybar, bar width=22pt,
-    enlargelimits=0.12,
-    xlabel={Edge Corruption Rate (\%)},
-    ylabel={Graph Recovery Rate (\%)},
+    ybar, bar width=22pt, enlargelimits=0.12,
+    xlabel={Edge Corruption Rate (\%)}, ylabel={Graph Recovery Rate (\%)},
     symbolic x coords={0\%, 5\%, 10\%, 20\%, 35\%, 50\%},
-    xtick=data,
-    nodes near coords, nodes near coords align={vertical},
+    xtick=data, nodes near coords, nodes near coords align={vertical},
     nodes near coords style={font=\tiny},
     title={SIM-12: Protocol 8.1 — Semantic Memory Graph Reconstruction},
     title style={font=\small}, label style={font=\small},
@@ -539,19 +618,18 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
     {(0\%, 99.8) (5\%, 98.2) (10\%, 94.5) (20\%, 81.3) (35\%, 54.2) (50\%, 12.1)};
   \end{axis}
   \end{tikzpicture}
-  \caption{SIM-12 (CH8 · PROTOCOL 8.1): APU-X semantic graph reconstruction rates under adversarial edge deletion. At $10\%$ corruption the system still recovers $94.5\%$ of graph edges.}
+  \caption{SIM-12 (CH8 · PROTOCOL 8.1): $94.5\%$ recovery at $10\%$ corruption.}
   \label{fig:sim12}
 \end{figure}
 
-\subsubsection{SIM-13: Protocol 8.2 — PMM Synaptic Retention}
+\subsubsection{SIM-13: Protocol 8.2 — PCM Conductance Drift}
 
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}
   \begin{axis}[
     width=0.82\textwidth, height=5cm,
-    xlabel={Time (ms)},
-    ylabel={Conductance Retention $G/G_0$},
+    xlabel={Time (ms)}, ylabel={Conductance Retention $G/G_0$},
     grid=major, grid style={dashed,gray!25},
     legend pos=north east,
     title={SIM-13: Protocol 8.2 — PCM Multilevel Conductance Drift},
@@ -567,7 +645,7 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
   \addlegendentry{\small State 00 (Low-G)}
   \end{axis}
   \end{tikzpicture}
-  \caption{SIM-13 (CH8 · PROTOCOL 8.2): Chalcogenide glass structural relaxation drift across four conductance levels. Temporal discrimination between levels remains viable up to $\sim$80\,ms retention window.}
+  \caption{SIM-13 (CH8 · PROTOCOL 8.2): Level discrimination viable to $\sim$80\,ms.}
   \label{fig:sim13}
 \end{figure}
 
@@ -578,25 +656,19 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
   \begin{tikzpicture}
   \begin{axis}[
     width=0.82\textwidth, height=5cm,
-    xlabel={Distance from Active Core ($\mu$m)},
-    ylabel={Temperature Delta $\Delta T$ (K)},
+    xlabel={Distance from Core ($\mu$m)}, ylabel={$\Delta T$ (K)},
     grid=major, grid style={dashed,gray!25},
     legend pos=north east,
-    title={SIM-14 (App.A): CNT vs Copper Thermal Dissipation Gradient},
+    title={SIM-14 (App.A): CNT vs Copper Thermal Dissipation},
     title style={font=\small}, label style={font=\small},
   ]
-  \addplot[redcol, thick, domain=0:120, samples=100]
-    { 50*exp(-x/18) };
+  \addplot[redcol, thick, domain=0:120, samples=100] { 50*exp(-x/18) };
   \addlegendentry{\small Copper interconnect}
-  \addplot[cyancol, thick, domain=0:120, samples=100]
-    { 18*exp(-x/55) };
+  \addplot[cyancol, thick, domain=0:120, samples=100] { 18*exp(-x/55) };
   \addlegendentry{\small CNT pillars ($\kappa \geq 1400\,\text{W/mK}$)}
-  \draw[black!40, dotted] (axis cs:0, 0.0001007) -- (axis cs:120, 0.0001007);
-  \node[font=\tiny, black!60] at (axis cs:60, 0.002)
-    {$\Delta T_{\max} = 1.004{\times}10^{-7}\,\text{K (APU-X measured)}$};
   \end{axis}
   \end{tikzpicture}
-  \caption{SIM-14 (APP.A · CNT THERMAL): Carbon nanotube vertical pillars achieve $\kappa_{\text{vertical}} \geq 1400\,\text{W/mK}$, producing a flat, diffuse thermal profile versus copper's steep exponential decay.}
+  \caption{SIM-14 (APP.A · CNT): $\kappa_{\text{vertical}} \geq 1400\,\text{W/mK}$, flat thermal profile.}
   \label{fig:sim14}
 \end{figure}
 
@@ -607,10 +679,10 @@ $k$-dimensional principal subspace of the covariance $\mathbf{C} + \alpha \mathb
 
 \subsection{System Overview}
 
-The PMM-ABRAXAS (Parallel Memory Manifold — Adaptive Banach Recursive Attractor
+The PMM-ABRAXAS (Parallel Memory Manifold --- Adaptive Banach Recursive Attractor
 for eXact Alignment Stability) is the cognitive software stack of the APU-X
-architecture. It consists of six functional modules arranged in a processing
-pipeline, surrounded by the GIM safety perimeter.
+architecture. Six functional modules form the processing pipeline, surrounded
+by the GIM safety perimeter.
 
 \begin{figure}[H]
   \centering
@@ -623,29 +695,20 @@ pipeline, surrounded by the GIM safety perimeter.
     dasharr/.style={draw=goldcol!60, dashed, -{Stealth[scale=0.8]}},
     arr/.style={draw=cyancol!60, -{Stealth[scale=0.8]}}
   ]
-  % Nodes
   \node[box] (input) {RAW INPUT $x_t$};
   \node[box, below=of input] (npe) {\textbf{01 · NPE}\\{\tiny Neural Processing Engine}};
   \node[box, below=of npe] (ecf) {\textbf{02 · ECF}\\{\tiny Eigenvector Cognitive Filter}};
   \node[box, below=of ecf] (src) {\textbf{03 · SRC}\\{\tiny Symbolic Reasoning Core}};
   \node[box, below=of src, draw=greencol, fill=greencol!8] (out) {OUTPUT $a_t$};
-
-  % DASM register
   \node[box, right=2.5cm of ecf, draw=greencol, fill=greencol!6] (dasm)
         {\textbf{06 · DASM}\\{\tiny Snapshot Register}};
-
-  % GIM perimeter ellipse
   \draw[redcol!40, dashed, line width=0.8pt]
         ([shift={(-0.3cm,0.5cm)}]npe.north west)
         rectangle ([shift={(0.3cm,-0.5cm)}]src.south east);
   \node[redcol!50, font=\tiny] at ([shift={(0.0cm,-0.65cm)}]src.south)
         {GIM PERIMETER};
-
-  % Oja++ feedback arc
   \draw[dasharr] (ecf.west) -- ++(-1.2,0) -- ++(0,2.4) -- (npe.west)
         node[midway, left, goldcol, font=\tiny] {Oja++\\feedback};
-
-  % Arrows
   \draw[arr] (input) -- (npe);
   \draw[arr] (npe) -- (ecf);
   \draw[arr] (ecf) -- (src);
@@ -653,117 +716,83 @@ pipeline, surrounded by the GIM safety perimeter.
   \draw[greencol!60, dashed, {Stealth[scale=0.8]}-{Stealth[scale=0.8]}]
         (ecf.east) -- (dasm.west) node[midway, above, font=\tiny, greencol] {12.98 ns mirror};
   \end{tikzpicture}
-  \caption{PMM-ABRAXAS pipeline architecture showing the six-component processing chain, GIM safety perimeter (red dashed), DASM snapshot register (green), and Oja++ feedback arc (gold dashed).}
+  \caption{PMM-ABRAXAS pipeline: GIM perimeter (red dashed), DASM register (green), Oja++ feedback (gold).}
   \label{fig:pmm_arch}
 \end{figure}
 
 \subsection{Component Specifications}
 
 \subsubsection{01 · Neural Processing Engine (NPE)}
-
 \begin{cyanbox}
-\textbf{Function:} Generates high-dimensional continuous embeddings from raw input.
-$$
-z_t = \text{NPE}(x_t) \in \mathbb{R}^d, \quad \mathrm{Tr}(\mathbf{C}_0) > 0
-$$
-A non-degenerate random kernel projection at $t=0$ initialises the manifold
-with non-zero trace, preventing epistemic vacuum collapse.
+\textbf{Function:} High-dimensional embedding generation. $z_t = \text{NPE}(x_t) \in \mathbb{R}^d$,
+$\mathrm{Tr}(\mathbf{C}_0) > 0$ (non-degenerate random kernel at $t=0$ prevents epistemic vacuum collapse).
 \end{cyanbox}
 
 \subsubsection{02 · Eigenvector Cognitive Filter (ECF)}
-
 \begin{cyanbox}
-\textbf{Function:} Projects neural vectors onto the $k$-dimensional Guided Action Subspace $W^* \in \mathbb{R}^{d \times k}$.
-
-The Quicksand Oja++ update step is:
+\textbf{Quicksand Oja++ update:}
 $$
 \hat{W}_{t+1} = \mathrm{QR}\!\left(\hat{W}_t + \eta_t^{\text{eff}} \bigl(I - \hat{W}_t \hat{W}_t^\top\bigr) x_t x_t^\top \hat{W}_t\right)
 $$
-The eigengap $\delta_k = \lambda_k - \lambda_{k+1}$ measures structural separation.
-If $\delta_k < \delta_{\min}$, the GIM triggers rollback.
+Eigengap $\delta_k = \lambda_k - \lambda_{k+1}$. If $\delta_k < \delta_{\min}$, GIM fires.
 \end{cyanbox}
 
 \subsubsection{03 · Symbolic Reasoning Core (SRC)}
-
 \begin{cyanbox}
-\textbf{Function:} Converts continuous spectral vectors to discrete symbolic verdicts with a no-chattering guarantee.
-$$
-r = \Delta - \frac{\rho}{L_D} \quad \Rightarrow \quad \text{no chattering in } B(x^*, r)
-$$
+\textbf{No-chattering radius:} $r = \Delta - \rho/L_D$. Inside $B(x^*, r)$: $s(x) = s(y)$ for all $x, y$.
 \end{cyanbox}
 
 \subsubsection{04 · Global Integrity Monitor (GIM)}
-
 \begin{redbox}
-\textbf{Function:} Evaluates composite boolean predicate $\mathcal{I}(t)$ at 20\,Hz. All seven conditions must be simultaneously TRUE for any autonomous action.
-
-\textbf{Lyapunov Safety Guarantee:}
-$$
-\dot{V}(U_t) \;\leq\; -2\delta_k\,V(U_t)
-$$
-
-\textbf{Contraction Modulus:}
-$$
-L_{\text{contract}} = 1 - \eta_t^{\text{eff}}(2\delta_k - \delta_{\min}) < 1
-$$
-
-A hardware eBPF watchdog enforces this at Ring~0. Empirically validated by SIM-04: GIM fires at $t=481$, zero false positives.
+\textbf{Lyapunov Safety Guarantee:} $\dot{V}(U_t) \leq -2\delta_k\,V(U_t)$\\
+\textbf{Contraction Modulus:} $L_{\text{contract}} = 1 - \eta_t^{\text{eff}}(2\delta_k - \delta_{\min}) < 1$\\
+Enforced by hardware eBPF watchdog at Ring~0. GIM fires at $t=481$, zero false positives (SIM-04).
 \end{redbox}
 
 \subsubsection{05 · Differential Active-Set Masking (DASM)}
-
 \begin{greenbox}
-\textbf{Function:} Mirrors verified analog parameter state $\theta_t$ into a digital SRAM snapshot register before each update. On GIM predicate failure:
-$$
-\theta_{t+1} \;\leftarrow\; \theta_{\text{snapshot}} \quad \text{(single clock cycle)}
-$$
-\textbf{Zero-Drift Guarantee:}
-$$
-\mathbb{E}\!\left[\|\theta_{\text{restored}} - \theta_t\|^2\right] \;\equiv\; 0
-$$
-versus the naive analogue reversal error:
-$$
-\mathbb{E}\!\left[\|\theta_{\text{reversed}} - \theta_t\|^2\right] = 2\Theta\sigma^2
-$$
-SRAM BER $< 10^{-15}$ ensures zero-drift restoration.
+\textbf{Zero-Drift Guarantee:} $\mathbb{E}\!\left[\|\theta_{\text{restored}} - \theta_t\|^2\right] \equiv 0$
+
+vs naïve reverse: $\mathbb{E}[\|\theta_{\text{reversed}} - \theta_t\|^2] = 2\Theta\sigma^2$
+
+SRAM BER $< 10^{-15}$; single-cycle restoration.
 \end{greenbox}
 
-\subsubsection{06 · Quicksand Oja++ (Adaptive Learning Rule)}
-
+\subsubsection{06 · Quicksand Oja++ (Noise-Adaptive Step)}
 \begin{cyanbox}
-\textbf{Noise-Adaptive Step Size:}
 $$
-\eta_t^{\text{eff}} = \frac{\eta_0}{1 + \hat{\sigma}^2_t / \delta_{\min}}
+\eta_t^{\text{eff}} = \frac{\eta_0}{1 + \hat{\sigma}^2_t / \delta_{\min}} \quad \text{(self-annealing under adversarial noise)}
 $$
-As $\hat{\sigma}^2_t \to \infty$, $\eta_t^{\text{eff}} \to 0$ — preventing boundary singularity under adversarial noise injection.
-
-\textbf{Asymptotic convergence:}
 $$
 \limsup_{t\to\infty}\; \mathbb{E}[V(\hat{W}_t)] \;\leq\; \frac{\eta_t B^4}{2\delta_k} + O(\sigma^2_{\text{noise}})
 $$
-Empirically confirmed 4.2$\times$ faster convergence vs standard Oja (SIM-01).
+Empirically: $4.2\times$ faster convergence vs standard Oja (SIM-01).
 \end{cyanbox}
 
 % =============================================================================
-\section{Slide 04: APU-X Neuromorphic Substrate — Seven Physical Layers}
+\section{Slide 04: APU-X Neuromorphic Substrate}
 \label{sec:apux}
 % =============================================================================
 
 \subsection{Physical Architecture}
 
-The APU-X substrate is a 7-layer 3D-stacked neuromorphic chip at $Z$: 0–15\,mm total height.
-The website renders this as an interactive Three.js 3D model with Idle Rotate, Explode View,
-and Thermal mapping modes. The table below summarises the seven layers.
+The APU-X substrate is a 7-layer 3D-stacked neuromorphic chip, $Z$: 0--15\,mm total height.
+The website renders this as an interactive Three.js 3D model with three modes:
+\begin{itemize}[noitemsep]
+  \item \textbf{Idle Rotate:} continuous 0.3°/frame Y-axis rotation
+  \item \textbf{Explode View:} GSAP-animated layer separation (click toggle)
+  \item \textbf{Thermal Map:} procedural colour mapping onto each layer face
+\end{itemize}
 
 \begin{table}[H]
   \centering
-  \caption{APU-X 7-Layer Physical Stack Summary}
+  \caption{APU-X 7-Layer Physical Stack}
   \small
   \begin{tabularx}{\textwidth}{c X l l}
     \toprule
-    \textbf{Layer} & \textbf{Name} & \textbf{Z range} & \textbf{SPICE Validation} \\
+    \textbf{L} & \textbf{Name} & \textbf{Z range} & \textbf{SPICE Validation} \\
     \midrule
-    01 & 14nm FinFET Silicon Base & 0–1 mm & ch6\_1\_combinational\_latency.cir\\
+    01 & 14nm FinFET Silicon Base & 0–1 mm & ch6\_1\_combinational\_latency.cir \\
     02 & 512-Tile Parallel Rank-Update Array & 1–3 mm & — \\
     03 & CNT Thermal Pillars + Graphene/h-BN Shunts & 3–6 mm & appA\_cnt\_thermal.py \\
     04 & CHS Coaxial Heterogeneous Shielding & 6–8 mm & ch6\_3\_chs\_em\_decoupling.cir \\
@@ -774,96 +803,11 @@ and Thermal mapping modes. The table below summarises the seven layers.
   \end{tabularx}
 \end{table}
 
-\subsection{Layer-by-Layer Analysis}
-
-\subsubsection{Layer 01: 14nm FinFET Silicon Base}
-
-Fabricated on a 14nm FinFET process node with High-K dielectric gates (channel length $L \geq 14$\,nm).
-The single-cycle clock frequency is $f_{\text{clock}} = 77$\,MHz (period $T = 12.98$\,ns).
-
-\begin{cyanbox}
-\textbf{SPICE Result:} $T_{\text{comb}} = 250 \times 40\,\text{ps} + 2.9\,\text{ns} = 12.9\,\text{ns} \leq 1/f_{\text{clock}}$ ✓
-$$
-T_{\text{comb}} = N_{\text{stages}} \times t_{\text{gate}} + t_{\text{setup}} = 12.9\,\text{ns}
-$$
-\end{cyanbox}
-
-\subsubsection{Layer 02: 512-Tile Parallel Rank-Update Array}
-
-$L = 512$ independent processing tiles each managing sub-dictionary $N_{\text{tile}} = N/L$.
-Sequential $O(m \cdot N)$ complexity reduced to $O(m \cdot N/L)$.
-
-$$
-\text{ops}_{\text{tile}} = \frac{m \cdot N}{L} = \frac{1028 \times 2^{16}}{512} = 1.3 \times 10^5
-$$
-
-At 77\,MHz, the full rank-update completes in 1.68\,ms — well within the 20\,Hz GIM polling cycle.
-
-\subsubsection{Layer 03: CNT Thermal Pillars + Graphene/h-BN Shunts}
-
-Vertical carbon nanotube pillars achieve $\kappa_{\text{vertical}} \geq 1400\,\text{W/m{\cdot}K}$.
-The maximum temperature rise under full operation load is:
-
-\begin{greenbox}
-$$
-\Delta T_{\max} = \frac{P_{\text{density}} \cdot d^2_{\text{layer}}}{2\kappa_{\text{vertical}}} = 1.004 \times 10^{-7}\,\text{K} \quad \text{✓}
-$$
-This is 3 orders of magnitude below standard copper interconnect heating.
-\end{greenbox}
-
-\subsubsection{Layer 04: CHS Coaxial Heterogeneous Shielding}
-
-A grounded graphene monolayer outer sleeve at radius $r_s$ enforces
-$\hat{n} \times E(r_s) = 0$. Physical shielding leakage $\delta_{\text{shield}} \leq 10^{-5}$.
-
-\begin{greenbox}
-\textbf{SPICE Result:} $V_{\text{noise}} = M_{ij}\,\frac{dI_i}{dt} \approx 2.77\,\mu\text{V} < V_{\text{LSB}} = 976\,\mu\text{V}$ ✓
-
-Electromagnetic coupling noise $10^5\times$ below the 8-bit LSB voltage.
-\end{greenbox}
-
-\subsubsection{Layer 05: SOT-MRAM Parameter State Invariance}
-
-Spin-Orbit Torque MRAM provides non-volatile high-endurance storage for the DASM
-rollback source.
-
-\begin{greenbox}
-\textbf{SPICE Result:} $\text{BER} < 10^{-15}$ under normal operation, $f_{\text{write}} = 77\,\text{MHz}$ ✓
-
-Write latency equals a single clock cycle — 12.98\,ns.
-\end{greenbox}
-
-\subsubsection{Layer 06: DASM Digital Snapshot Registers}
-
-DASM mirrors $\theta_t \to \theta_{\text{snapshot}}$ before each update. On GIM predicate failure:
-$\theta_{t+1} \leftarrow \theta_{\text{snapshot}}$ in a single bitwise copy cycle.
-
-\begin{greenbox}
-\textbf{SPICE Result:}
-$\mathbb{E}[\|\theta_{\text{restored}} - \theta_t\|^2] \equiv 0$ · zero-drift confirmed ✓
-\end{greenbox}
-
-\subsubsection{Layer 07: Shadow Worker Verification Tile}
-
-Runs in lock-step with the primary execution path at 20\,Hz. Evaluates algebraic invariants
-on SRAM snapshot blocks, independently reconstructing states via the inverse dictionary
-operator $\mathcal{D}_t$. Completely decoupled from primary execution to prevent
-single-point failure.
-
-$$
-\mathcal{I}(t) \;\Rightarrow\;
-\begin{cases}
-\text{PASS:} & \theta_{t+1} = \theta_t - \eta_t \nabla \mathcal{L} \\
-\text{FAIL:}  & \theta_{t+1} \leftarrow \theta_{\text{snapshot}}
-\end{cases}
-$$
-
-\subsection{Integrated 3D Stack Diagram}
+\subsection{3D Stack Schematic}
 
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}[scale=1]
-    % Define layers from bottom to top
     \foreach \i/\name/\col in {
       1/{Layer 1: 14nm FinFET Base}/cyancol,
       2/{Layer 2: 512-Tile Array}/cyancol,
@@ -874,62 +818,107 @@ $$
       7/{Layer 7: Shadow Worker}/cyancol
     }{
       \fill[\col!15, draw=\col!60, line width=0.5pt]
-        (0, \i*0.72 - 0.72) rectangle (8, \i*0.72 - 0.08);
-      \node[font=\tiny, \col!80!black] at (4, \i*0.72 - 0.40) {\name};
+        (0, \i*0.72 - 0.72) rectangle (10, \i*0.72 - 0.08);
+      \node[font=\tiny, \col!80!black] at (5, \i*0.72 - 0.40) {\name};
     }
-    % Z axis
     \draw[black!30, -{Stealth}] (-0.3, 0) -- (-0.3, 7*0.72)
       node[above, font=\tiny, black!50] {$Z$};
     \node[font=\tiny, black!50, rotate=90] at (-0.65, 2.5) {0 -- 15 mm};
   \end{tikzpicture}
-  \caption{APU-X 7-layer 3D stack schematic. From bottom: silicon base → parallel compute → thermal management → EM shielding → non-volatile memory → digital rollback registers → independent verification.}
+  \caption{APU-X 7-layer stack: silicon → compute → thermal → EM shield → memory → rollback → verification.}
   \label{fig:apux_stack}
 \end{figure}
 
+\subsection{Key Hardware Results}
+
+\begin{table}[H]
+  \centering
+  \caption{SPICE-Validated Hardware Performance Summary}
+  \small
+  \begin{tabularx}{\textwidth}{lXl}
+    \toprule
+    \textbf{Parameter} & \textbf{Result} & \textbf{Source} \\
+    \midrule
+    Combinational latency & $T_{\text{comb}} = 12.9\,\text{ns} \leq 1/f_{\text{clock}}$ ✓ & ch6\_1 \\
+    SRAM SNM & $> 150\,\text{mV}$ ✓ & ch6\_2 \\
+    CHS EM suppression & $10^5\times$ noise reduction ✓ & ch6\_3 \\
+    SOT-MRAM BER & $< 10^{-15}$ at 77\,MHz ✓ & ch6\_6 \\
+    CNT $\Delta T_{\max}$ & $1.004 \times 10^{-7}\,\text{K}$ ✓ & App.A \\
+    TSV shear stress & $\tau_{\max} = 122\,\text{MPa} < \sigma_{\text{yield}}/4$ ✓ & FEM \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
 % =============================================================================
-\section{Slide 05: SPICE Simulations \& Python Models}
+\section{Slide 05: SPICE Simulations \& Pyodide Python Runner}
 \label{sec:spice}
 % =============================================================================
 
 \subsection{In-Browser Pyodide Execution Engine}
 
-The SPICE Simulations slide hosts a full in-browser Python runtime using Pyodide (CPython
-compiled to WebAssembly). Users can open any of the 14 simulation scripts in the sidebar,
-view the full source code, and click \textbf{RUN IN BROWSER} to execute the Python script
-natively inside the browser tab — without any server-side computation.
-
-Packages automatically loaded: \texttt{numpy}, \texttt{matplotlib}, \texttt{pandas},
-\texttt{scipy}, \texttt{tqdm}.
+The Slide 05 hosts a full in-browser Python runtime using Pyodide 0.25
+(CPython 3.11 compiled to WebAssembly via Emscripten). Users can open any of
+the 14 simulation scripts, view source, and click \textbf{RUN IN BROWSER} to
+execute Python entirely within the browser tab --- no server computation involved.
 
 \begin{cyanbox}
 \textbf{Runtime Execution Pipeline:}
 \begin{enumerate}[noitemsep]
-  \item Pyodide WASM runtime initialised
-  \item Dependencies installed via micropip
-  \item \texttt{plt.show()} intercepted and re-routed to base64 PNG in DOM
-  \item \texttt{\_\_file\_\_} injected as virtual path to prevent NameError
-  \item Output rendered in terminal and graph panel below code editor
+  \item Pyodide WASM runtime lazy-loaded from CDN on first use ($\sim$8\,MB initial load)
+  \item Scientific packages installed via \texttt{micropip}: \texttt{numpy}, \texttt{matplotlib}, \texttt{scipy}, \texttt{pandas}, \texttt{tqdm}
+  \item \texttt{plt.show()} intercepted — figure rendered as base64 PNG injected into DOM graph panel
+  \item \texttt{\_\_file\_\_} injected as virtual path \texttt{/home/pyodide/script.py} to prevent \texttt{NameError}
+  \item \texttt{stdout}/\texttt{stderr} streamed to terminal panel via \texttt{pyodide.setStdout}
+  \item Execution is async — UI remains responsive during computation
 \end{enumerate}
 \end{cyanbox}
+
+\subsection{Architectural Diagram: Pyodide Pipeline}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    node distance=1.0cm,
+    box/.style={rectangle, draw=cyancol!60, fill=cyancol!6,
+                minimum width=2.8cm, minimum height=0.75cm,
+                align=center, font=\small, rounded corners=2pt},
+    arr/.style={draw=cyancol!60, -{Stealth[scale=0.8]}}
+  ]
+  \node[box] (user) {User clicks\\RUN};
+  \node[box, right=1.5cm of user] (fetch) {Fetch Python\\source (XHR)};
+  \node[box, right=1.5cm of fetch] (pyodide) {Pyodide\\WASM runtime};
+  \node[box, below=0.8cm of pyodide] (exec) {Execute\\script};
+  \node[box, left=1.5cm of exec] (out) {Capture\\stdout/figure};
+  \node[box, left=1.5cm of out] (dom) {Inject into\\DOM panels};
+
+  \draw[arr] (user) -- (fetch);
+  \draw[arr] (fetch) -- (pyodide);
+  \draw[arr] (pyodide) -- (exec);
+  \draw[arr] (exec) -- (out);
+  \draw[arr] (out) -- (dom);
+  \end{tikzpicture}
+  \caption{Pyodide execution pipeline: fully client-side, zero server load after CDN bootstrap.}
+  \label{fig:pyodide_pipeline}
+\end{figure}
 
 \subsection{Python Simulation Suite}
 
 \begin{table}[H]
   \centering
-  \caption{Python Model Files — APU-X Simulation Suite}
+  \caption{Python Model Files — 14-Script Simulation Suite}
   \small
   \begin{tabularx}{\textwidth}{l X}
     \toprule
     \textbf{File} & \textbf{Content} \\
     \midrule
-    \texttt{appA\_cnt\_thermal.py} & CNT thermal conductivity vs copper comparison \\
-    \texttt{ch3\_margin\_gain.py} & Margin gain $\gamma$ vs step size $\alpha$ \\
+    \texttt{appA\_cnt\_thermal.py} & CNT vs copper thermal conductivity comparison \\
+    \texttt{ch3\_margin\_gain.py} & Margin gain $\gamma$ vs step size $\alpha$ (Theorem 3.2) \\
     \texttt{ch3\_oja\_convergence.py} & Oja++ convergence on Stiefel manifold \\
-    \texttt{ch4\_crossbar\_enoise.py} & kT/C noise and quantization floor analysis \\
+    \texttt{ch4\_crossbar\_enoise.py} & $kT/C$ noise and quantization floor analysis \\
     \texttt{ch4\_memory\_graph\_recovery.py} & Graph reconstruction after adversarial deletion \\
     \texttt{ch5\_boundary\_damping.py} & Lyapunov damped oscillation validation \\
-    \texttt{ch5\_lcontract\_sweep.py} & L-contraction sweep across temperature range \\
-    \texttt{ch6\_1\_pvt\_sweep.py} & PVT corner sweep (SS/TT/FF corners) \\
+    \texttt{ch5\_lcontract\_sweep.py} & $L$-contraction temperature sweep \\
+    \texttt{ch6\_1\_pvt\_sweep.py} & PVT corner sweep (SS/TT/FF) \\
     \texttt{ch6\_2\_dasm\_ber\_analysis.py} & DASM SRAM BER vs signal swing \\
     \texttt{ch6\_3\_vnoise\_verification.py} & CHS EM noise suppression verification \\
     \texttt{ch6\_4\_thermal\_precision.py} & Precision degradation vs temperature \\
@@ -942,20 +931,18 @@ Packages automatically loaded: \texttt{numpy}, \texttt{matplotlib}, \texttt{pand
 
 \subsection{SPICE Netlist Suite}
 
-Seven SPICE netlists validate the physical substrate layer by layer:
-
 \begin{table}[H]
   \centering
-  \caption{SPICE Netlist Files — APU-X Physical Validation}
+  \caption{SPICE Netlists — Physical Layer Validation}
   \small
   \begin{tabularx}{\textwidth}{l X l}
     \toprule
     \textbf{File} & \textbf{Validation Target} & \textbf{Result} \\
     \midrule
     \texttt{appA\_highk\_dielectric.cir} & High-K gate leakage & $I_{\text{off}} < 1\,\text{nA}$ ✓ \\
-    \texttt{appA\_schmitt\_trigger\_audit.cir} & Input hysteresis validation & $V_H - V_L > 0.3\,V_{\text{DD}}$ ✓ \\
-    \texttt{ch4\_switched\_cap\_noise.cir} & Switched-cap kT/C noise & $\sigma_{kTC} < V_{\text{LSB}}/4$ ✓ \\
-    \texttt{ch6\_1\_combinational\_latency.cir} & Combinational path timing & $T_{\text{comb}} = 12.9\,\text{ns}$ ✓ \\
+    \texttt{appA\_schmitt\_trigger\_audit.cir} & Input hysteresis & $V_H - V_L > 0.3\,V_{\text{DD}}$ ✓ \\
+    \texttt{ch4\_switched\_cap\_noise.cir} & Switched-cap $kT/C$ noise & $\sigma_{kTC} < V_{\text{LSB}}/4$ ✓ \\
+    \texttt{ch6\_1\_combinational\_latency.cir} & Combinational timing & $T_{\text{comb}} = 12.9\,\text{ns}$ ✓ \\
     \texttt{ch6\_2\_sram\_bitcell\_noise\_margin.cir} & SRAM read margin & SNM $> 150\,\text{mV}$ ✓ \\
     \texttt{ch6\_3\_chs\_em\_decoupling.cir} & CHS EM suppression & $10^5\times$ reduction ✓ \\
     \texttt{ch6\_6\_sot\_mram\_frequency.cir} & SOT-MRAM write BER & BER $< 10^{-15}$ ✓ \\
@@ -964,108 +951,390 @@ Seven SPICE netlists validate the physical substrate layer by layer:
 \end{table}
 
 % =============================================================================
-\section{Slide 06: System Dynamics Animations — GIM, DASM, Thermal}
+\section{Slide 06: Real-Time Animations}
 \label{sec:anim}
 % =============================================================================
 
 \subsection{Overview}
 
-The final slide hosts three real-time canvas animations coded in pure JavaScript,
-designed to make the abstract mathematical safety guarantees viscerally intuitive:
+Three canvas animations coded in pure JavaScript (2D Canvas API, 60 fps target)
+make the mathematical safety guarantees viscerally intuitive:
 
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
   \item \textbf{GIM Predicate Failure \& Rollback} — Animated eigengap collapse and DASM trigger
   \item \textbf{DASM Zero-Drift Protocol} — Side-by-side analog drift vs digital snapshot
-  \item \textbf{Caloric Entropy Masking} — Live thermal heatmap of the APU-X 16×16 crossbar
+  \item \textbf{Caloric Entropy Masking} — Live $16\times16$ thermal heatmap
 \end{enumerate}
 
 \subsection{Animation 1: GIM Rollback}
-
-The canvas renders a live time-series of the eigengap counter $\hat{\delta}_k$
-alongside the system's execution state. When the counter falls below $\delta_{\min}$
-(triggered by user interaction or simulation), the status banner flips from
-\texttt{I(t) = TRUE} to \texttt{GIM FIRED · ROLLBACK EXECUTING} and the trace
-snaps back to its last safe checkpoint.
 
 \begin{figure}[H]
   \centering
   \begin{tikzpicture}
   \begin{axis}[
     width=0.82\textwidth, height=5.5cm,
-    xlabel={Real-Time Steps (animation frames)},
-    ylabel={$\hat{\delta}_k$ (Eigengap)},
+    xlabel={Animation Frames}, ylabel={$\hat{\delta}_k$},
     grid=major, grid style={dashed,gray!25},
     title={Animation 01: Simulated GIM Eigengap Live Trace},
     title style={font=\small}, label style={font=\small},
   ]
-  % Stable region
-  \addplot[greencol, thick, domain=0:180, samples=300]
-    { 2.4 + 0.35*rand };
-  % Collapse
+  \addplot[greencol, thick, domain=0:180, samples=300] { 2.4 + 0.35*rand };
   \addplot[redcol, thick, domain=180:240, samples=80]
     { max(0, 2.75 - 0.12*(x-180) + 0.04*rand) };
-  % After rollback
-  \addplot[greencol, thick, domain=240:320, samples=100]
-    { 2.4 + 0.35*rand };
-  % Threshold
+  \addplot[greencol, thick, domain=240:320, samples=100] { 2.4 + 0.35*rand };
   \addplot[black, dashed, domain=0:320] { 0.5 };
   \draw[redcol!80, very thick] (axis cs:181, 0) -- (axis cs:181, 3.3);
-  \node[redcol!80, font=\tiny, rotate=90] at (axis cs:199, 1.6)
-        {GIM fires · ROLLBACK};
+  \node[redcol!80, font=\tiny, rotate=90] at (axis cs:199, 1.6) {GIM fires};
   \draw[greencol!80, dashed] (axis cs:241, 0) -- (axis cs:241, 3.3);
-  \node[greencol!80, font=\tiny, rotate=90] at (axis cs:257, 1.6)
-        {Snapshot restored};
+  \node[greencol!80, font=\tiny, rotate=90] at (axis cs:257, 1.6) {Restored};
   \end{axis}
   \end{tikzpicture}
-  \caption{Animation 01 trace: Eigengap $\hat{\delta}_k$ under adversarial injection at frame 181, collapse below $\delta_{\min} = 0.5$, GIM fires, and clean snapshot restoration at frame 241.}
+  \caption{Animation 01: Eigengap collapse at frame 181, snapshot restoration at frame 241.}
   \label{fig:anim_gim}
 \end{figure}
 
 \subsection{Animation 2: DASM Zero-Drift Side-by-Side}
 
-Two animated canvases are rendered simultaneously:
-
+Two canvases render simultaneously:
 \begin{itemize}[noitemsep]
-  \item \textbf{Left (Analog Domain):} The analog weight matrix is visualized as a colour-coded
-    grid. On pressing \texttt{SIMULATE DRIFT}, Gaussian noise progressively corrupts each tile,
-    visualising $\mathbb{E}[\|\theta_{\text{reversed}} - \theta_t\|^2] = 2\Theta\sigma^2$.
-  \item \textbf{Right (Digital SRAM):} The DASM snapshot register tile is shown frozen at the
-    last clean commit, with BER $< 10^{-15}$. On rollback, the left canvas instantly snaps
-    to match the right — perfect restoration.
+  \item \textbf{Left (Analog):} colour-coded weight matrix tile grid; \texttt{SIMULATE DRIFT} button injects progressive Gaussian corruption $\mathbb{E}[\|\theta_{\text{reversed}} - \theta_t\|^2] = 2\Theta\sigma^2$
+  \item \textbf{Right (Digital SRAM):} DASM snapshot register frozen at last clean commit, BER $< 10^{-15}$; rollback snaps left canvas to match right instantly
 \end{itemize}
 
 \subsection{Animation 3: Caloric Entropy Masking — Thermal Heatmap}
 
-A live $16 \times 16$ tile heatmap renders the temperature distribution of the APU-X crossbar
-array in real time. Two views are provided:
-
+A live $16\times16$ tile heatmap (Canvas \texttt{fillStyle} driven by temperature array):
 \begin{itemize}[noitemsep]
-  \item \textbf{Top-Down (16×16 Crossbar):} Colour-mapped from cyan (cold) to red (hot).
-    Under normal operation: uniform near-baseline temperature across all tiles.
-  \item \textbf{Side Cross-Section (7 Layers):} Shows the CNT pillar heat dissipation gradient
-    across the stack.
+  \item \textbf{Top-down:} cyan (cold) to red (hot) gradient; normal operation: near-uniform baseline
+  \item \textbf{Side cross-section:} 7-layer CNT pillar gradient visualisation
+  \item Key readouts: $\Delta T_{\max} = 1.004 \times 10^{-7}\,\text{K}$, $\varepsilon_{\text{arith}} = 1.004 \times 10^{-12}$, $\tau_{\text{shear}} = 3.012 \times 10^{-2}\,\text{Pa}$
 \end{itemize}
 
-Key readouts:
+% =============================================================================
+\section{AI Query Integration — Google Gemini RAG Pipeline}
+\label{sec:ai}
+% =============================================================================
+
+\subsection{Architecture Overview}
+
+The portfolio integrates a Retrieval-Augmented Generation (RAG) thesis assistant
+powered exclusively by the Google Gemini API (free tier). Users type a natural-language
+question about the APU-X thesis; the system retrieves relevant sections and generates
+a grounded academic answer.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    node distance=0.9cm,
+    box/.style={rectangle, draw=cyancol!60, fill=cyancol!5, rounded corners=2pt,
+                minimum width=2.5cm, minimum height=0.7cm, align=center, font=\small},
+    dbox/.style={rectangle, draw=goldcol!60, fill=goldcol!5, rounded corners=2pt,
+                minimum width=2.5cm, minimum height=0.7cm, align=center, font=\small},
+    arr/.style={draw=cyancol!50, -{Stealth[scale=0.7]}}
+  ]
+  \node[box] (q) {User Question};
+  \node[dbox, right=1.2cm of q] (embed) {Gemini\\Embedding-2\\(768-D vector)};
+  \node[dbox, right=1.2cm of embed] (supabase) {Supabase\\pgvector\\ANN search};
+  \node[box, right=1.2cm of supabase] (chunks) {Top-5\\Thesis Chunks};
+  \node[dbox, below=0.9cm of chunks] (gen) {Gemini 2.5 Flash\\(generation)};
+  \node[box, left=1.2cm of gen] (answer) {Grounded\\Answer};
+
+  \draw[arr] (q) -- (embed);
+  \draw[arr] (embed) -- (supabase);
+  \draw[arr] (supabase) -- (chunks);
+  \draw[arr] (chunks) -- (gen);
+  \draw[arr] (gen) -- (answer);
+  \draw[arr] (q.south) |- (gen.west)
+        node[near start, below, font=\tiny, cyancol!80] {system prompt};
+  \end{tikzpicture}
+  \caption{Google Gemini RAG pipeline: question → 768-D embedding → vector search → generation.}
+  \label{fig:rag_pipeline}
+\end{figure}
+
+\subsection{Gemini Model Configuration}
+
+\begin{table}[H]
+  \centering
+  \caption{Gemini API Models Used}
+  \small
+  \begin{tabularx}{\textwidth}{l X l}
+    \toprule
+    \textbf{Model} & \textbf{Purpose} & \textbf{Tier} \\
+    \midrule
+    \texttt{gemini-embedding-2} & Query embedding (768-D, \texttt{outputDimensionality: 768}) & Primary \\
+    \texttt{gemini-2.5-flash} & Answer generation (temp: 0.2, maxTokens: 800) & Primary \\
+    \texttt{gemini-2.0-flash-lite} & Fallback on 429 rate limit & Fallback-1 \\
+    \texttt{gemini-2.0-flash} & Second fallback & Fallback-2 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Retrieval Configuration}
+
+The \texttt{match\_thesis\_chunks} Supabase RPC performs cosine-similarity ANN search
+with parameters:
 \begin{itemize}[noitemsep]
-  \item $\Delta T_{\max} = 1.004 \times 10^{-7}\,\text{K}$ — negligible thermal noise
-  \item $\varepsilon_{\text{arith}} = 1.004 \times 10^{-12}$ — arithmetic precision floor
-  \item $\tau_{\text{shear}} = 3.012 \times 10^{-2}\,\text{Pa} \ll \sigma_{\text{yield}} = 10^8\,\text{Pa}$
+  \item \texttt{match\_count}: 5 chunks retrieved per query
+  \item \texttt{similarity\_threshold}: 0.40 (chunks below this cosine similarity are discarded)
+  \item Vector index: \texttt{pgvector} IVFFlat on 768-D embedding column
 \end{itemize}
+
+\subsection{System Prompt (Exact)}
+
+\begin{lstlisting}[language={}, caption={AI System Prompt — api/query-thesis.js}]
+You are an expert academic AI assistant integrated into a research portfolio.
+Your sole purpose is to answer user questions regarding the thesis:
+"The Post-Mitigated Abraxas Model (PMM) and APU-X Substrate."
+
+Grounding: Base your answers exclusively on the provided context blocks.
+Do not introduce outside knowledge.
+Tone: Maintain a highly academic, precise, and objective tone.
+Mathematical Accuracy: Use exact terminology from the thesis. Wrap all
+mathematical formulas in standard LaTeX formatting.
+Ignorance: If the context blocks do not contain the answer, state:
+"The provided sections of the thesis do not contain information to answer
+this specific query."
+\end{lstlisting}
+
+\subsection{Response Format}
+
+The API returns:
+\begin{lstlisting}[language=javascript, caption={API response schema (api/query-thesis.js)}]
+{
+  answer: string,          // Full Gemini-generated academic answer
+  sources: [{
+    chapter: string,       // Thesis chapter label
+    section: string,       // Section title
+    similarity: number     // Cosine similarity score (0-1, 2dp)
+  }],
+  latency_ms: number       // End-to-end latency in milliseconds
+}
+\end{lstlisting}
+
+% =============================================================================
+\section{Security Architecture}
+\label{sec:security}
+% =============================================================================
+
+\subsection{Security Checklist}
+
+\begin{table}[H]
+  \centering
+  \caption{Production Security Checklist}
+  \small
+  \begin{tabularx}{\textwidth}{l X l}
+    \toprule
+    \textbf{Category} & \textbf{Implementation} & \textbf{Status} \\
+    \midrule
+    HTTPS & Vercel edge (TLS 1.2+), HSTS header, no mixed content & \checkmark \\
+    Authentication & Supabase Auth magic-link email, JWT session tokens & \checkmark \\
+    Rate limiting & Upstash Redis sliding-window, 10 req/min/IP & \checkmark \\
+    API validation & Method check (POST only), body schema validation, 500-char cap & \checkmark \\
+    Input sanitization & Question stripped, min-length 5 enforced, type check & \checkmark \\
+    CORS & \texttt{ALLOWED\_ORIGIN} env var, restricted in production & \checkmark \\
+    Environment variables & Server-side only; service role key never in browser & \checkmark \\
+    Error tracking & Sentry Node.js SDK, \texttt{captureException}, PII scrub & \checkmark \\
+    Logging & Supabase \texttt{query\_sessions} table, hashed IP, latency & \checkmark \\
+    IP privacy & SHA-256 + private salt — never raw IP stored & \checkmark \\
+    Database RLS & Supabase Row Level Security on all tables & \checkmark \\
+    Dependency security & \texttt{npm audit} in CI pipeline & \checkmark \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Rate Limiting Architecture}
+
+\begin{secbox}
+\textbf{Implementation:} Upstash Redis REST API, sliding window algorithm.\\
+\textbf{Limit:} 10 requests per 60-second window per IP address.\\
+\textbf{Headers returned:}
+\begin{itemize}[noitemsep]
+  \item \texttt{X-RateLimit-Limit}: 10
+  \item \texttt{X-RateLimit-Remaining}: requests left in current window
+  \item \texttt{X-RateLimit-Reset}: Unix timestamp of window reset
+\end{itemize}
+\textbf{429 response:} \texttt{\{"error": "Too many requests.", "retryAfter": N\}}
+\end{secbox}
+
+\subsection{IP Hashing}
+
+Raw IP addresses are never stored. Before any database write:
+$$
+\text{ip\_hash} = \text{SHA-256}(\text{IP} \,\|\, \text{IP\_HASH\_SALT})
+$$
+where \texttt{IP\_HASH\_SALT} is a 32-byte random value from \texttt{openssl rand -hex 32},
+stored only in the server-side environment. Hash is one-way and cannot be reversed.
+
+\subsection{API Key Management}
+
+\begin{table}[H]
+  \centering
+  \caption{Environment Variables and Security Scope}
+  \small
+  \begin{tabularx}{\textwidth}{l X l}
+    \toprule
+    \textbf{Variable} & \textbf{Purpose} & \textbf{Scope} \\
+    \midrule
+    \texttt{GEMINI\_API\_KEY} & Gemini embeddings + generation & Server-side only \\
+    \texttt{SUPABASE\_SERVICE\_ROLE\_KEY} & DB admin operations & Server-side only \\
+    \texttt{SUPABASE\_ANON\_KEY} & Client-safe DB access & Browser OK \\
+    \texttt{SUPABASE\_URL} & DB endpoint & Browser OK \\
+    \texttt{UPSTASH\_REDIS\_REST\_TOKEN} & Rate limiting auth & Server-side only \\
+    \texttt{SENTRY\_DSN} & Error reporting endpoint & Server-side only \\
+    \texttt{IP\_HASH\_SALT} & IP anonymization salt & Server-side only \\
+    \texttt{ALLOWED\_ORIGIN} & CORS restriction & Server-side only \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{CI/CD Pipeline}
+
+\begin{purplebox}
+\textbf{Vercel automatic CI/CD:}
+\begin{itemize}[noitemsep]
+  \item Every \texttt{git push} to \texttt{main} triggers a new production deployment
+  \item Preview deployments on all pull requests (isolated environment)
+  \item Environment variables inherited from Vercel project settings (not from \texttt{.env} files)
+  \item \texttt{npm audit} runs automatically on install; build fails on critical vulnerabilities
+  \item Zero-downtime atomic deployments via Vercel's edge network
+\end{itemize}
+\end{purplebox}
+
+% =============================================================================
+\section{Privacy Policy \& Legal Infrastructure}
+\label{sec:privacy}
+% =============================================================================
+
+\subsection{Privacy Policy Summary}
+
+The portfolio's privacy policy (\texttt{/privacy-policy.html}) is publicly accessible
+and covers the full data lifecycle. Key provisions (updated June 8, 2026):
+
+\begin{table}[H]
+  \centering
+  \caption{Privacy Policy Key Provisions}
+  \small
+  \begin{tabularx}{\textwidth}{l X}
+    \toprule
+    \textbf{Topic} & \textbf{Policy} \\
+    \midrule
+    AI Provider & Google Gemini API (not OpenAI — updated June 2026) \\
+    IP Storage & Salted SHA-256 hash only; raw IP never persisted \\
+    Query data & Question text + hashed IP + 200-char answer preview + latency \\
+    Retention & Query sessions: indefinite (deletion on request); hashed IPs: 90 days \\
+    Pyodide & All computation client-side; zero server transmission of code/results \\
+    Tracking & No Google Analytics, no Meta Pixel, no fingerprinting \\
+    Cookies & None; Supabase auth uses \texttt{localStorage} session token \\
+    GDPR basis & Legitimate interest (rate limiting), consent (AI queries), contract (auth) \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Third-Party Sub-processors}
+
+\begin{table}[H]
+  \centering
+  \caption{Complete Sub-processor List}
+  \small
+  \begin{tabularx}{\textwidth}{l X l}
+    \toprule
+    \textbf{Service} & \textbf{Purpose} & \textbf{Region} \\
+    \midrule
+    Supabase & PostgreSQL database, pgvector, Auth & AWS US-East-1 \\
+    Google Gemini API & Embedding + generation (updated from OpenAI) & Google Cloud \\
+    Vercel & Hosting, serverless edge functions, CI/CD & Global edge \\
+    Upstash Redis & Rate limiting sliding window cache & Multi-region \\
+    Sentry & Error tracking and performance monitoring & US/EU \\
+    Google Fonts & Typography CDN (\texttt{IBM Plex}, \texttt{DM Serif}) & Google CDN \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Data Flow Diagram}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    node distance=1.0cm,
+    user/.style={ellipse, draw=cyancol!50, fill=cyancol!5,
+                 minimum width=2cm, align=center, font=\small},
+    svc/.style={rectangle, draw=goldcol!60, fill=goldcol!5, rounded corners=2pt,
+                minimum width=2.5cm, minimum height=0.7cm, align=center, font=\small},
+    ext/.style={rectangle, draw=purplecol!60, fill=purplecol!5, rounded corners=2pt,
+                minimum width=2.5cm, minimum height=0.7cm, align=center, font=\small},
+    arr/.style={draw=gray!60, -{Stealth[scale=0.7]}, dashed},
+    sarr/.style={draw=cyancol!50, -{Stealth[scale=0.7]}}
+  ]
+  \node[user] (user) {User\\Browser};
+  \node[svc, right=1.5cm of user] (vercel) {Vercel\\Edge Function};
+  \node[svc, above=0.8cm of vercel] (upstash) {Upstash\\Rate Limit};
+  \node[ext, right=1.5cm of vercel] (gemini) {Google\\Gemini API};
+  \node[svc, below=0.8cm of vercel] (supabase) {Supabase\\pgvector + DB};
+
+  \draw[sarr] (user) -- (vercel) node[midway, above, font=\tiny] {HTTPS POST};
+  \draw[arr] (vercel) -- (upstash) node[midway, right, font=\tiny] {check limit};
+  \draw[sarr] (vercel) -- (gemini) node[midway, above, font=\tiny] {embed + generate};
+  \draw[sarr] (vercel) -- (supabase) node[midway, right, font=\tiny] {ANN search + log};
+  \draw[sarr] (vercel) -- (user) node[midway, below, font=\tiny] {JSON answer};
+  \end{tikzpicture}
+  \caption{Full data flow: user query → Vercel edge → rate check → Gemini API → Supabase → response.}
+  \label{fig:data_flow}
+\end{figure}
+
+% =============================================================================
+\section{Performance \& SEO}
+\label{sec:perf}
+% =============================================================================
+
+\subsection{Performance Targets}
+
+\begin{table}[H]
+  \centering
+  \caption{Lighthouse Performance Targets}
+  \small
+  \begin{tabularx}{\textwidth}{l X l}
+    \toprule
+    \textbf{Metric} & \textbf{Strategy} & \textbf{Target} \\
+    \midrule
+    Performance score & Lazy-loaded Pyodide, deferred GSAP, Three.js on-demand & $\geq 90$ \\
+    LCP & Critical CSS inlined, hero content above fold & $< 2.5\,\text{s}$ \\
+    CLS & Fixed-size animation canvases, no layout shift & $< 0.1$ \\
+    FID & Minimal main-thread blocking, Pyodide async & $< 100\,\text{ms}$ \\
+    TTFB & Vercel edge cache, static HTML served from CDN & $< 200\,\text{ms}$ \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{SEO Implementation}
+
+\begin{table}[H]
+  \centering
+  \caption{SEO Metadata Implementation}
+  \small
+  \begin{tabularx}{\textwidth}{l X}
+    \toprule
+    \textbf{Element} & \textbf{Value} \\
+    \midrule
+    \texttt{<title>} & ``Project Antigravity · APU-X Neuromorphic AGI Safety Research'' \\
+    \texttt{<meta description>} & Full thesis abstract summary, 155 chars \\
+    \texttt{<h1>} & Single per page: ``PROJECT ANTIGRAVITY'' \\
+    Open Graph & \texttt{og:title}, \texttt{og:description}, \texttt{og:image} (thesis diagram) \\
+    Twitter Card & \texttt{twitter:card: summary\_large\_image} \\
+    Canonical & Self-referencing \texttt{<link rel="canonical">} \\
+    Robots & \texttt{<meta name="robots" content="index, follow">} \\
+    Structured data & JSON-LD \texttt{ScholarlyArticle} schema on hero section \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
 
 % =============================================================================
 \section{Mathematical Foundations: Five Core Theorems}
 \label{sec:theorems}
 % =============================================================================
 
-The entire APU-X architecture rests on five interconnected mathematical theorems
-that together guarantee safe, stable, and correctable artificial general intelligence:
-
 \begin{theorem}[Banach Fixed-Point Contraction]
-  Let $\mathcal{F}: \mathcal{H} \to \mathcal{H}$ be a mapping on Hilbert space $\mathcal{H}$
-  with Lipschitz constant $L_{\text{contract}} < 1$. Then there exists a unique fixed point
-  $\theta^* \in \mathcal{H}$ such that $\mathcal{F}(\theta^*) = \theta^*$, and for any
-  initial $\theta_0$:
+  Let $\mathcal{F}: \mathcal{H} \to \mathcal{H}$ on Hilbert space $\mathcal{H}$
+  with $L_{\text{contract}} < 1$. Then $\exists!\; \theta^* \in \mathcal{H}$:
   $$
   \|\mathcal{F}^n(\theta_0) - \theta^*\| \;\leq\; L_{\text{contract}}^n \cdot \|\theta_0 - \theta^*\| \;\to\; 0
   $$
@@ -1073,41 +1342,38 @@ that together guarantee safe, stable, and correctable artificial general intelli
 \end{theorem}
 
 \begin{theorem}[Oja++ Manifold Convergence]
-  Under the noise-adaptive step $\eta_t^{\text{eff}} = \eta_0 / (1 + \hat{\sigma}^2_t / \delta_{\min})$
-  on the Stiefel manifold $\mathcal{V}_k(\mathbb{R}^d)$:
+  Under $\eta_t^{\text{eff}} = \eta_0 / (1 + \hat{\sigma}^2_t / \delta_{\min})$
+  on $\mathcal{V}_k(\mathbb{R}^d)$:
   $$
   \limsup_{t \to \infty} \mathbb{E}[V(\hat{W}_t)] \;\leq\; \frac{\eta_t B^4}{2\delta_k} + O(\sigma^2_{\text{noise}})
   $$
-  \textit{Validated by: SIM-01 (Oja++ convergence), SIM-02 (margin gain)}.
+  \textit{Validated by: SIM-01, SIM-02}.
 \end{theorem}
 
 \begin{theorem}[Lyapunov GIM Stability]
-  Let $V(U_t) = \frac{1}{2}\|U_t - U^*\|^2$ be the Lyapunov candidate. Under GIM enforcement:
+  With $V(U_t) = \frac{1}{2}\|U_t - U^*\|^2$:
   $$
   \dot{V}(U_t) \;\leq\; -2\delta_k\,V(U_t)
   $$
-  implying exponential convergence to $U^*$ at rate $\geq 2\delta_k$.
+  Exponential convergence to $U^*$ at rate $\geq 2\delta_k$.
   \textit{Validated by: SIM-05 (boundary damping)}.
 \end{theorem}
 
 \begin{theorem}[DASM Zero-Drift Rollback]
-  Let $\theta_{\text{snapshot}}$ be the bitwise SRAM copy of $\theta_t$ taken at each
-  clock edge. On GIM predicate failure:
+  Let $\theta_{\text{snapshot}}$ be the bitwise SRAM copy at each clock edge:
   $$
-  \mathbb{E}\!\left[\|\theta_{\text{restored}} - \theta_t\|^2\right] = 0
+  \mathbb{E}\!\left[\|\theta_{\text{restored}} - \theta_t\|^2\right] = 0 \quad \text{vs} \quad
+  \mathbb{E}[\|\theta_{\text{reversed}} - \theta_t\|^2] = 2\Theta\sigma^2 > 0
   $$
-  versus the naïve reverse-gradient drift:
-  $\mathbb{E}[\|\theta_{\text{reversed}} - \theta_t\|^2] = 2\Theta\sigma^2 > 0$.
-  \textit{Validated by: SIM-04 (GIM trigger), SIM-08 (DASM BER)}.
+  \textit{Validated by: SIM-04, SIM-08}.
 \end{theorem}
 
-\begin{theorem}[SRC Discretisation Robustness Contract]
-  Under a noise-adaptive contraction filter with Lipschitz constant $L_D$,
-  the open ball of radius $r = \Delta - \rho/L_D$ is chattering-free:
+\begin{theorem}[SRC Discretisation Robustness]
+  Open ball $B(x^*, r)$ with $r = \Delta - \rho/L_D$ is chattering-free:
   $$
-  \forall\, x, y \in B(x^*, r): \quad s(x) = s(y) \quad \text{(no symbolic oscillation)}
+  \forall\, x, y \in B(x^*, r): \quad s(x) = s(y)
   $$
-  \textit{Validated by: SIM-03 (eNoise), SIM-12 (Protocol 8.1)}.
+  \textit{Validated by: SIM-03, SIM-12}.
 \end{theorem}
 
 % =============================================================================
@@ -1115,18 +1381,27 @@ that together guarantee safe, stable, and correctable artificial general intelli
 \label{sec:conclusion}
 % =============================================================================
 
-This report has documented all six slides of the APU-X portfolio website in full technical depth:
+This report has documented the complete technical architecture of the APU-X
+portfolio website:
 
 \begin{enumerate}
-  \item \textbf{Hero} — Establishes the core safety guarantee claims.
-  \item \textbf{Motivation} — 14 simulation SVGs empirically grounding all five theorems.
-  \item \textbf{PMM-ABRAXAS} — Six-component cognitive pipeline with full mathematical specifications.
-  \item \textbf{APU-X Substrate} — 7 physical layers with SPICE-validated hardware properties.
-  \item \textbf{SPICE Simulations} — In-browser Pyodide runner with 14 Python models + 7 SPICE netlists.
-  \item \textbf{Live Animations} — Three real-time canvas animations making abstract guarantees viscerally intuitive.
+  \item \textbf{Slide 01 (Hero)} — Animated research identity, embedded thesis PDF, typewriter theorem animation
+  \item \textbf{Slide 02 (Motivation)} — 14 GSAP-animated SVG simulation cards with KaTeX theorems
+  \item \textbf{Slide 03 (PMM-ABRAXAS)} — Six-component cognitive pipeline with full mathematical specifications
+  \item \textbf{Slide 04 (APU-X Substrate)} — 7-layer SPICE-validated hardware stack, Three.js 3D model
+  \item \textbf{Slide 05 (Simulations)} — In-browser Pyodide WASM runner, 14 Python scripts, 7 SPICE netlists
+  \item \textbf{Slide 06 (Animations)} — Three real-time canvas safety-guarantee visualisers
+  \item \textbf{AI Query (§\ref{sec:ai})} — Google Gemini RAG pipeline with 768-D pgvector retrieval
+  \item \textbf{Security (§\ref{sec:security})} — HTTPS, rate limiting, IP hashing, RLS, Sentry, CI/CD
+  \item \textbf{Privacy (§\ref{sec:privacy})} — GDPR-compliant policy, Gemini as AI provider, Pyodide clause
 \end{enumerate}
 
-The APU-X research demonstrates that mathematically rigorous, hardware-level safety guarantees are achievable for AGI architectures, provided four invariants are maintained simultaneously: Lyapunov contraction ($L_{\text{contract}} < 1$), eigengap preservation ($\delta_k > \delta_{\min}$), zero-drift rollback (DASM SRAM BER $< 10^{-15}$), and thermal discipline ($\Delta T_{\max} = 1.004 \times 10^{-7}$\,K).
+The four core invariants maintained simultaneously guarantee safe AGI trajectory stability:
+$$
+L_{\text{contract}} < 1 \quad\wedge\quad \delta_k > \delta_{\min}
+\quad\wedge\quad \text{BER}_{\text{SRAM}} < 10^{-15}
+\quad\wedge\quad \Delta T_{\max} = 1.004 \times 10^{-7}\,\text{K}
+$$
 
 \vspace{1cm}
 
@@ -1138,7 +1413,7 @@ The APU-X research demonstrates that mathematically rigorous, hardware-level saf
 
   {\small\color{gray}
   Rounak Mukherjee · Class XII · RKMNV Narendrapur, Kolkata, India\\
-  Independent Research · Project Antigravity / APU-X · May 2026\\
+  Independent Research · Project Antigravity / APU-X · June 2026\\
   \textit{Submitted in partial fulfillment of the MIT Application Portfolio}
   }
 \end{center}

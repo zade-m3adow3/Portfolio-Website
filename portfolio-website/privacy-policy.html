@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Policy — Project Antigravity · PMM-Abraxas Portfolio</title>
-  <meta name="description" content="Privacy Policy for the PMM-Abraxas AGI research portfolio. Explains data collection, AI query logging, and your rights.">
+  <meta name="description" content="Privacy Policy for the PMM-Abraxas AGI research portfolio. Explains data collection, AI query logging via Google Gemini, and your rights.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
   <style>
@@ -192,7 +192,7 @@
     <span class="pp-badge">§ Legal</span>
     <h1>Privacy Policy</h1>
     <div class="pp-meta">
-      Effective Date: June 5, 2026 &nbsp;·&nbsp; Last Updated: June 5, 2026 &nbsp;·&nbsp;
+      Effective Date: June 8, 2026 &nbsp;·&nbsp; Last Updated: June 8, 2026 &nbsp;·&nbsp;
       Rounak Mukherjee · Project Antigravity
     </div>
 
@@ -207,14 +207,14 @@
     <h2>2. Data We Collect</h2>
 
     <h3>2.1 — Automatically Collected Data</h3>
-    <p>When you visit this site, the hosting infrastructure (GitHub Pages / Vercel) may log standard server access data:</p>
+    <p>When you visit this site, the hosting infrastructure (Vercel) may log standard server access data:</p>
     <ul>
       <li>IP address (used for routing and rate limiting; see §4)</li>
       <li>Browser user-agent string</li>
       <li>Pages visited and timestamps</li>
       <li>HTTP referrer</li>
     </ul>
-    <p>This data is collected by the hosting provider under their own privacy policy. We do not have direct access to raw IP logs from GitHub Pages.</p>
+    <p>This data is collected by the hosting provider under their own privacy policy. We do not have direct access to raw IP logs from Vercel's edge network.</p>
 
     <h3>2.2 — AI Query Data (Thesis Assistant)</h3>
     <p>If you use the Thesis AI Query feature (when available), the following is logged:</p>
@@ -225,7 +225,8 @@
       <li>Response latency in milliseconds</li>
       <li>Which thesis sections were retrieved to answer your query</li>
     </ul>
-    <p>Your question is sent to <strong>OpenAI's API</strong> (for embedding generation and answer synthesis). OpenAI's data processing is governed by <a href="https://openai.com/policies/api-data-usage-policies" target="_blank" rel="noopener">OpenAI's API Data Usage Policy</a>. As of the effective date of this policy, OpenAI does not use API inputs to train their models by default.</p>
+    <p>Your question is sent to <strong>Google's Gemini API</strong> (for embedding generation via <code>gemini-embedding-2</code> and answer synthesis via <code>gemini-2.5-flash</code> / <code>gemini-2.0-flash-lite</code> / <code>gemini-2.0-flash</code>, in that priority order). Google's data processing is governed by <a href="https://ai.google.dev/gemini-api/terms" target="_blank" rel="noopener">Google Gemini API Terms of Service</a> and <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a>. As of the effective date of this policy, Google does not use Gemini API inputs to train their models by default when accessed via the API with a valid key.</p>
+    <p>The system uses a retrieval-augmented generation (RAG) pipeline: your question is converted into a vector embedding, matched against pre-indexed thesis chunks stored in our Supabase vector database, and the top matching chunks are passed as grounding context to the Gemini generation model. No raw thesis text is transmitted unnecessarily.</p>
 
     <h3>2.3 — Research Logs (Authenticated Users Only)</h3>
     <p>If you authenticate (via Supabase Auth magic-link email), voluntary research log entries you create are stored and associated with your user account. These are visible only to you and to the site administrator.</p>
@@ -236,6 +237,7 @@
       <li>We do not sell or share your data with any third party for commercial purposes</li>
       <li>We do not store raw IP addresses — only salted SHA-256 hashes</li>
       <li>We do not use browser fingerprinting</li>
+      <li>We do not train any AI model on your queries</li>
     </ul>
 
     <h2>3. Legal Basis for Processing (GDPR)</h2>
@@ -246,8 +248,18 @@
       <li><strong>Contract</strong> (Art. 6(1)(b) GDPR): account data for authenticated researchers</li>
     </ul>
 
-    <h2>4. Rate Limiting & Security</h2>
-    <p>The AI query API is rate-limited to <strong>10 requests per minute per IP</strong> using a sliding-window algorithm (Upstash Redis). This is a security measure to prevent denial-of-service attacks and excessive API usage costs. Rate limit decisions are made in real time and are not stored permanently.</p>
+    <h2>4. Rate Limiting &amp; Security</h2>
+    <p>The AI query API is rate-limited to <strong>10 requests per minute per IP</strong> using a sliding-window algorithm (Upstash Redis). This is a security measure to prevent denial-of-service attacks and excessive API usage. Rate limit decisions are made in real time and are not stored permanently.</p>
+    <p>Additional security measures include:</p>
+    <ul>
+      <li>All traffic served over HTTPS (TLS 1.2+) via Vercel's edge network</li>
+      <li>API input validation and sanitization on all endpoints</li>
+      <li>Input length capped at 500 characters for AI queries to prevent prompt injection</li>
+      <li>Error tracking via Sentry with PII scrubbing enabled</li>
+      <li>Supabase Row Level Security (RLS) enforced on all tables</li>
+      <li>Service-role keys are server-side only; never exposed to the browser</li>
+      <li>CORS restricted to the deployed Vercel domain in production</li>
+    </ul>
 
     <h2>5. Data Retention</h2>
     <ul>
@@ -259,11 +271,11 @@
     <h2>6. Third-Party Sub-processors</h2>
     <ul>
       <li><strong>Supabase</strong> (database &amp; auth) — <a href="https://supabase.com/privacy" target="_blank" rel="noopener">Privacy Policy</a> — hosted on AWS in the US</li>
-      <li><strong>OpenAI</strong> (AI embeddings &amp; generation) — <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a></li>
+      <li><strong>Google Gemini API</strong> (AI embeddings &amp; generation) — <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a> · <a href="https://ai.google.dev/gemini-api/terms" target="_blank" rel="noopener">Gemini API Terms</a></li>
       <li><strong>Vercel</strong> (hosting &amp; serverless functions) — <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a></li>
-      <li><strong>GitHub Pages</strong> (static hosting) — <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank" rel="noopener">Privacy Statement</a></li>
       <li><strong>Upstash</strong> (rate limiting cache) — <a href="https://upstash.com/trust/privacy.pdf" target="_blank" rel="noopener">Privacy Policy</a></li>
       <li><strong>Sentry</strong> (error tracking) — <a href="https://sentry.io/privacy/" target="_blank" rel="noopener">Privacy Policy</a></li>
+      <li><strong>Google Fonts</strong> (typography CDN) — <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></li>
     </ul>
 
     <h2>7. Your Rights</h2>
@@ -277,14 +289,18 @@
     </ul>
     <p>To exercise any of these rights, contact us at <a href="mailto:abraxaslector49@gmail.com">abraxaslector49@gmail.com</a>. We will respond within 30 days.</p>
 
-    <h2>8. Cookies</h2>
-    <p>This site does not set any first-party tracking cookies. Supabase Auth uses a short-lived session token stored in <code>localStorage</code> (not a cookie) to maintain authenticated sessions. This token is scoped to this site and is not accessible to third parties.</p>
+    <h2>8. Cookies &amp; Local Storage</h2>
+    <p>This site does not set any first-party tracking cookies. Supabase Auth uses a short-lived session token stored in <code>localStorage</code> (not a cookie) to maintain authenticated sessions. This token is scoped to this site and is not accessible to third parties. The Pyodide in-browser Python runtime stores WebAssembly packages in the browser's Cache API for performance — no personal data is cached.</p>
 
-    <h2>9. Children's Privacy</h2>
+    <h2>9. In-Browser Computation (Pyodide)</h2>
+    <p>The Slide 05 simulation runner uses Pyodide (CPython compiled to WebAssembly) to execute Python code entirely within your browser. <strong>No Python code or simulation results are transmitted to our servers.</strong> All computation happens locally on your device. Pyodide package downloads come directly from the Pyodide CDN (JsDelivr / GitHub Releases).</p>
+
+    <h2>10. Children's Privacy</h2>
     <p>This site is an academic research portfolio and is not directed at children under 13. We do not knowingly collect personal data from children. If you believe a child has submitted data, contact us for immediate deletion.</p>
 
-    <h2>10. Changes to This Policy</h2>
+    <h2>11. Changes to This Policy</h2>
     <p>We may update this policy as the platform evolves. Material changes will be indicated by updating the "Last Updated" date at the top. Continued use of the site after changes constitutes acceptance of the revised policy.</p>
+    <p>Change log: <em>June 8, 2026</em> — Updated AI provider from OpenAI to Google Gemini API; added Pyodide privacy clause; expanded security section; added Google Fonts to sub-processors.</p>
 
     <div class="pp-contact-block">
       <h3>Contact the Data Controller</h3>

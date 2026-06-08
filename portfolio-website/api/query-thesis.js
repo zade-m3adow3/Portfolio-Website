@@ -47,6 +47,9 @@ async function embedQuestion(question) {
   return json.embedding.values;
 }
 
+// Model fallback chain — try each in order; skip to next on 429 (quota exhausted)
+const GENERATION_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash-lite', 'gemini-2.0-flash'];
+
 async function generateAnswer(question, chunks) {
   const contextBlock = chunks
     .map((c, i) => `[Context ${i + 1} — ${c.chapter} · ${c.section_title}]\n${c.content_text}`)
@@ -54,27 +57,38 @@ async function generateAnswer(question, chunks) {
 
   const userMessage = `Here are the retrieved thesis sections:\n\n${contextBlock}\n\n---\n\nUser question: ${question}`;
   const apiKey = process.env.GEMINI_API_KEY;
-  // gemini-2.0-flash: fast, free-tier available model
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents: [{ role: 'user', parts: [{ text: userMessage }] }],
-        generationConfig: { temperature: 0.2, maxOutputTokens: 800 },
-      }),
-    });
-    if (!res.ok) throw new Error(`Gemini LLM failed: ${await res.text()}`);
-    const json = await res.json();
-    const answerText = json.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
-    return answerText;
-  } catch (err) {
-    console.error('generateAnswer error', err);
-    return '';
+  for (const model of GENERATION_MODELS) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: [{ role: 'user', parts: [{ text: userMessage }] }],
+          generationConfig: { temperature: 0.2, maxOutputTokens: 800 },
+        }),
+      });
+
+      if (res.status === 429) {
+        console.warn(`Model ${model} rate-limited (429), trying next model...`);
+        continue; // try next model in the chain
+      }
+      if (!res.ok) throw new Error(`Gemini LLM failed (${model}): ${await res.text()}`);
+
+      const json = await res.json();
+      const answerText = json.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+      return answerText;
+    } catch (err) {
+      console.error(`generateAnswer error with ${model}:`, err);
+      continue; // try next model
+    }
   }
+
+  // All models exhausted
+  console.error('All generation models exhausted or failed');
+  return '';
 }
 
 

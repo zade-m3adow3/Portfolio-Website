@@ -58,8 +58,8 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" defer></script>
   <!-- Lenis smooth scroll -->
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
-  <!-- Pyodide -->
-  <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+  <!-- Pyodide (loaded asynchronously — heavy WASM, only needed on-demand) -->
+  <script>window.PYODIDE_CDN = 'https://cdn.jsdelivr.net/pyodide/v0.27.0/full/';</script>
 </head>
 
 <body>
@@ -274,15 +274,38 @@
         }
       }
 
-      /* Wire inter-slide transitions */
-      // NOTE: slide-02 excluded — its own GSAP pin handles exit.
-      // After FIX 2 swap: APU-X=id#slide-04 (pos 3), PMM=id#slide-03 (pos 4)
-      wireSlideTransition("#slide-01", "#slide-02");
-      // APU-X exit: zoom scale-up (1→2.5) to give impression of diving into the hardware
-      wireZoomOutTransition("#slide-04");
-      // PMM exit: standard clip transition into Simulations slide
-      wireSlideTransition("#slide-03", "#slide-05");
-      wireSlideTransition("#slide-05", "#slide-06");
+      /* Wire inter-slide transitions — desktop only.
+         On touch devices GSAP ScrollTrigger transform animations
+         appear as abrupt jumps because the browser compositor
+         batches passive scroll events; native CSS handles it better. */
+      if (!isTouchDevice) {
+        // NOTE: slide-02 excluded — its own GSAP pin handles exit.
+        // After FIX 2 swap: APU-X=id#slide-04 (pos 3), PMM=id#slide-03 (pos 4)
+        wireSlideTransition("#slide-01", "#slide-02");
+        // APU-X exit: zoom scale-up (1→2.5) to give impression of diving into the hardware
+        wireZoomOutTransition("#slide-04");
+        // PMM exit: standard clip transition into Simulations slide
+        wireSlideTransition("#slide-03", "#slide-05");
+        wireSlideTransition("#slide-05", "#slide-06");
+      } else {
+        /* Mobile: use IntersectionObserver for smooth CSS fade-in per slide */
+        const slideEls = document.querySelectorAll(
+          '#slide-01, #slide-02, #slide-03, #slide-04, #slide-05, #slide-06'
+        );
+        const fadeObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach(entry => {
+              entry.target.style.transition = 'opacity 0.45s ease';
+              entry.target.style.opacity = entry.isIntersecting ? '1' : '0.6';
+            });
+          },
+          { threshold: 0.15 }
+        );
+        slideEls.forEach(el => {
+          el.style.opacity = '0.6';
+          fadeObserver.observe(el);
+        });
+      }
 
       /* Global progress dots */
       initProgressDots();

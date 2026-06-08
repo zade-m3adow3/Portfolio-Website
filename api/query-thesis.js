@@ -28,9 +28,9 @@ async function embedQuestion(question) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY not set');
 
-  // gemini-embedding-2 is the correct model for this API key (confirmed via ListModels)
-  const model = 'gemini-embedding-2';
-  const url = `https://generativelanguage.googleapis.com/v1/models/${model}:embedContent?key=${apiKey}`;
+  // text-embedding-004: stable free-tier model, outputs 768 dims natively
+  const model = 'text-embedding-004';
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:embedContent?key=${apiKey}`;
 
   const res = await fetch(url, {
     method: 'POST',
@@ -38,7 +38,6 @@ async function embedQuestion(question) {
     body: JSON.stringify({
       model: `models/${model}`,
       content: { parts: [{ text: question }] },
-      outputDimensionality: 768,
     }),
   });
 
@@ -98,6 +97,7 @@ export default async function handler(req, res) {
     const embedding = await embedQuestion(q);
     const { data: chunks, error: dbErr } = await supabaseAdmin.rpc(
       'match_thesis_chunks',
+      // threshold 0.40 — balanced; higher values return zero results
       { query_embedding: embedding, match_count: 5, similarity_threshold: 0.40 }
     );
     if (dbErr) throw dbErr;

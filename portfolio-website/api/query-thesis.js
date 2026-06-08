@@ -28,20 +28,22 @@ async function embedQuestion(question) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY not set');
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-2:embedContent?key=${apiKey}`;
+  // text-embedding-004 is the stable free-tier embedding model (768 dims)
+  const model = 'text-embedding-004';
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:embedContent?key=${apiKey}`;
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'models/gemini-embedding-2',
+      model: `models/${model}`,
       content: { parts: [{ text: question }] },
-      outputDimensionality: 768
+      // text-embedding-004 natively outputs 768 dims; outputDimensionality is optional
     }),
   });
 
   if (!res.ok) throw new Error(`Gemini embed failed: ${await res.text()}`);
   const json = await res.json();
-  return json.embedding.values; 
+  return json.embedding.values;
 }
 
 async function generateAnswer(question, chunks) {
@@ -51,7 +53,8 @@ async function generateAnswer(question, chunks) {
 
   const userMessage = `Here are the retrieved thesis sections:\n\n${contextBlock}\n\n---\n\nUser question: ${question}`;
   const apiKey = process.env.GEMINI_API_KEY;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  // gemini-2.0-flash: fast, free-tier available model
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
   const res = await fetch(url, {
     method: 'POST',
@@ -94,7 +97,8 @@ export default async function handler(req, res) {
     const embedding = await embedQuestion(q);
     const { data: chunks, error: dbErr } = await supabaseAdmin.rpc(
       'match_thesis_chunks',
-      { query_embedding: embedding, match_count: 5, similarity_threshold: 0.70 }
+      // threshold 0.40 — balanced; 0.70 was too strict and returned zero chunks
+      { query_embedding: embedding, match_count: 5, similarity_threshold: 0.40 }
     );
     if (dbErr) throw dbErr;
 

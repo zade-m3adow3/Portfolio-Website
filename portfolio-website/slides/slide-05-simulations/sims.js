@@ -609,13 +609,27 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
   async function loadPyodideRuntime() {
     if (pyodideInstance) return pyodideInstance;
     if (pyodideIsLoading) return new Promise(resolve => setTimeout(() => loadPyodideRuntime().then(resolve), 500));
-    
+
     pyodideIsLoading = true;
     const terminalOutput = document.getElementById('sims-pyodide-output');
     terminalOutput.textContent += 'Initializing Pyodide WASM runtime... (this may take a moment)\n';
-    
+
     try {
+      // Dynamically load pyodide.js if not already present
+      if (typeof loadPyodide === 'undefined') {
+        await new Promise((resolve, reject) => {
+          const cdnBase = window.PYODIDE_CDN || 'https://cdn.jsdelivr.net/pyodide/v0.27.0/full/';
+          const s = document.createElement('script');
+          s.src = cdnBase + 'pyodide.js';
+          s.onload = resolve;
+          s.onerror = () => reject(new Error('Failed to load Pyodide script from CDN'));
+          document.head.appendChild(s);
+        });
+        terminalOutput.textContent += 'Pyodide script loaded.\n';
+      }
+
       pyodideInstance = await loadPyodide({
+        indexURL: window.PYODIDE_CDN || 'https://cdn.jsdelivr.net/pyodide/v0.27.0/full/',
         stdout: (text) => {
           if (terminalOutput) {
             terminalOutput.textContent += text + '\n';
@@ -629,7 +643,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
           }
         }
       });
-      terminalOutput.textContent += 'Pyodide loaded. Installing packages: numpy, matplotlib, pandas, scipy, tqdm...\n';
+      terminalOutput.textContent += 'Pyodide loaded. Installing packages: numpy, matplotlib, pandas, scipy...\n';
       await pyodideInstance.loadPackage(['numpy', 'matplotlib', 'pandas', 'scipy', 'micropip']);
       await pyodideInstance.runPythonAsync(`
 import micropip
@@ -714,37 +728,34 @@ await micropip.install('tqdm')
       
       try {
         const py = await loadPyodideRuntime();
-        
-        // We override matplotlib show() and savefig() to render to DOM
-        const pycode = `
-import io, base64
-import matplotlib.pyplot as plt
-from js import document
 
-__file__ = "sim.py"
+        // Wrap user code: redirect plt.show() to DOM so plots appear in the output panel
+        const wrapperSetup = [
+          'import io, base64',
+          'import matplotlib',
+          'matplotlib.use("agg")',
+          'import matplotlib.pyplot as plt',
+          'from js import document as _js_doc',
+          '',
+          'def _show_plot(*args, **kwargs):',
+          '    buf = io.BytesIO()',
+          '    plt.savefig(buf, format="png", bbox_inches="tight", dpi=96)',
+          '    buf.seek(0)',
+          '    img_b64 = base64.b64encode(buf.read()).decode("utf-8")',
+          '    img_el = _js_doc.createElement("img")',
+          '    img_el.src = "data:image/png;base64," + img_b64',
+          '    img_el.style.maxWidth = "100%"',
+          '    img_el.style.margin = "8px 0"',
+          '    _js_doc.getElementById("sims-pyodide-plot").appendChild(img_el)',
+          '    plt.clf()',
+          '',
+          'plt.show = _show_plot',
+          '',
+        ].join('\n');
 
-def custom_show(*args, **kwargs):
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png', bbox_inches='tight')
-    buf.seek(0)
-    img_b64 = base64.b64encode(buf.read()).decode('utf-8')
-    img_data = f"data:image/png;base64,{img_b64}"
-    
-    # Send to JS wrapper
-    img_el = document.createElement('img')
-    img_el.src = img_data
-    img_el.style.maxWidth = '100%'
-    document.getElementById('sims-pyodide-plot').appendChild(img_el)
-    plt.clf()
-
-plt.show = custom_show
-plt.savefig = custom_show
-
-# Execute user script
-${currentCode.split('\\n').join('\\n')}
-`;
-        
-        await py.runPythonAsync(pycode);
+        // Combine wrapper + user code (no string manipulation of newlines)
+        const fullCode = wrapperSetup + currentCode;
+        await py.runPythonAsync(fullCode);
         terminalOutput.textContent += '\n> Execution finished.\n';
       } catch(err) {
         terminalOutput.textContent += '\nRuntime Error:\n' + err;

@@ -55,7 +55,7 @@ LAYER_L       = [0.80, 0.75, 0.78, 0.70]    # contraction moduli per layer
 LAYER_SIGMA   = [0.002, 0.003, 0.002, 0.008] # noise levels per layer
 
 print("\n" + "="*70)
-print("  Protocol 8.2 — 10⁶ Continuous PMM Updates")
+print("  Protocol 8.2 - 1,000,000 Continuous PMM Updates")
 print(f"  N_updates  = {N_UPDATES:,}")
 print(f"  N_layers   = {N_LAYERS}")
 print(f"  γ_stability= {GAMMA_STAB:.2e}")
@@ -236,16 +236,23 @@ bars = ax3.bar(range(N_LAYERS), total_fail_counts, color=colors4,
                edgecolor="#30363d", linewidth=0.8)
 ax3.set_xticks(range(N_LAYERS))
 ax3.set_xticklabels([n.split(":")[0] for n in LAYER_NAMES], color="white")
+
+max_val = max(total_fail_counts) if len(total_fail_counts) > 0 else 0
+ax3.set_ylim(0, max(100, max_val * 1.2)) # Force reasonable y-axis limits
+
 for bar, cnt, rate in zip(bars, total_fail_counts, total_fail_rate):
-    ax3.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 50,
+    y_offset = max(2, max_val * 0.05)
+    ax3.text(bar.get_x() + bar.get_width()/2, bar.get_height() + y_offset,
              f"{cnt:,}\n({rate*100:.4f}%)", ha="center", color="white",
              fontsize=8)
+
 ax3.set_ylabel("Total failure events (out of 1,000,000 updates)")
 ax3.set_title(f"Total Failure Counts by Layer\n(Protocol 8.2 — {N_UPDATES:,} updates)")
 ax3.grid(True, color="#21262d", linewidth=0.4, axis="y")
 
-plt.suptitle("APU-X Protocol 8.2 — 10⁶ PMM Updates with Per-Layer Failure Logging",
+plt.suptitle("APU-X Protocol 8.2 - 1e6 PMM Updates with Per-Layer Failure Logging",
              color="white", fontsize=13, fontweight="bold")
+
 plt.tight_layout()
 plt.savefig(out_dir / "protocol82_plot.png", dpi=180, bbox_inches="tight",
             facecolor=fig.get_facecolor())

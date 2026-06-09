@@ -143,17 +143,12 @@
       const relPath = plot.dataset.svg;
       const simId = plot.closest('.s2-sim-card').dataset.sim;
       // Resolve relative to this script's slide directory
-      // Resolve SVG path correctly using URL constructor (handles ../ traversal properly)
-      const base = document.querySelector('link[href*="motivation.css"]');
-      let svgPath;
-
-      if (base) {
-        // new URL() normalises ../../ segments: avoids 404s on CDNs that reject non-normalised paths
-        svgPath = new URL(relPath, base.href).href;
-      } else {
-        // Fallback: construct absolute URL from window location
-        svgPath = new URL("slides/slide-02-motivation/" + relPath, window.location.href).href;
-      }
+      // Resolve SVG path relative to the website root
+      // data-svg values are like "../../assets/simulations/..."
+      // By stripping "../../", we get "assets/simulations/..."
+      // Since index.html is at the root, fetching this directly works everywhere.
+      const cleanPath = relPath.replace("../../", "");
+      const svgPath = cleanPath;
 
       plot.classList.add("loading");
 

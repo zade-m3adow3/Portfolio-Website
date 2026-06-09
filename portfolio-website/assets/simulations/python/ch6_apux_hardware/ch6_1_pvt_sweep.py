@@ -163,7 +163,7 @@ t_comb_vs_vdd = [chain_delay_ns(N_STAGES, cn_ss, cp_ss, v, 125) for v in vdds]
 # ─────────────────────────────────────────────────────────────
 # Save results
 # ─────────────────────────────────────────────────────────────
-out_dir = Path(__file__).parent
+out_dir = Path(__file__).parent if '__file__' in globals() else Path('.')
 df.to_csv(out_dir / "pvt_sweep_results.csv", index=False)
 
 print("\n" + "="*78)

@@ -27,7 +27,7 @@ import pandas as pd
 from scipy.linalg import eigvalsh
 from pathlib import Path
 
-out_dir = Path(__file__).parent
+out_dir = Path(__file__).parent if '__file__' in globals() else Path('.')
 rng = np.random.default_rng(42)
 
 # ─────────────────────────────────────────────────────────────

@@ -23,7 +23,7 @@ import pandas as pd
 from scipy.special import erfc
 from pathlib import Path
 
-out_dir = Path(__file__).parent
+out_dir = Path(__file__).parent if '__file__' in globals() else Path('.')
 
 # ─────────────────────────────────────────────────────────────
 # SRAM SNM → BER model

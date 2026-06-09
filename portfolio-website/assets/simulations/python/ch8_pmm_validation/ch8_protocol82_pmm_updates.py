@@ -35,7 +35,7 @@ from pathlib import Path
 from tqdm import tqdm
 import time
 
-out_dir = Path(__file__).parent
+out_dir = Path(__file__).parent if '__file__' in globals() else Path('.')
 rng = np.random.default_rng(20240601)
 
 # ─────────────────────────────────────────────────────────────

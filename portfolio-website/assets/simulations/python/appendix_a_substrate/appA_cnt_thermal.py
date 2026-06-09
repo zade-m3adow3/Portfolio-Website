@@ -22,7 +22,7 @@ import pandas as pd
 from scipy.integrate import quad
 from pathlib import Path
 
-out_dir = Path(__file__).parent
+out_dir = Path(__file__).parent if '__file__' in globals() else Path('.')
 
 # ─────────────────────────────────────────────────────────────
 # Physical constants

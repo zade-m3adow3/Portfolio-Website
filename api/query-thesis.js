@@ -28,7 +28,6 @@ async function embedQuestion(question) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY not set');
 
-  // gemini-embedding-2 is the required model for this specific API key
   const model = 'gemini-embedding-2';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:embedContent?key=${apiKey}`;
 
@@ -42,13 +41,25 @@ async function embedQuestion(question) {
     }),
   });
 
+  if (res.status === 429) {
+    const err = new Error('RateLimit');
+    err.status = 429;
+    throw err;
+  }
   if (!res.ok) throw new Error(`Gemini embed failed: ${await res.text()}`);
+  
   const json = await res.json();
   return json.embedding.values;
 }
 
 // Model fallback chain — try each in order; skip to next on 429 (quota exhausted)
-const GENERATION_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash-lite', 'gemini-2.0-flash'];
+const GENERATION_MODELS = [
+  'gemini-2.5-flash', 
+  'gemini-2.0-flash-lite', 
+  'gemini-2.0-flash',
+  'gemini-1.5-flash',
+  'gemini-1.5-flash-8b'
+];
 
 async function generateAnswer(question, chunks) {
   const contextBlock = chunks
@@ -57,6 +68,8 @@ async function generateAnswer(question, chunks) {
 
   const userMessage = `Here are the retrieved thesis sections:\n\n${contextBlock}\n\n---\n\nUser question: ${question}`;
   const apiKey = process.env.GEMINI_API_KEY;
+
+  let hitRateLimit = false;
 
   for (const model of GENERATION_MODELS) {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
@@ -73,12 +86,17 @@ async function generateAnswer(question, chunks) {
 
       if (res.status === 429) {
         console.warn(`Model ${model} rate-limited (429), trying next model...`);
+        hitRateLimit = true;
         continue; // try next model in the chain
       }
       if (!res.ok) throw new Error(`Gemini LLM failed (${model}): ${await res.text()}`);
 
       const json = await res.json();
       const answerText = json.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+      if (!answerText) {
+         console.warn(`Model ${model} returned empty answer (possible safety block).`);
+         continue;
+      }
       return answerText;
     } catch (err) {
       console.error(`generateAnswer error with ${model}:`, err);
@@ -88,6 +106,9 @@ async function generateAnswer(question, chunks) {
 
   // All models exhausted
   console.error('All generation models exhausted or failed');
+  if (hitRateLimit) {
+    return { error: 'RateLimit' };
+  }
   return '';
 }
 
@@ -120,6 +141,9 @@ export default async function handler(req, res) {
       embedding = await embedQuestion(q);
     } catch (embedErr) {
       console.error('Embedding failed', embedErr);
+      if (embedErr.message === 'RateLimit' || embedErr.status === 429) {
+        return res.status(429).json({ error: 'The AI embedding model is rate limited. Please wait a minute and try again.' });
+      }
       // Return a generic fallback answer indicating retrieval issue
       return res.status(200).json({
         answer: 'Unable to retrieve relevant thesis sections at this time. Please try again later.',
@@ -144,6 +168,11 @@ export default async function handler(req, res) {
     }
 
     const answer = await generateAnswer(q, chunks);
+    
+    if (answer && answer.error === 'RateLimit') {
+      return res.status(429).json({ error: 'The AI model is currently receiving too many requests. Please wait a minute and try again.' });
+    }
+
     // If the model returned no text (empty string or null), provide a graceful fallback
     if (!answer || answer.trim().length === 0) {
       console.error('Gemini returned empty answer');

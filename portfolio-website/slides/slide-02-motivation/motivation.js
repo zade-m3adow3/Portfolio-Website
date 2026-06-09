@@ -158,7 +158,7 @@
       plot.classList.add("loading");
 
       try {
-        const resp = await fetch(svgPath);
+        const resp = await fetch(svgPath + "?v=2");
         if (!resp.ok) throw new Error(resp.statusText);
         const text = await resp.text();
         const parser = new DOMParser();

@@ -254,9 +254,8 @@ plt.suptitle("APU-X Protocol 8.2 - 1e6 PMM Updates with Per-Layer Failure Loggin
              color="white", fontsize=13, fontweight="bold")
 
 plt.tight_layout()
-plt.savefig(out_dir / "protocol82_plot.png", dpi=180, bbox_inches="tight",
-            facecolor=fig.get_facecolor())
-plt.savefig(out_dir / "protocol82_plot.svg", format="svg", bbox_inches="tight", facecolor=fig.get_facecolor())
+plt.savefig(out_dir / "protocol82_plot.png", dpi=180, facecolor=fig.get_facecolor())
+plt.savefig(out_dir / "protocol82_plot.svg", format="svg", facecolor=fig.get_facecolor())
 plt.close()
 print(f"\nPlot saved    → {out_dir / 'protocol82_plot.png'}")
 print(f"Log CSV saved → {out_dir / 'protocol82_pmm_log.csv'}")

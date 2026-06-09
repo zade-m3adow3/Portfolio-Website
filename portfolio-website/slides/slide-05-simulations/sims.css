@@ -515,5 +515,7 @@ input[type=range] {
   color: #a9b7c6; /* syntax highlight base */
   margin: 0;
   tab-size: 4;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 

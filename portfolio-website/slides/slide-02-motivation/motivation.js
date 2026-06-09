@@ -172,6 +172,8 @@
           svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
           svg.style.width = "100%";
           svg.style.height = "100%";
+          svg.style.maxHeight = "100%";
+          svg.style.display = "block";
           plot.classList.remove("loading");
           plot.appendChild(svg);
         } else {

@@ -350,6 +350,20 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  /* Ensure tall multi-panel SVGs (e.g. 2x2 subplot grids) don't overflow */
+  max-height: 100%;
+}
+
+/* Sim 13 (wide card, 2x2 subplot) — force SVG to fill without exceeding container */
+.s2-sim-card-wide .s2-sim-plot {
+  max-height: 70vh;
+}
+
+.s2-sim-card-wide .s2-sim-plot svg {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .s2-plot-expanded {

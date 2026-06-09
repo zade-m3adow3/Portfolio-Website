@@ -288,24 +288,77 @@
         wireSlideTransition("#slide-03", "#slide-05");
         wireSlideTransition("#slide-05", "#slide-06");
       } else {
-        /* Mobile: use IntersectionObserver for smooth CSS fade-in per slide */
+        /* Mobile: rich slide-reveal animation using IntersectionObserver.
+           Each slide starts with a translate+fade state and snaps in smoothly
+           as it scrolls into view. */
         const slideEls = document.querySelectorAll(
           '#slide-01, #slide-02, #slide-03, #slide-04, #slide-05, #slide-06'
         );
-        const fadeObserver = new IntersectionObserver(
+
+        // Inject the mobile-reveal keyframes/classes once
+        if (!document.getElementById('mobile-slide-reveal-styles')) {
+          const style = document.createElement('style');
+          style.id = 'mobile-slide-reveal-styles';
+          style.textContent = `
+            @media (max-width: 1024px) {
+              .slide-reveal-init {
+                opacity: 0;
+                transform: translateY(48px) scale(0.97);
+                transition:
+                  opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+                will-change: opacity, transform;
+              }
+              .slide-reveal-visible {
+                opacity: 1 !important;
+                transform: translateY(0) scale(1) !important;
+              }
+              /* Stagger child elements inside revealed slides */
+              .slide-reveal-visible .sims-header,
+              .slide-reveal-visible .hero-content-wrapper,
+              .slide-reveal-visible .s2-panel-a-content,
+              .slide-reveal-visible .pmm-content-area,
+              .slide-reveal-visible .apux-header {
+                animation: mobileChildReveal 0.55s cubic-bezier(0.16,1,0.3,1) 0.15s both;
+              }
+              @keyframes mobileChildReveal {
+                from { opacity: 0; transform: translateY(24px); }
+                to   { opacity: 1; transform: translateY(0); }
+              }
+              /* Slide 01 hero is visible immediately — no delay */
+              #slide-01.slide-reveal-init {
+                opacity: 1;
+                transform: none;
+              }
+            }
+          `;
+          document.head.appendChild(style);
+        }
+
+        const revealObserver = new IntersectionObserver(
           (entries) => {
             entries.forEach(entry => {
-              entry.target.style.transition = 'opacity 0.45s ease';
-              entry.target.style.opacity = entry.isIntersecting ? '1' : '0.6';
+              if (entry.isIntersecting) {
+                entry.target.classList.add('slide-reveal-visible');
+                // Once revealed, unobserve so it stays visible
+                revealObserver.unobserve(entry.target);
+              }
             });
           },
-          { threshold: 0.15 }
+          { threshold: 0.08 }
         );
+
         slideEls.forEach(el => {
-          el.style.opacity = '0.6';
-          fadeObserver.observe(el);
+          // Hero slide is already visible on load
+          if (el.id === 'slide-01') {
+            el.classList.add('slide-reveal-visible');
+          } else {
+            el.classList.add('slide-reveal-init');
+            revealObserver.observe(el);
+          }
         });
       }
+
 
       /* Global progress dots */
       initProgressDots();

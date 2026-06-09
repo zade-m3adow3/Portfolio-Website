@@ -274,62 +274,53 @@
         }
       }
 
-      /* Wire inter-slide transitions — desktop only.
-         On touch devices GSAP ScrollTrigger transform animations
-         appear as abrupt jumps because the browser compositor
-         batches passive scroll events; native CSS handles it better. */
-      if (!isTouchDevice) {
-        // NOTE: slide-02 excluded — its own GSAP pin handles exit.
-        // After FIX 2 swap: APU-X=id#slide-04 (pos 3), PMM=id#slide-03 (pos 4)
+      /* Wire inter-slide transitions.
+         Use GSAP on wide desktop screens; CSS IntersectionObserver reveal on mobile/narrow. */
+      const isMobileWidth = window.matchMedia('(max-width: 1024px)').matches;
+
+      if (!isTouchDevice && !isMobileWidth) {
+        // Desktop GSAP transitions
         wireSlideTransition("#slide-01", "#slide-02");
-        // APU-X exit: zoom scale-up (1→2.5) to give impression of diving into the hardware
         wireZoomOutTransition("#slide-04");
-        // PMM exit: standard clip transition into Simulations slide
         wireSlideTransition("#slide-03", "#slide-05");
         wireSlideTransition("#slide-05", "#slide-06");
-      } else {
-        /* Mobile: rich slide-reveal animation using IntersectionObserver.
-           Each slide starts with a translate+fade state and snaps in smoothly
-           as it scrolls into view. */
+      }
+
+      /* Mobile / narrow viewport: CSS reveal animation for all slides.
+         Runs on touch devices AND any browser at ≤1024px viewport width. */
+      if (isTouchDevice || isMobileWidth) {
         const slideEls = document.querySelectorAll(
           '#slide-01, #slide-02, #slide-03, #slide-04, #slide-05, #slide-06'
         );
 
-        // Inject the mobile-reveal keyframes/classes once
+        // Inject reveal styles (no @media wrapper — JS already gates this block)
         if (!document.getElementById('mobile-slide-reveal-styles')) {
           const style = document.createElement('style');
           style.id = 'mobile-slide-reveal-styles';
           style.textContent = `
-            @media (max-width: 1024px) {
-              .slide-reveal-init {
-                opacity: 0;
-                transform: translateY(48px) scale(0.97);
-                transition:
-                  opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-                  transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-                will-change: opacity, transform;
-              }
-              .slide-reveal-visible {
-                opacity: 1 !important;
-                transform: translateY(0) scale(1) !important;
-              }
-              /* Stagger child elements inside revealed slides */
-              .slide-reveal-visible .sims-header,
-              .slide-reveal-visible .hero-content-wrapper,
-              .slide-reveal-visible .s2-panel-a-content,
-              .slide-reveal-visible .pmm-content-area,
-              .slide-reveal-visible .apux-header {
-                animation: mobileChildReveal 0.55s cubic-bezier(0.16,1,0.3,1) 0.15s both;
-              }
-              @keyframes mobileChildReveal {
-                from { opacity: 0; transform: translateY(24px); }
-                to   { opacity: 1; transform: translateY(0); }
-              }
-              /* Slide 01 hero is visible immediately — no delay */
-              #slide-01.slide-reveal-init {
-                opacity: 1;
-                transform: none;
-              }
+            .slide-reveal-init {
+              opacity: 0;
+              transform: translateY(44px) scale(0.97);
+              transition:
+                opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+              will-change: opacity, transform;
+            }
+            .slide-reveal-visible {
+              opacity: 1 !important;
+              transform: translateY(0) scale(1) !important;
+            }
+            /* Stagger key children after parent reveal */
+            .slide-reveal-visible .sims-header,
+            .slide-reveal-visible .hero-content-wrapper,
+            .slide-reveal-visible .s2-panel-a-content,
+            .slide-reveal-visible .pmm-content-area,
+            .slide-reveal-visible .apux-header {
+              animation: mobileChildReveal 0.55s cubic-bezier(0.16,1,0.3,1) 0.15s both;
+            }
+            @keyframes mobileChildReveal {
+              from { opacity: 0; transform: translateY(20px); }
+              to   { opacity: 1; transform: translateY(0); }
             }
           `;
           document.head.appendChild(style);
@@ -340,17 +331,16 @@
             entries.forEach(entry => {
               if (entry.isIntersecting) {
                 entry.target.classList.add('slide-reveal-visible');
-                // Once revealed, unobserve so it stays visible
                 revealObserver.unobserve(entry.target);
               }
             });
           },
-          { threshold: 0.08 }
+          { threshold: 0.06, rootMargin: '0px 0px -40px 0px' }
         );
 
         slideEls.forEach(el => {
-          // Hero slide is already visible on load
           if (el.id === 'slide-01') {
+            // Hero is always visible immediately
             el.classList.add('slide-reveal-visible');
           } else {
             el.classList.add('slide-reveal-init');
